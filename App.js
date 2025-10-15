@@ -4,13 +4,16 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ExerciseSearchScreen from "./src/screens/ExerciseSearchScreen";
 import ExerciseDetailsScreen from "./src/screens/ExerciseDetailsScreen";
+import AppNavigator from "./src/navigation/AppNavigator";
 
-const Stack = createNativeStackNavigator();
+// const Stack = createNativeStackNavigator();
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
+  return <AppNavigator />;
+  //(
+  //<NavigationContainer>
+  {
+    /* <Stack.Navigator
         initialRouteName="ExerciseSearch"
         screenOptions={{
           headerTitle: "Exercise Search",
@@ -21,16 +24,8 @@ export default function App() {
           name="ExerciseDetails"
           component={ExerciseDetailsScreen}
         />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+      </Stack.Navigator> */
+  }
+  //</NavigationContainer>
+  //);
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
