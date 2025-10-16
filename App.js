@@ -6,26 +6,6 @@ import ExerciseSearchScreen from "./src/screens/ExerciseSearchScreen";
 import ExerciseDetailsScreen from "./src/screens/ExerciseDetailsScreen";
 import AppNavigator from "./src/navigation/AppNavigator";
 
-// const Stack = createNativeStackNavigator();
-
 export default function App() {
   return <AppNavigator />;
-  //(
-  //<NavigationContainer>
-  {
-    /* <Stack.Navigator
-        initialRouteName="ExerciseSearch"
-        screenOptions={{
-          headerTitle: "Exercise Search",
-        }}
-      >
-        <Stack.Screen name="ExerciseSearch" component={ExerciseSearchScreen} />
-        <Stack.Screen
-          name="ExerciseDetails"
-          component={ExerciseDetailsScreen}
-        />
-      </Stack.Navigator> */
-  }
-  //</NavigationContainer>
-  //);
 }

@@ -19,7 +19,7 @@ const ExercisesList = ({ header, exercises }) => {
   return (
     <View>
       {/* header po kategoriach ćwiczeń */}
-      <Text>{header}</Text>
+      <Text style={styles.header}>{header}</Text>
       {/* lista ćwiczeń z danej kategorii */}
       <FlatList
         horizontal
@@ -41,6 +41,13 @@ const ExercisesList = ({ header, exercises }) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  header: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginLeft: 15,
+    marginVertical: 5,
+  },
+});
 
 export default ExercisesList;

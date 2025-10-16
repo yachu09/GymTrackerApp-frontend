@@ -8,6 +8,7 @@ const Stack = createNativeStackNavigator();
 
 export default function SearchStack() {
   return (
+    //nawigator stacka zakładki (tab) "search"
     <Stack.Navigator
       initialRouteName="SearchTab"
       screenOptions={

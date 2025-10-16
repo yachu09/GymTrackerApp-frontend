@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
     borderColor: "black",
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
+    marginLeft: 15,
     backgroundColor: "#f0f0f0",
     padding: 10,
     borderRadius: 8,
@@ -32,6 +33,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+    alignSelf: "center",
   },
   image: {
     width: "100%",
