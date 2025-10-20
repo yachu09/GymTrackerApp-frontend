@@ -17,7 +17,7 @@ export default function MainTabs() {
       }}
     >
       <Tab.Screen
-        name="WorkoutTab"
+        name="WorkoutTabScreen"
         component={WorkoutStack}
         options={{
           title: "Workout",
