@@ -1,10 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import StandardButton from "../components/StandardButton";
 
 const WorkoutTabScreen = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Text>This is a workout tab screen</Text>
+      <StandardButton
+        onPress={() => {
+          navigation.navigate("WorkoutPlanning");
+        }}
+        text="Click to plan your workout!"
+      />
     </View>
   );
 };

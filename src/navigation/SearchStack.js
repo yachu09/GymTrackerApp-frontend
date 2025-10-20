@@ -10,7 +10,7 @@ export default function SearchStack() {
   return (
     //nawigator stacka zakładki (tab) "search"
     <Stack.Navigator
-      initialRouteName="SearchTab"
+      initialRouteName="ExerciseSearch"
       screenOptions={
         {
           // headerTitle: "Exercise Search",
