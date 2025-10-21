@@ -1,9 +1,9 @@
 import React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
 
-const ExercisesDetail = ({ exercise }) => {
+const ExercisesDetail = ({ exercise, bgColor }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: bgColor }]}>
       <Text style={styles.name}>{exercise.name}</Text>
 
       <Image

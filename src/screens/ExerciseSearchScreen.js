@@ -3,12 +3,16 @@ import { Text, View, StyleSheet, FlatList } from "react-native";
 import useExercises from "../hooks/useExercises";
 import SearchBar from "../components/SearchBar";
 import ExercisesList from "../components/ExercisesList";
-import { BottomTabBarHeightCallbackContext } from "@react-navigation/bottom-tabs";
+import { AntDesign } from "@expo/vector-icons";
 
-const ExerciseSearchScreen = () => {
+const ExerciseSearchScreen = ({ route }) => {
   const [term, setTerm] = useState("");
   const [searchExercises, exercises, errorMessage] = useExercises([]);
   const [groupedExercises, setGroupedExercises] = useState([]);
+  //true or false - jeśli true wyświetl plusik do dodawania ćwiczeń który zmieni się po kliknieciu w haczyk jako że ćwiczenie zostało zakolejkowane do planu
+  //wtedy doda się to ćwiczenie do jakiegoś state, i jeśli dodawanie ćwiczeń zostanie zatwierdzone plan zostanie utworzony w bazie i nawigacja przekieruje do planów
+  const fromProgramPlanning = route.params.fromProgramPlanning;
+  const [exercisesToAdd, setExercisesToAdd] = useState([]);
 
   const groupExercisesByMuscleGroup = (exercises) => {
     const grouped = [];
@@ -82,6 +86,7 @@ const ExerciseSearchScreen = () => {
                 item.muscleGroup.slice(1)
               } Exercises`}
               exercises={item.exercises}
+              fromProgramPlanning={fromProgramPlanning}
             />
           );
         }}

@@ -1,0 +1,34 @@
+import React from "react";
+import { View, Text, TextInput, StyleSheet } from "react-native";
+
+const StandardTextInput = ({ term, placeholder, onTermChange }) => {
+  return (
+    <View style={styles.background}>
+      <TextInput
+        style={styles.inputStyle}
+        placeholder={placeholder}
+        value={term}
+        onChangeText={(newTerm) => onTermChange(newTerm)}
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  background: {
+    backgroundColor: "lightgray",
+    height: 50,
+    borderRadius: 10,
+    marginHorizontal: 15,
+    flexDirection: "row",
+    marginTop: 15,
+  },
+  inputStyle: {
+    flex: 1,
+    fontSize: 18,
+  },
+});
+
+export default StandardTextInput;

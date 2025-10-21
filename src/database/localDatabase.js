@@ -22,6 +22,19 @@ export const initDatabase = async () => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS programExercises (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    programId INTEGER NOT NULL,
+    exerciseId INTEGER NOT NULL,
+    exerciseName TEXT NOT NULL,
+    description TEXT,
+    muscleGroup TEXT,
+    imageUrl TEXT,
+    sets INTEGER,
+    reps INTEGER,
+    breakTime INTEGER,
+    FOREIGN KEY (programId) REFERENCES trainingPrograms(id)
+    )
   `);
 };
 
