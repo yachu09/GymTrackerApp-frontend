@@ -4,6 +4,8 @@ import useExercises from "../hooks/useExercises";
 import SearchBar from "../components/SearchBar";
 import ExercisesList from "../components/ExercisesList";
 import { AntDesign } from "@expo/vector-icons";
+import AddProgramButton from "../components/AddProgramButton";
+import { useNavigation } from "@react-navigation/native";
 
 const ExerciseSearchScreen = ({ route }) => {
   const [term, setTerm] = useState("");
@@ -13,6 +15,18 @@ const ExerciseSearchScreen = ({ route }) => {
   //wtedy doda się to ćwiczenie do jakiegoś state, i jeśli dodawanie ćwiczeń zostanie zatwierdzone plan zostanie utworzony w bazie i nawigacja przekieruje do planów
   const fromProgramPlanning = route.params.fromProgramPlanning;
   const [exercisesToAdd, setExercisesToAdd] = useState([]);
+
+  const navigation = useNavigation();
+
+  const [selectedExercises, setSelectedExercises] = useState([]);
+
+  const toggleSelectExercise = (exerciseId) => {
+    setSelectedExercises((prev) =>
+      prev.includes(exerciseId)
+        ? prev.filter((id) => id !== exerciseId)
+        : [...prev, exerciseId]
+    );
+  };
 
   const groupExercisesByMuscleGroup = (exercises) => {
     const grouped = [];
@@ -75,6 +89,19 @@ const ExerciseSearchScreen = ({ route }) => {
         exercise/s
         {term ? " that match your search" : null}
       </Text>
+
+      {fromProgramPlanning ? (
+        <AddProgramButton
+          text="Add selected exercises"
+          onPress={() => {
+            navigation.navigate("AddProgram", {
+              idsToAdd: selectedExercises,
+              exercises: exercises,
+            });
+          }}
+        />
+      ) : null}
+
       <FlatList
         data={groupedExercises}
         keyExtractor={(item) => item.muscleGroup}
@@ -87,6 +114,8 @@ const ExerciseSearchScreen = ({ route }) => {
               } Exercises`}
               exercises={item.exercises}
               fromProgramPlanning={fromProgramPlanning}
+              selectedExercises={selectedExercises}
+              toggleSelectExercise={toggleSelectExercise}
             />
           );
         }}

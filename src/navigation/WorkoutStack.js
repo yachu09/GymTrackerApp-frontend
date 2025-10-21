@@ -11,7 +11,11 @@ export default function WorkoutStack() {
     <Stack.Navigator initialRouteName="WorkoutTab">
       <Stack.Screen name="WorkoutTab" component={WorkoutTabScreen} />
       <Stack.Screen name="WorkoutPlanning" component={WorkoutPlanningScreen} />
-      <Stack.Screen name="AddProgram" component={AddProgramScreen} />
+      <Stack.Screen
+        name="AddProgram"
+        component={AddProgramScreen}
+        initialParams={{ idsToAdd: [], exercises: [] }}
+      />
       <Stack.Screen name="ExerciseSearch" component={ExerciseSearchScreen} />
     </Stack.Navigator>
   );

@@ -2,23 +2,37 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import StandardTextInput from "../components/StandardTextInput";
-import StandardButton from "../components/StandardButton";
 import { useNavigation } from "@react-navigation/native";
+import AddProgramButton from "../components/AddProgramButton";
+import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 
-const AddProgramScreen = () => {
+const AddProgramScreen = ({ route }) => {
   const { programs, addProgram } = useTrainingPrograms();
   const [term, setTerm] = useState("");
   const navigation = useNavigation();
 
   // Dodaj testowy wpis tylko raz po załadowaniu ekranu
   useEffect(() => {
-    addProgram("testowy plan");
+    // addProgram("testowy plan");
   }, []);
 
   // Loguj stan bazy, gdy się zmieni
   useEffect(() => {
     console.log("Aktualny stan bazy:", programs);
   }, [programs]);
+
+  const idsToAdd = route.params.idsToAdd;
+  const exercises = route.params.exercises;
+  let exercisesToProgram = [];
+  if (idsToAdd.length && exercises.length) {
+    // console.log(`id do dodania ${idsToAdd}`);
+    exercisesToProgram = exercises.filter((exercise) =>
+      idsToAdd.includes(exercise.id)
+    );
+    // console.log(exercisesToProgram);
+    if (term) {
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -29,7 +43,7 @@ const AddProgramScreen = () => {
           setTerm(newTerm);
         }}
       />
-      <StandardButton
+      <AddProgramButton
         text="Add exercises"
         onPress={() => {
           navigation.navigate("ExerciseSearch", { fromProgramPlanning: true });
