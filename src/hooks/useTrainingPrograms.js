@@ -25,12 +25,24 @@ export function useTrainingPrograms() {
   const loadPrograms = async () => {
     try {
       const db = await getDb();
-      const rows = await db.getAllAsync(
-        "SELECT * FROM trainingPrograms ORDER BY id DESC;"
-      );
-      if (mountedRef.current) setPrograms(rows);
+
+      const programs = await db.getAllAsync(`
+      SELECT * FROM trainingPrograms ORDER BY id DESC;
+    `);
+
+      const exercises = await db.getAllAsync(`
+      SELECT * FROM programExercises ORDER BY programId;
+    `);
+
+      const programsWithExercises = programs.map((program) => ({
+        ...program,
+        exercises: exercises.filter((ex) => ex.programId === program.id),
+      }));
+
+      setPrograms(programsWithExercises);
+      console.log("Aktualne plany treningowe:", programsWithExercises);
     } catch (e) {
-      console.error("loadPrograms error", e);
+      console.error("loadPrograms error:", e);
     }
   };
 
@@ -46,5 +58,35 @@ export function useTrainingPrograms() {
     }
   };
 
-  return { programs, addProgram, loadPrograms };
+  const addProgramWithExercises = async (programName, exercisesArr) => {
+    try {
+      const db = await getDb();
+
+      const result = await db.runAsync(
+        "INSERT INTO trainingPrograms (name) VALUES (?);",
+        [programName]
+      );
+      const programId = result.lastInsertRowId;
+
+      for (const item of exercisesArr) {
+        await db.runAsync(
+          "INSERT INTO programExercises (programId, exerciseId, exerciseName, description, muscleGroup, imageUrl) VALUES (?, ?, ?, ?, ?, ?);",
+          [
+            programId,
+            item.id,
+            item.name,
+            item.description,
+            item.muscleGroup,
+            item.imageUrl,
+          ]
+        );
+      }
+    } catch (err) {
+      console.error("addProgramWithExercises error: ", err);
+    }
+
+    return programId;
+  };
+
+  return { programs, addProgram, loadPrograms, addProgramWithExercises };
 }

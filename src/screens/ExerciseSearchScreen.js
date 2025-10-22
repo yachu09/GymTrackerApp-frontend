@@ -70,7 +70,8 @@ const ExerciseSearchScreen = ({ route }) => {
     setGroupedExercises(grouped);
   }, [exercises, term]);
 
-  console.log(JSON.stringify(groupedExercises, null, 2));
+  // console.log(JSON.stringify(groupedExercises, null, 2));
+  // console.log(`search bar term: ${term}`);
   return (
     <View style={styles.container}>
       <SearchBar

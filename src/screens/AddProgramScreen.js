@@ -4,10 +4,10 @@ import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import StandardTextInput from "../components/StandardTextInput";
 import { useNavigation } from "@react-navigation/native";
 import AddProgramButton from "../components/AddProgramButton";
-// import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 
 const AddProgramScreen = ({ route }) => {
-  const { programs, addProgram } = useTrainingPrograms();
+  const { programs, addProgram, loadPrograms, addProgramWithExercises } =
+    useTrainingPrograms();
   const [term, setTerm] = useState("");
   const navigation = useNavigation();
 
@@ -18,8 +18,17 @@ const AddProgramScreen = ({ route }) => {
 
   // Loguj stan bazy, gdy się zmieni
   useEffect(() => {
-    console.log("Aktualny stan bazy:", programs);
+    console.log("Aktualny stan bazy:", JSON.stringify(programs, null, 2));
   }, [programs]);
+
+  const createProgram = () => {
+    console.log(`term: ${term}`);
+    if (term.length && exercisesToProgram.length) {
+      //use hook and add program to local db
+      const programId = addProgramWithExercises(term, exercisesToProgram);
+      console.log(`Utworzono nowy plan - id: ${programId}`);
+    } else console.log("Nie utworzono nowego planu, brakuje nazwy");
+  };
 
   const idsToAdd = route.params.idsToAdd;
   const exercises = route.params.exercises;
@@ -29,9 +38,9 @@ const AddProgramScreen = ({ route }) => {
     exercisesToProgram = exercises.filter((exercise) =>
       idsToAdd.includes(exercise.id)
     );
-    console.log(exercisesToProgram);
-    if (term) {
-    }
+    console.log(
+      `Selected exercises: ${JSON.stringify(exercisesToProgram, null, 2)}`
+    );
   }
 
   return (
@@ -42,11 +51,28 @@ const AddProgramScreen = ({ route }) => {
         onTermChange={(newTerm) => {
           setTerm(newTerm);
         }}
+        // onTermSubmit={() => {
+        //   createProgram();
+        // }}
       />
+      <Text style={styles.selectedExercisesText}>
+        {exercisesToProgram.length
+          ? `You have selected ${exercisesToProgram.length} exercises`
+          : "Select exercises first"}
+      </Text>
       <AddProgramButton
         text="Add exercises"
         onPress={() => {
-          navigation.navigate("ExerciseSearch", { fromProgramPlanning: true });
+          navigation.navigate("ExerciseSearch", {
+            fromProgramPlanning: true,
+          });
+        }}
+      />
+      <AddProgramButton
+        style={styles.createProgramButton}
+        text="Create training program"
+        onPress={() => {
+          createProgram();
         }}
       />
     </View>
@@ -58,6 +84,10 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: "center",
     // alignItems: "center",
+  },
+  selectedExercisesText: {
+    alignSelf: "center",
+    marginTop: 5,
   },
 });
 

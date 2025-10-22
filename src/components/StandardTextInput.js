@@ -1,7 +1,12 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
-const StandardTextInput = ({ term, placeholder, onTermChange }) => {
+const StandardTextInput = ({
+  term,
+  placeholder,
+  onTermChange,
+  onTermSubmit,
+}) => {
   return (
     <View style={styles.background}>
       <TextInput
@@ -11,6 +16,9 @@ const StandardTextInput = ({ term, placeholder, onTermChange }) => {
         onChangeText={(newTerm) => onTermChange(newTerm)}
         autoCapitalize="none"
         autoCorrect={false}
+        // onEndEditing={() => {
+        //   onTermSubmit();
+        // }}
       />
     </View>
   );
