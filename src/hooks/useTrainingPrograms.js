@@ -46,18 +46,6 @@ export function useTrainingPrograms() {
     }
   };
 
-  const addProgram = async (name) => {
-    try {
-      const db = await getDb();
-      await db.runAsync("INSERT INTO trainingPrograms (name) VALUES (?);", [
-        name,
-      ]);
-      await loadPrograms();
-    } catch (e) {
-      console.error("addProgram error", e);
-    }
-  };
-
   const addProgramWithExercises = async (programName, exercisesArr) => {
     try {
       const db = await getDb();
@@ -88,5 +76,5 @@ export function useTrainingPrograms() {
     return programId;
   };
 
-  return { programs, addProgram, loadPrograms, addProgramWithExercises };
+  return { programs, loadPrograms, addProgramWithExercises };
 }

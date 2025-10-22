@@ -2,11 +2,12 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 
-const TrainingProgramBox = ({ programName, onPress }) => {
+const TrainingProgramBox = ({ program, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
-        <Text style={styles.programName}>{programName}</Text>
+        <Text style={styles.programName}>{program.name}</Text>
+        <Text>{program.exercises.length} exercises</Text>
       </View>
     </TouchableOpacity>
   );

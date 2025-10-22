@@ -37,18 +37,3 @@ export const initDatabase = async () => {
     )
   `);
 };
-
-// tak ma wyglądać +- element tabeli trainingProgram w bazie
-const trainingProgramsItem = {
-  id: 0, //primary key //autoincrement
-  name: "", //TEXT
-  //array of objects
-  exercsises: [
-    {
-      exercise: {}, //object
-      sets: 0, //INTEGER
-      reps: 0, //INTEGER
-      breakTime: 0, //INTEGER (seconds)
-    },
-  ],
-};

@@ -6,17 +6,12 @@ import { useNavigation } from "@react-navigation/native";
 import AddProgramButton from "../components/AddProgramButton";
 
 const AddProgramScreen = ({ route }) => {
-  const { programs, addProgram, loadPrograms, addProgramWithExercises } =
+  const { programs, loadPrograms, addProgramWithExercises } =
     useTrainingPrograms();
   const [term, setTerm] = useState("");
   const navigation = useNavigation();
 
-  // Dodaj testowy wpis tylko raz po załadowaniu ekranu
-  useEffect(() => {
-    // addProgram("testowy plan");
-  }, []);
-
-  // Loguj stan bazy, gdy się zmieni
+  // Llog stanu bazy gdy się zmienia state
   useEffect(() => {
     console.log("Aktualny stan bazy:", JSON.stringify(programs, null, 2));
   }, [programs]);
@@ -24,7 +19,7 @@ const AddProgramScreen = ({ route }) => {
   const createProgram = () => {
     console.log(`term: ${term}`);
     if (term.length && exercisesToProgram.length) {
-      //use hook and add program to local db
+      //hook to add program to local db
       const programId = addProgramWithExercises(term, exercisesToProgram);
       console.log(`Utworzono nowy plan - id: ${programId}`);
     } else console.log("Nie utworzono nowego planu, brakuje nazwy");
@@ -34,7 +29,6 @@ const AddProgramScreen = ({ route }) => {
   const exercises = route.params.exercises;
   let exercisesToProgram = [];
   if (idsToAdd.length && exercises.length) {
-    // console.log(`id do dodania ${idsToAdd}`);
     exercisesToProgram = exercises.filter((exercise) =>
       idsToAdd.includes(exercise.id)
     );
@@ -51,9 +45,6 @@ const AddProgramScreen = ({ route }) => {
         onTermChange={(newTerm) => {
           setTerm(newTerm);
         }}
-        // onTermSubmit={() => {
-        //   createProgram();
-        // }}
       />
       <Text style={styles.selectedExercisesText}>
         {exercisesToProgram.length
@@ -73,6 +64,7 @@ const AddProgramScreen = ({ route }) => {
         text="Create training program"
         onPress={() => {
           createProgram();
+          navigation.navigate("WorkoutPlanning");
         }}
       />
     </View>
@@ -82,8 +74,6 @@ const AddProgramScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
   },
   selectedExercisesText: {
     alignSelf: "center",

@@ -1,24 +1,43 @@
-import React from "react";
+import React, { use, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import TrainingProgramBox from "../components/TrainingProgramBox";
 import AddProgramButton from "../components/AddProgramButton";
 import { useNavigation } from "@react-navigation/native";
+import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
+import { initDatabase } from "../database/localDatabase";
 
 const WorkoutPlanningScreen = () => {
+  const { programs, loadPrograms } = useTrainingPrograms();
   const navigation = useNavigation();
-  //1. zapytaj LOKALNĄ baze (nie api) o plany treningowe
-  //2.1 jeśli w bazie nie ma nic wyświetl coś w stylu "No training program yet? Add one!" i pokaż guzik
-  // stwórz ekran do tworzenia planu uzywająć wyszukiwarki ćwiczeń
-  //2.2 jeśli w bazie są plany wyświetl je, a pod nimi przycisk do dodania nowego
-  //3 dodaj możliwość kliknięcia w plan i wystartowania treningu
-  //4 po starcie treningu przenieś do ekranu treningowego i zajeb z JEFITa mniej więcej wygląd UI odpalonego treningu
+
+  //FIXME: right after adding a training program number of exercises is not being shown correctly
+  // after reloading the screen number of exercises is fine
+  //the bug is probably due to programs not being fully loaded from the hook but idk
+  useEffect(() => {
+    if (programs.length) {
+      loadPrograms();
+    } else {
+      initDatabase();
+      loadPrograms();
+    }
+  }, []);
+
+  //jeśli w bazie nie ma nic wyświetl coś w stylu "No training program yet? Add one!" i pokaż guzik
+  //dodaj możliwość kliknięcia w plan i wystartowania treningu
+  //po starcie treningu przenieś do ekranu treningowego i zajeb z JEFITa mniej więcej wygląd UI odpalonego treningu
   return (
-    <View>
-      {/* chwilowe rozwiązanie - docelowo FlatList renderujący komponenty TrainingProgramBox na podstawie tego co zwróci baza */}
+    <View style={styles.container}>
       {/* zdarzenie onPress TrainingProgramBox ma przekierowywać do startu treningu zależnie od wybranego programu treningowego */}
-      <TrainingProgramBox programName={"Program #1"} onPress={() => {}} />
-      <TrainingProgramBox programName={"Program #2"} />
-      <TrainingProgramBox programName={"Program #3"} />
+      {!programs.length ? (
+        <Text>No training programs yet? Add one!</Text>
+      ) : null}
+      <FlatList
+        data={programs}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => {
+          return <TrainingProgramBox program={item} onPress={() => {}} />;
+        }}
+      />
       <AddProgramButton
         text="Add training program!"
         onPress={() => {
@@ -31,8 +50,7 @@ const WorkoutPlanningScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    marginTop: 300,
+    flex: 1,
   },
 });
 
