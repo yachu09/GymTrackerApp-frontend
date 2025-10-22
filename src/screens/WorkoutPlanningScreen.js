@@ -35,7 +35,14 @@ const WorkoutPlanningScreen = () => {
         data={programs}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => {
-          return <TrainingProgramBox program={item} onPress={() => {}} />;
+          return (
+            <TrainingProgramBox
+              program={item}
+              onPress={() => {
+                navigation.navigate("ProgramDetails", { program: item });
+              }}
+            />
+          );
         }}
       />
       <AddProgramButton
