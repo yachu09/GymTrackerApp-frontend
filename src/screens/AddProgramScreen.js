@@ -4,7 +4,7 @@ import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import StandardTextInput from "../components/StandardTextInput";
 import { useNavigation } from "@react-navigation/native";
 import AddProgramButton from "../components/AddProgramButton";
-import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
+// import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 
 const AddProgramScreen = ({ route }) => {
   const { programs, addProgram } = useTrainingPrograms();
@@ -29,7 +29,7 @@ const AddProgramScreen = ({ route }) => {
     exercisesToProgram = exercises.filter((exercise) =>
       idsToAdd.includes(exercise.id)
     );
-    // console.log(exercisesToProgram);
+    console.log(exercisesToProgram);
     if (term) {
     }
   }
