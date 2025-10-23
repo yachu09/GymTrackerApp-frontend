@@ -25,9 +25,14 @@ export default function SearchStack() {
       <Stack.Screen
         name="ExerciseSearch"
         component={ExerciseSearchScreen}
+        options={{ title: "Search an exercise!" }}
         initialParams={{ fromProgramPlanning: false }}
       />
-      <Stack.Screen name="ExerciseDetails" component={ExerciseDetailsScreen} />
+      <Stack.Screen
+        name="ExerciseDetails"
+        component={ExerciseDetailsScreen}
+        options={{ title: "Details" }}
+      />
     </Stack.Navigator>
   );
 }

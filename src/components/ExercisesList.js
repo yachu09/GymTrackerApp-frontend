@@ -37,7 +37,7 @@ const ExercisesList = ({
             <TouchableOpacity
               onPress={() => {
                 if (!fromProgramPlanning) {
-                  navigation.navigate("ExerciseDetails");
+                  navigation.navigate("ExerciseDetails", { exercise: item });
                 } else {
                   toggleSelectExercise(item.id);
                 }

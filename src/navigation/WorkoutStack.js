@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator();
 
 export default function WorkoutStack() {
   return (
-    <Stack.Navigator initialRouteName="WorkoutTab">
+    <Stack.Navigator initialRouteName="WorkoutPlanning">
       <Stack.Screen name="WorkoutTab" component={WorkoutTabScreen} />
       <Stack.Screen name="WorkoutPlanning" component={WorkoutPlanningScreen} />
       <Stack.Screen name="ProgramDetails" component={ProgramDetailsScreen} />
