@@ -12,17 +12,29 @@ const AddProgramScreen = ({ route }) => {
   const navigation = useNavigation();
 
   // Llog stanu bazy gdy się zmienia state
-  useEffect(() => {
-    console.log("Aktualny stan bazy:", JSON.stringify(programs, null, 2));
-  }, [programs]);
+  // useEffect(() => {
+  //   console.log("Aktualny stan bazy:", JSON.stringify(programs, null, 2));
+  // }, [programs]);
 
-  const createProgram = () => {
+  const createProgram = async () => {
     console.log(`term: ${term}`);
     if (term.length && exercisesToProgram.length) {
-      //hook to add program to local db
-      const programId = addProgramWithExercises(term, exercisesToProgram);
-      console.log(`Utworzono nowy plan - id: ${programId}`);
-    } else console.log("Nie utworzono nowego planu, brakuje nazwy");
+      try {
+        // Czekamy aż cały zapis do bazy się zakończy
+        const programId = await addProgramWithExercises(
+          term,
+          exercisesToProgram
+        );
+        console.log(`Utworzono nowy plan - id: ${programId}`);
+
+        // Dopiero teraz wracamy na początek stacka
+        navigation.popToTop();
+      } catch (err) {
+        console.error("Błąd podczas tworzenia programu:", err);
+      }
+    } else {
+      console.log("Nie utworzono nowego planu, brakuje nazwy");
+    }
   };
 
   const idsToAdd = route.params.idsToAdd;
@@ -32,9 +44,9 @@ const AddProgramScreen = ({ route }) => {
     exercisesToProgram = exercises.filter((exercise) =>
       idsToAdd.includes(exercise.id)
     );
-    console.log(
-      `Selected exercises: ${JSON.stringify(exercisesToProgram, null, 2)}`
-    );
+    // console.log(
+    //   `Selected exercises: ${JSON.stringify(exercisesToProgram, null, 2)}`
+    // );
   }
 
   return (
@@ -64,7 +76,8 @@ const AddProgramScreen = ({ route }) => {
         text="Create training program"
         onPress={() => {
           createProgram();
-          navigation.navigate("WorkoutPlanning");
+          // navigation.navigate("WorkoutPlanning");
+          // navigation.popToTop();
         }}
       />
     </View>

@@ -5,6 +5,7 @@ import AddProgramButton from "../components/AddProgramButton";
 import { useNavigation } from "@react-navigation/native";
 import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import { initDatabase } from "../database/localDatabase";
+import { useFocusEffect } from "@react-navigation/native";
 
 const WorkoutPlanningScreen = () => {
   const { programs, loadPrograms } = useTrainingPrograms();
@@ -13,14 +14,36 @@ const WorkoutPlanningScreen = () => {
   //FIXME: right after adding a training program number of exercises is not being shown correctly
   // after reloading the screen number of exercises is fine
   //the bug is probably due to programs not being fully loaded from the hook but idk
-  useEffect(() => {
-    if (programs.length) {
-      loadPrograms();
-    } else {
-      initDatabase();
-      loadPrograms();
-    }
-  }, []);
+  // useEffect(() => {
+  //   // if (programs.length) {
+  //   //   loadPrograms();
+  //   //   console.log("programs loaded");
+  //   // } else {
+  //   //   initDatabase();
+  //   //   loadPrograms();
+  //   // }
+  //   const initAndLoad = async () => {
+  //     await initDatabase();
+  //     await loadPrograms();
+  //     console.log("db init and programs loaded");
+  //   };
+  //   initAndLoad();
+  // }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const initAndLoad = () => {
+        try {
+          initDatabase();
+          loadPrograms();
+          console.log("init and load");
+        } catch (e) {
+          console.error("init and load error (WorkoutPlanningScreen)", e);
+        }
+      };
+
+      initAndLoad();
+    }, [])
+  );
 
   //jeśli w bazie nie ma nic wyświetl coś w stylu "No training program yet? Add one!" i pokaż guzik
   //dodaj możliwość kliknięcia w plan i wystartowania treningu

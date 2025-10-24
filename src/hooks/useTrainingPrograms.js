@@ -40,7 +40,10 @@ export function useTrainingPrograms() {
       }));
 
       setPrograms(programsWithExercises);
-      console.log("Aktualne plany treningowe:", programsWithExercises);
+      console.log(
+        "Aktualne plany treningowe:",
+        JSON.stringify(programsWithExercises, null, 2)
+      );
     } catch (e) {
       console.error("loadPrograms error:", e);
     }
@@ -69,11 +72,11 @@ export function useTrainingPrograms() {
           ]
         );
       }
+
+      return programId;
     } catch (err) {
       console.error("addProgramWithExercises error: ", err);
     }
-
-    return programId;
   };
 
   return { programs, loadPrograms, addProgramWithExercises };
