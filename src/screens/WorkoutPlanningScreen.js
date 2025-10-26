@@ -8,12 +8,9 @@ import { initDatabase } from "../database/localDatabase";
 import { useFocusEffect } from "@react-navigation/native";
 
 const WorkoutPlanningScreen = () => {
-  const { programs, loadPrograms } = useTrainingPrograms();
+  const { programs, loadPrograms, dropAllTables } = useTrainingPrograms();
   const navigation = useNavigation();
 
-  //FIXME: right after adding a training program number of exercises is not being shown correctly
-  // after reloading the screen number of exercises is fine
-  //the bug is probably due to programs not being fully loaded from the hook but idk
   // useEffect(() => {
   //   // if (programs.length) {
   //   //   loadPrograms();
@@ -45,14 +42,15 @@ const WorkoutPlanningScreen = () => {
     }, [])
   );
 
-  //jeśli w bazie nie ma nic wyświetl coś w stylu "No training program yet? Add one!" i pokaż guzik
   //dodaj możliwość kliknięcia w plan i wystartowania treningu
   //po starcie treningu przenieś do ekranu treningowego i zajeb z JEFITa mniej więcej wygląd UI odpalonego treningu
   return (
     <View style={styles.container}>
       {/* zdarzenie onPress TrainingProgramBox ma przekierowywać do startu treningu zależnie od wybranego programu treningowego */}
       {!programs.length ? (
-        <Text>No training programs yet? Add one!</Text>
+        <Text style={styles.noPrograms}>
+          No training programs yet? Add one!
+        </Text>
       ) : null}
       <FlatList
         data={programs}
@@ -74,6 +72,13 @@ const WorkoutPlanningScreen = () => {
           navigation.navigate("AddProgram");
         }}
       />
+      {/* guzik do usuwania danych z bazy */}
+      <AddProgramButton
+        text="DEV: Delete all data"
+        onPress={() => {
+          dropAllTables();
+        }}
+      />
     </View>
   );
 };
@@ -81,6 +86,12 @@ const WorkoutPlanningScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  noPrograms: {
+    fontSize: 18,
+    fontWeight: "bold",
+    alignSelf: "center",
+    marginTop: 200,
   },
 });
 
