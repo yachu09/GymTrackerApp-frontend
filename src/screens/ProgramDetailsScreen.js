@@ -1,8 +1,11 @@
 import React from "react";
 import { Text, View, StyleSheet, FlatList } from "react-native";
 import ProgramExerciseDetail from "../components/ProgramExerciseDetail";
+import AddProgramButton from "../components/AddProgramButton";
+import { useNavigation } from "@react-navigation/native";
 
 const ProgramDetailsScreen = ({ route }) => {
+  const navigation = useNavigation();
   const program = route.params.program;
   return (
     <View>
@@ -12,6 +15,12 @@ const ProgramDetailsScreen = ({ route }) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => {
           return <ProgramExerciseDetail exercise={item} />;
+        }}
+      />
+      <AddProgramButton
+        text="Done"
+        onPress={() => {
+          navigation.pop();
         }}
       />
     </View>

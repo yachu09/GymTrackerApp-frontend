@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import { initDatabase } from "../database/localDatabase";
 import { useFocusEffect } from "@react-navigation/native";
+import WorkoutBar from "../components/WorkoutBar";
 
 const WorkoutPlanningScreen = () => {
   const { programs, loadPrograms, dropAllTables } = useTrainingPrograms();
@@ -79,6 +80,7 @@ const WorkoutPlanningScreen = () => {
           dropAllTables();
         }}
       />
+      <WorkoutBar />
     </View>
   );
 };

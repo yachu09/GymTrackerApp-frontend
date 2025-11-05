@@ -1,13 +1,13 @@
 import React from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 
-const NumericTextInput = ({ handleChange, term }) => {
+const NumericTextInput = ({ handleChange, term, placeholder = 0 }) => {
   return (
     <View>
       <TextInput
         style={styles.inputStyle}
         textAlign="center"
-        placeholder="0"
+        placeholder={placeholder.toString()}
         keyboardType="numeric"
         value={term}
         onChangeText={(term) => {
