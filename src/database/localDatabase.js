@@ -22,20 +22,25 @@ export const initDatabase = async () => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL
     );
-  `);
-};
 
-// tak ma wyglądać +- element tabeli trainingProgram w bazie
-const trainingProgramsItem = {
-  id: 0, //primary key //autoincrement
-  name: "", //TEXT
-  //array of objects
-  exercsises: [
-    {
-      exercise: {}, //object
-      sets: 0, //INTEGER
-      reps: 0, //INTEGER
-      breakTime: 0, //INTEGER (seconds)
-    },
-  ],
+    CREATE TABLE IF NOT EXISTS programExercises (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      programId INTEGER NOT NULL,
+      exerciseId INTEGER NOT NULL,
+      exerciseName TEXT NOT NULL,
+      description TEXT,
+      muscleGroup TEXT,
+      imageUrl TEXT,
+      FOREIGN KEY (programId) REFERENCES trainingPrograms(id)
+    ); 
+
+    CREATE TABLE IF NOT EXISTS exerciseSets(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      programExerciseId INTEGER NOT NULL,
+      setNumber INTEGER NOT NULL,
+      reps INTEGER NOT NULL,
+      breakTime INTEGER,
+      FOREIGN KEY (programExerciseId) REFERENCES programExercsises(id)
+    );
+  `);
 };

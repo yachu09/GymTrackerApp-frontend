@@ -1,38 +1,99 @@
-import React from "react";
+import React, { use, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import TrainingProgramBox from "../components/TrainingProgramBox";
 import AddProgramButton from "../components/AddProgramButton";
 import { useNavigation } from "@react-navigation/native";
+import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
+import { initDatabase } from "../database/localDatabase";
+import { useFocusEffect } from "@react-navigation/native";
+import WorkoutBar from "../components/WorkoutBar";
 
 const WorkoutPlanningScreen = () => {
+  const { programs, loadPrograms, dropAllTables } = useTrainingPrograms();
   const navigation = useNavigation();
-  //1. zapytaj LOKALNĄ baze (nie api) o plany treningowe
-  //2.1 jeśli w bazie nie ma nic wyświetl coś w stylu "No training program yet? Add one!" i pokaż guzik
-  // stwórz ekran do tworzenia planu uzywająć wyszukiwarki ćwiczeń
-  //2.2 jeśli w bazie są plany wyświetl je, a pod nimi przycisk do dodania nowego
-  //3 dodaj możliwość kliknięcia w plan i wystartowania treningu
-  //4 po starcie treningu przenieś do ekranu treningowego i zajeb z JEFITa mniej więcej wygląd UI odpalonego treningu
+
+  // useEffect(() => {
+  //   // if (programs.length) {
+  //   //   loadPrograms();
+  //   //   console.log("programs loaded");
+  //   // } else {
+  //   //   initDatabase();
+  //   //   loadPrograms();
+  //   // }
+  //   const initAndLoad = async () => {
+  //     await initDatabase();
+  //     await loadPrograms();
+  //     console.log("db init and programs loaded");
+  //   };
+  //   initAndLoad();
+  // }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const initAndLoad = () => {
+        try {
+          initDatabase();
+          loadPrograms();
+          console.log("init and load");
+        } catch (e) {
+          console.error("init and load error (WorkoutPlanningScreen)", e);
+        }
+      };
+
+      initAndLoad();
+    }, [])
+  );
+
+  //dodaj możliwość kliknięcia w plan i wystartowania treningu
+  //po starcie treningu przenieś do ekranu treningowego i zajeb z JEFITa mniej więcej wygląd UI odpalonego treningu
   return (
-    <View>
-      {/* chwilowe rozwiązanie - docelowo FlatList renderujący komponenty TrainingProgramBox na podstawie tego co zwróci baza */}
+    <View style={styles.container}>
       {/* zdarzenie onPress TrainingProgramBox ma przekierowywać do startu treningu zależnie od wybranego programu treningowego */}
-      <TrainingProgramBox programName={"Program #1"} onPress={() => {}} />
-      <TrainingProgramBox programName={"Program #2"} />
-      <TrainingProgramBox programName={"Program #3"} />
+      {!programs.length ? (
+        <Text style={styles.noPrograms}>
+          No training programs yet? Add one!
+        </Text>
+      ) : null}
+      <FlatList
+        data={programs}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => {
+          return (
+            <TrainingProgramBox
+              program={item}
+              onPress={() => {
+                navigation.navigate("ProgramDetails", { program: item });
+              }}
+            />
+          );
+        }}
+      />
       <AddProgramButton
         text="Add training program!"
         onPress={() => {
           navigation.navigate("AddProgram");
         }}
       />
+      {/* guzik do usuwania danych z bazy */}
+      <AddProgramButton
+        text="DEV: Delete all data"
+        onPress={() => {
+          dropAllTables();
+        }}
+      />
+      <WorkoutBar />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    marginTop: 300,
+    flex: 1,
+  },
+  noPrograms: {
+    fontSize: 18,
+    fontWeight: "bold",
+    alignSelf: "center",
+    marginTop: 200,
   },
 });
 
