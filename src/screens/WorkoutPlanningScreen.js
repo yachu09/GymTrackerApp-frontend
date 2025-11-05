@@ -1,4 +1,4 @@
-import React, { use, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import TrainingProgramBox from "../components/TrainingProgramBox";
 import AddProgramButton from "../components/AddProgramButton";
@@ -11,6 +11,7 @@ import WorkoutBar from "../components/WorkoutBar";
 const WorkoutPlanningScreen = () => {
   const { programs, loadPrograms, dropAllTables } = useTrainingPrograms();
   const navigation = useNavigation();
+  const [isWorkoutRunning, setIsWorkoutRunning] = useState(false);
 
   // useEffect(() => {
   //   // if (programs.length) {
@@ -61,6 +62,9 @@ const WorkoutPlanningScreen = () => {
               onPress={() => {
                 navigation.navigate("ProgramDetails", { program: item });
               }}
+              setIsWorkoutRunning={() => {
+                setIsWorkoutRunning(true);
+              }}
             />
           );
         }}
@@ -78,7 +82,13 @@ const WorkoutPlanningScreen = () => {
           dropAllTables();
         }}
       />
-      <WorkoutBar />
+      {isWorkoutRunning ? (
+        <WorkoutBar
+          setIsWorkoutRunning={() => {
+            setIsWorkoutRunning(false);
+          }}
+        />
+      ) : null}
     </View>
   );
 };

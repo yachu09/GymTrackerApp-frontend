@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const TrainingProgramBox = ({ program, onPress }) => {
+const TrainingProgramBox = ({ program, onPress, setIsWorkoutRunning }) => {
   const navigation = useNavigation();
 
   //sprawdza czy plan ma przypisane serie powtórzenia i czas przerwy
@@ -40,6 +40,7 @@ const TrainingProgramBox = ({ program, onPress }) => {
             style={styles.button}
             onPress={() => {
               navigation.navigate("Workout", { program });
+              setIsWorkoutRunning();
             }}
           >
             <Text style={styles.buttonText}>Start Workout</Text>
