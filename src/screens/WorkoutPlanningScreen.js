@@ -43,11 +43,9 @@ const WorkoutPlanningScreen = () => {
     }, [])
   );
 
-  //dodaj możliwość kliknięcia w plan i wystartowania treningu
   //po starcie treningu przenieś do ekranu treningowego i zajeb z JEFITa mniej więcej wygląd UI odpalonego treningu
   return (
     <View style={styles.container}>
-      {/* zdarzenie onPress TrainingProgramBox ma przekierowywać do startu treningu zależnie od wybranego programu treningowego */}
       {!programs.length ? (
         <Text style={styles.noPrograms}>
           No training programs yet? Add one!

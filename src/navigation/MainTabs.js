@@ -1,7 +1,5 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import SearchTabScreen from "../screens/SearchTabScreen";
-import WorkoutTabScreen from "../screens/WorkoutTabScreen";
 import SearchStack from "./SearchStack";
 import { FontAwesome6, Feather } from "@expo/vector-icons";
 import WorkoutStack from "./WorkoutStack";
@@ -17,7 +15,7 @@ export default function MainTabs() {
       }}
     >
       <Tab.Screen
-        name="WorkoutTabScreen"
+        name="WorkoutStack"
         component={WorkoutStack}
         options={{
           title: "Workout",
@@ -27,7 +25,7 @@ export default function MainTabs() {
         }}
       />
       <Tab.Screen
-        name="SearchTabScreen"
+        name="SearchStack"
         component={SearchStack}
         options={{
           title: "Search",

@@ -22,34 +22,6 @@ export function useTrainingPrograms() {
     };
   }, []);
 
-  //stary
-  // const loadPrograms = async () => {
-  //   try {
-  //     const db = await getDb();
-
-  //     const programs = await db.getAllAsync(`
-  //     SELECT * FROM trainingPrograms ORDER BY id DESC;
-  //   `);
-
-  //     const exercises = await db.getAllAsync(`
-  //     SELECT * FROM programExercises ORDER BY programId;
-  //   `);
-
-  //     const programsWithExercises = programs.map((program) => ({
-  //       ...program,
-  //       exercises: exercises.filter((ex) => ex.programId === program.id),
-  //     }));
-
-  //     setPrograms(programsWithExercises);
-  //     // console.log(
-  //     //   "Aktualne plany treningowe:",
-  //     //   JSON.stringify(programsWithExercises, null, 2)
-  //     // );
-  //   } catch (e) {
-  //     console.error("loadPrograms error:", e);
-  //   }
-  // };
-
   //nowy
   const loadPrograms = async () => {
     try {

@@ -11,8 +11,6 @@ const ExerciseSearchScreen = ({ route }) => {
   const [term, setTerm] = useState("");
   const [searchExercises, exercises, errorMessage] = useExercises([]);
   const [groupedExercises, setGroupedExercises] = useState([]);
-  //true or false - jeśli true wyświetl plusik do dodawania ćwiczeń który zmieni się po kliknieciu w haczyk jako że ćwiczenie zostało zakolejkowane do planu
-  //wtedy doda się to ćwiczenie do jakiegoś state, i jeśli dodawanie ćwiczeń zostanie zatwierdzone plan zostanie utworzony w bazie i nawigacja przekieruje do planów
   const fromProgramPlanning = route.params.fromProgramPlanning;
   const [exercisesToAdd, setExercisesToAdd] = useState([]);
 
@@ -62,7 +60,6 @@ const ExerciseSearchScreen = ({ route }) => {
     );
   };
 
-  //const groupedExercises = groupExercisesByMuscleGroup(exercises);
   //effect wywołuje się za każdym razem gdy zmienia się jeden z elementów drugiego argumentu [exercises, term]
   useEffect(() => {
     const filtered = filterExercises(exercises, term);
@@ -71,7 +68,6 @@ const ExerciseSearchScreen = ({ route }) => {
   }, [exercises, term]);
 
   // console.log(JSON.stringify(groupedExercises, null, 2));
-  // console.log(`search bar term: ${term}`);
   return (
     <View style={styles.container}>
       <SearchBar

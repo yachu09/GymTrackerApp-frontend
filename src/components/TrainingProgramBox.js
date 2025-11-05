@@ -1,8 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const TrainingProgramBox = ({ program, onPress }) => {
+  const navigation = useNavigation();
+
   //sprawdza czy plan ma przypisane serie powtórzenia i czas przerwy
   const isProgramSetUp = (program) => {
     if (!program?.exercises || program.exercises.length === 0) return false;
@@ -33,7 +36,12 @@ const TrainingProgramBox = ({ program, onPress }) => {
         <Text>{program.exercises.length} exercises</Text>
         {/* jeśli tak renderuje przycisk aby zacząć trening */}
         {isProgramSetUp(program) ? (
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate("Workout", { program });
+            }}
+          >
             <Text style={styles.buttonText}>Start Workout</Text>
           </TouchableOpacity>
         ) : (

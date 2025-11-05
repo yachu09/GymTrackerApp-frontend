@@ -1,16 +1,15 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WorkoutPlanningScreen from "../screens/WorkoutPlanningScreen";
-import WorkoutTabScreen from "../screens/WorkoutTabScreen";
 import AddProgramScreen from "../screens/AddProgramScreen";
 import ExerciseSearchScreen from "../screens/ExerciseSearchScreen";
 import ProgramDetailsScreen from "../screens/ProgramDetailsScreen";
+import WorkoutScreen from "../screens/WorkoutScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function WorkoutStack() {
   return (
     <Stack.Navigator initialRouteName="WorkoutPlanning">
-      <Stack.Screen name="WorkoutTab" component={WorkoutTabScreen} />
       <Stack.Screen
         name="WorkoutPlanning"
         component={WorkoutPlanningScreen}
@@ -31,6 +30,11 @@ export default function WorkoutStack() {
         name="ExerciseSearch"
         component={ExerciseSearchScreen}
         options={{ title: "Add exercises" }}
+      />
+      <Stack.Screen
+        name="Workout"
+        component={WorkoutScreen}
+        options={{ title: "workout screen" }}
       />
     </Stack.Navigator>
   );

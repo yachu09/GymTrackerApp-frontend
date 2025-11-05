@@ -20,14 +20,13 @@ const AddProgramScreen = ({ route }) => {
     console.log(`term: ${term}`);
     if (term.length && exercisesToProgram.length) {
       try {
-        // Czekamy aż cały zapis do bazy się zakończy
         const programId = await addProgramWithExercises(
           term,
           exercisesToProgram
         );
         console.log(`Utworzono nowy plan - id: ${programId}`);
 
-        // Dopiero teraz wracamy na początek stacka
+        //nawigacja na początek stacka
         navigation.popToTop();
       } catch (err) {
         console.error("Błąd podczas tworzenia programu:", err);
@@ -76,8 +75,6 @@ const AddProgramScreen = ({ route }) => {
         text="Create training program"
         onPress={() => {
           createProgram();
-          // navigation.navigate("WorkoutPlanning");
-          // navigation.popToTop();
         }}
       />
     </View>
