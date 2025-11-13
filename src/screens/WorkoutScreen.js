@@ -160,7 +160,9 @@ const WorkoutScreen = ({ route }) => {
           </View>
         )}
       />
-      <Text>{timeLeft}</Text>
+      <View style={styles.timerContainer}>
+        <Text style={styles.timerText}>{timeLeft}</Text>
+      </View>
       <StandardButton
         text="Log Set"
         onPress={() => {
@@ -203,6 +205,23 @@ const styles = StyleSheet.create({
   done: {
     alignSelf: "center",
     marginRight: 15,
+  },
+  timerContainer: {
+    backgroundColor: "lightblue",
+    height: 50,
+    borderRadius: 10,
+    flexDirection: "row",
+    padding: 10,
+    width: 80,
+    marginHorizontal: 15,
+    marginTop: 10,
+    justifyContent: "center",
+  },
+  timerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    alignSelf: "center",
+    color: "black",
   },
 });
 
