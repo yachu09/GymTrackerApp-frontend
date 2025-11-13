@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import StandardTextInput from "../components/StandardTextInput";
 import { useNavigation } from "@react-navigation/native";
-import AddProgramButton from "../components/AddProgramButton";
+import StandardButton from "../components/StandardButton";
 
 const AddProgramScreen = ({ route }) => {
   const { programs, loadPrograms, addProgramWithExercises } =
@@ -62,7 +62,7 @@ const AddProgramScreen = ({ route }) => {
           ? `You have selected ${exercisesToProgram.length} exercises`
           : "Select exercises first"}
       </Text>
-      <AddProgramButton
+      <StandardButton
         text="Add exercises"
         onPress={() => {
           navigation.navigate("ExerciseSearch", {
@@ -70,7 +70,7 @@ const AddProgramScreen = ({ route }) => {
           });
         }}
       />
-      <AddProgramButton
+      <StandardButton
         style={styles.createProgramButton}
         text="Create training program"
         onPress={() => {

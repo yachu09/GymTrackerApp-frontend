@@ -1,7 +1,13 @@
 import React from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 
-const NumericTextInput = ({ handleChange, term, placeholder = 0 }) => {
+const NumericTextInput = ({
+  handleChange,
+  term,
+  placeholder = 0,
+  onFocus,
+  onBlur,
+}) => {
   return (
     <View>
       <TextInput
@@ -15,6 +21,8 @@ const NumericTextInput = ({ handleChange, term, placeholder = 0 }) => {
         }}
         autoCapitalize="none"
         autoCorrect={false}
+        onFocus={onFocus ? onFocus : undefined}
+        onBlur={onBlur ? onBlur : undefined}
       />
     </View>
   );

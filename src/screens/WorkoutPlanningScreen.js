@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import TrainingProgramBox from "../components/TrainingProgramBox";
-import AddProgramButton from "../components/AddProgramButton";
+import StandardButton from "../components/StandardButton";
 import { useNavigation } from "@react-navigation/native";
 import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
+import { useWorkouts } from "../hooks/useWorkouts";
 import { initDatabase } from "../database/localDatabase";
 import { useFocusEffect } from "@react-navigation/native";
 import WorkoutBar from "../components/WorkoutBar";
@@ -12,6 +13,8 @@ const WorkoutPlanningScreen = () => {
   const { programs, loadPrograms, dropAllTables } = useTrainingPrograms();
   const navigation = useNavigation();
   const [isWorkoutRunning, setIsWorkoutRunning] = useState(false);
+
+  const { dropAllWorkouts } = useWorkouts();
 
   // useEffect(() => {
   //   // if (programs.length) {
@@ -69,17 +72,23 @@ const WorkoutPlanningScreen = () => {
           );
         }}
       />
-      <AddProgramButton
+      <StandardButton
         text="Add training program!"
         onPress={() => {
           navigation.navigate("AddProgram");
         }}
       />
       {/* guzik do usuwania danych z bazy */}
-      <AddProgramButton
-        text="DEV: Delete all data"
+      <StandardButton
+        text="DEV: Delete all program data"
         onPress={() => {
           dropAllTables();
+        }}
+      />
+      <StandardButton
+        text="DEV: Delete all workout history"
+        onPress={() => {
+          dropAllWorkouts();
         }}
       />
       {isWorkoutRunning ? (

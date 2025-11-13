@@ -4,7 +4,7 @@ import useExercises from "../hooks/useExercises";
 import SearchBar from "../components/SearchBar";
 import ExercisesList from "../components/ExercisesList";
 import { AntDesign } from "@expo/vector-icons";
-import AddProgramButton from "../components/AddProgramButton";
+import StandardButton from "../components/StandardButton";
 import { useNavigation } from "@react-navigation/native";
 
 const ExerciseSearchScreen = ({ route }) => {
@@ -88,7 +88,7 @@ const ExerciseSearchScreen = ({ route }) => {
       </Text>
 
       {fromProgramPlanning ? (
-        <AddProgramButton
+        <StandardButton
           text="Add selected exercises"
           onPress={() => {
             navigation.navigate("AddProgram", {

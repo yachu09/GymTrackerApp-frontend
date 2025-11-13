@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, StyleSheet, FlatList } from "react-native";
 import ProgramExerciseDetail from "../components/ProgramExerciseDetail";
-import AddProgramButton from "../components/AddProgramButton";
+import StandardButton from "../components/StandardButton";
 import { useNavigation } from "@react-navigation/native";
 
 const ProgramDetailsScreen = ({ route }) => {
@@ -17,7 +17,7 @@ const ProgramDetailsScreen = ({ route }) => {
           return <ProgramExerciseDetail exercise={item} />;
         }}
       />
-      <AddProgramButton
+      <StandardButton
         text="Done"
         onPress={() => {
           navigation.pop();

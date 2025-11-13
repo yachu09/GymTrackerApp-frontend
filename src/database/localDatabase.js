@@ -17,6 +17,7 @@ export const executeSql = async (sql, params = []) => {
 
 export const initDatabase = async () => {
   const db = await getDb();
+  //tabele związane z planami treningowymi
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS trainingPrograms (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,6 +42,28 @@ export const initDatabase = async () => {
       reps INTEGER NOT NULL,
       breakTime INTEGER,
       FOREIGN KEY (programExerciseId) REFERENCES programExercsises(id)
+    );
+  `);
+
+  //tabele związane z zapisywaniem odbytych treningów
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS workouts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      programId INTEGER NOT NULL,
+      date TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (programId) REFERENCES trainingPrograms(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS workoutSets (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      workoutId INTEGER NOT NULL,
+      programExerciseId INTEGER NOT NULL,
+      setNumber INTEGER NOT NULL,
+      weight REAL,
+      reps INTEGER,
+      FOREIGN KEY (workoutId) REFERENCES workouts(id),
+      FOREIGN KEY (programExerciseId) REFERENCES programExercises(id),
+      UNIQUE(workoutId, programExerciseId, setNumber)
     );
   `);
 };

@@ -11,17 +11,20 @@ const StandardButton = ({ onPress, text }) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "lightgray",
+    backgroundColor: "lightblue",
     height: 50,
     borderRadius: 10,
     flexDirection: "row",
     padding: 10,
+    marginHorizontal: 15,
+    marginTop: 10,
+    justifyContent: "center",
   },
   buttonText: {
     fontSize: 18,
     fontWeight: "bold",
     alignSelf: "center",
-    color: "darkgray",
+    color: "black",
   },
 });
 
