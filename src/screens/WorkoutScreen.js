@@ -6,21 +6,25 @@ import {
   Image,
   FlatList,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import StandardButton from "../components/StandardButton";
 import SetNumber from "../components/SetNumber";
 import NumericTextInput from "../components/NumericTextInput";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useWorkouts } from "../hooks/useWorkouts";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const { width } = Dimensions.get("window");
 
 const WorkoutScreen = ({ route }) => {
   const program = route.params.program;
   const exercises = program.exercises;
+  //FIXME chwilowe rozwiązanie bo initialSeconds ma stale przypisaną wartość
   const initialSeconds = exercises[0].sets[0].breakTime;
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const [isBreak, setIsBreak] = useState(false);
+  //FIXME do zarządzania kolorem haczyka czy ćwiczenie jest wykonane
   const [isDone, setIsDone] = useState(false);
 
   const [focusedSet, setFocusedSet] = useState(null);
@@ -40,12 +44,14 @@ const WorkoutScreen = ({ route }) => {
           if (prev <= 1) {
             clearInterval(interval);
             setIsBreak(false);
-            return initialSeconds; //reset czasu po zakonczeniu przerwy
+            return initialSeconds;
           }
           return prev - 1;
         });
       }, 1000);
     }
+
+    //check if last set
 
     return () => {
       if (interval) clearInterval(interval);
@@ -107,6 +113,12 @@ const WorkoutScreen = ({ route }) => {
     setIsBreak(true);
   };
 
+  const skipRest = () => {
+    setIsBreak(false);
+    //chwilowe rozwiązanie bo initialSeconds ma stale przypisaną wartość
+    setTimeLeft(initialSeconds);
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -162,6 +174,19 @@ const WorkoutScreen = ({ route }) => {
       />
       <View style={styles.timerContainer}>
         <Text style={styles.timerText}>{timeLeft}</Text>
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => {
+            skipRest();
+          }}
+        >
+          <Text style={{ fontSize: 10, alignSelf: "center" }}>Skip rest</Text>
+          <Ionicons
+            name="play-skip-forward-circle-outline"
+            size={30}
+            style={{ marginLeft: 20 }}
+          />
+        </TouchableOpacity>
       </View>
       <StandardButton
         text="Log Set"
@@ -208,11 +233,11 @@ const styles = StyleSheet.create({
   },
   timerContainer: {
     backgroundColor: "lightblue",
-    height: 50,
+    height: 60,
     borderRadius: 10,
     flexDirection: "row",
     padding: 10,
-    width: 80,
+    width: 120,
     marginHorizontal: 15,
     marginTop: 10,
     justifyContent: "center",
@@ -221,7 +246,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     alignSelf: "center",
-    color: "black",
+    color: "blue",
   },
 });
 

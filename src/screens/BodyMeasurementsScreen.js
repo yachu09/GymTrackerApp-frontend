@@ -16,9 +16,9 @@ const BodyMeasurementsScreen = () => {
   const prepareWeightDataForGraph = (data) => {
     return data.map((item) => ({
       value: item.value,
-      date: item.date, // zachowujemy oryginalną datę
-      dataPointText: item.value.toString(), // do wyświetlenia przy punkcie
-      label: item.date, // opcjonalnie, jeśli chcesz pokazać datę na osi X
+      date: item.date,
+      dataPointText: item.value.toString(),
+      label: item.date,
     }));
   };
 
@@ -32,6 +32,26 @@ const BodyMeasurementsScreen = () => {
   const calcAvgBasedOnPeriod = () => {};
   const calcMinBasedOnPeriod = () => {};
   const calcMaxBasedOnPeriod = () => {};
+
+  const generateGraphLabels = (data) => {
+    // let sum = 0;
+    // for (let el of data) {
+    //   sum += el.value;
+    // }
+    // const avg = sum / data.length;
+    const min = Math.min(...data.map((item) => item.value));
+    const max = Math.max(...data.map((item) => item.value));
+    const minLabel = Math.floor(min - 1);
+    const maxLabel = Math.floor(max + 1);
+    const labels = [];
+    for (let i = minLabel; i <= maxLabel; i++) {
+      labels.push(i.toString());
+    }
+    return labels;
+  };
+
+  const yLabels = generateGraphLabels(weightDataToGraph);
+  // console.log(JSON.stringify(weightDataToGraph, null, 2));
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
@@ -59,6 +79,10 @@ const BodyMeasurementsScreen = () => {
       <View style={styles.chartContainer}>
         <LineChart
           data={weightDataToGraph}
+          yAxisLabelTexts={yLabels}
+          fromZero={false}
+          noOfSections={yLabels.length - 1}
+          stepHeight={50}
           dataPointsColor={"blue"}
           color={"lightblue"}
           thickness={3}
@@ -66,29 +90,12 @@ const BodyMeasurementsScreen = () => {
           isAnimated
           yAxisThickness={0}
           xAxisThickness={0}
-          // hideYAxisText
           textColor1="blue"
           textShiftY={-8}
           textShiftX={-3}
           textFontSize={12}
-          hideRules
           xAxisLabelTextStyle={{ fontSize: 8 }}
-          // startFromZero={false}
-          //chwilowo na sztywno
-          fromZero={false}
-          yAxisLabelTexts={[
-            "60",
-            "62",
-            "64",
-            "66",
-            "68",
-            "70",
-            "72",
-            "74",
-            "76",
-            "78",
-            "80",
-          ]}
+          yAxisLabelTextStyle={{ fontSize: 10 }}
         />
       </View>
       <View style={styles.weigthStatsView}>

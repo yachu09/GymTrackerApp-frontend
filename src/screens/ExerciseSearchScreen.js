@@ -6,6 +6,7 @@ import ExercisesList from "../components/ExercisesList";
 import { AntDesign } from "@expo/vector-icons";
 import StandardButton from "../components/StandardButton";
 import { useNavigation } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ExerciseSearchScreen = ({ route }) => {
   const [term, setTerm] = useState("");
@@ -69,55 +70,57 @@ const ExerciseSearchScreen = ({ route }) => {
 
   // console.log(JSON.stringify(groupedExercises, null, 2));
   return (
-    <View style={styles.container}>
-      <SearchBar
-        term={term}
-        onTermChange={(newTerm) => {
-          setTerm(newTerm);
-        }}
-        onTermSubmit={() => {}}
-      />
-      <Text style={styles.searchResultCount}>
-        We found{" "}
-        {groupedExercises.reduce(
-          (total, group) => total + group.exercises.length,
-          0
-        )}{" "}
-        exercise/s
-        {term ? " that match your search" : null}
-      </Text>
+    <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
+      <View style={styles.container}>
+        <SearchBar
+          term={term}
+          onTermChange={(newTerm) => {
+            setTerm(newTerm);
+          }}
+          onTermSubmit={() => {}}
+        />
+        <Text style={styles.searchResultCount}>
+          We found{" "}
+          {groupedExercises.reduce(
+            (total, group) => total + group.exercises.length,
+            0
+          )}{" "}
+          exercise/s
+          {term ? " that match your search" : null}
+        </Text>
 
-      {fromProgramPlanning ? (
-        <StandardButton
-          text="Add selected exercises"
-          onPress={() => {
-            navigation.navigate("AddProgram", {
-              idsToAdd: selectedExercises,
-              exercises: exercises,
-            });
+        {fromProgramPlanning ? (
+          <StandardButton
+            text="Add selected exercises"
+            onPress={() => {
+              navigation.navigate("AddProgram", {
+                idsToAdd: selectedExercises,
+                exercises: exercises,
+              });
+            }}
+          />
+        ) : null}
+
+        <FlatList
+          data={groupedExercises}
+          keyExtractor={(item) => item.muscleGroup}
+          renderItem={({ item }) => {
+            return (
+              <ExercisesList
+                header={`${
+                  item.muscleGroup.charAt(0).toUpperCase() +
+                  item.muscleGroup.slice(1)
+                } Exercises`}
+                exercises={item.exercises}
+                fromProgramPlanning={fromProgramPlanning}
+                selectedExercises={selectedExercises}
+                toggleSelectExercise={toggleSelectExercise}
+              />
+            );
           }}
         />
-      ) : null}
-
-      <FlatList
-        data={groupedExercises}
-        keyExtractor={(item) => item.muscleGroup}
-        renderItem={({ item }) => {
-          return (
-            <ExercisesList
-              header={`${
-                item.muscleGroup.charAt(0).toUpperCase() +
-                item.muscleGroup.slice(1)
-              } Exercises`}
-              exercises={item.exercises}
-              fromProgramPlanning={fromProgramPlanning}
-              selectedExercises={selectedExercises}
-              toggleSelectExercise={toggleSelectExercise}
-            />
-          );
-        }}
-      />
-    </View>
+      </View>
+    </LinearGradient>
   );
 };
 

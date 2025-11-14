@@ -8,6 +8,7 @@ import { useWorkouts } from "../hooks/useWorkouts";
 import { initDatabase } from "../database/localDatabase";
 import { useFocusEffect } from "@react-navigation/native";
 import WorkoutBar from "../components/WorkoutBar";
+import { LinearGradient } from "expo-linear-gradient";
 
 const WorkoutPlanningScreen = () => {
   const { programs, loadPrograms, dropAllTables } = useTrainingPrograms();
@@ -49,56 +50,58 @@ const WorkoutPlanningScreen = () => {
 
   //po starcie treningu przenieś do ekranu treningowego i zajeb z JEFITa mniej więcej wygląd UI odpalonego treningu
   return (
-    <View style={styles.container}>
-      {!programs.length ? (
-        <Text style={styles.noPrograms}>
-          No training programs yet? Add one!
-        </Text>
-      ) : null}
-      <FlatList
-        data={programs}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => {
-          return (
-            <TrainingProgramBox
-              program={item}
-              onPress={() => {
-                navigation.navigate("ProgramDetails", { program: item });
-              }}
-              setIsWorkoutRunning={() => {
-                setIsWorkoutRunning(true);
-              }}
-            />
-          );
-        }}
-      />
-      <StandardButton
-        text="Add training program!"
-        onPress={() => {
-          navigation.navigate("AddProgram");
-        }}
-      />
-      {/* guzik do usuwania danych z bazy */}
-      <StandardButton
-        text="DEV: Delete all program data"
-        onPress={() => {
-          dropAllTables();
-        }}
-      />
-      <StandardButton
-        text="DEV: Delete all workout history"
-        onPress={() => {
-          dropAllWorkouts();
-        }}
-      />
-      {isWorkoutRunning ? (
-        <WorkoutBar
-          setIsWorkoutRunning={() => {
-            setIsWorkoutRunning(false);
+    <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
+      <View style={styles.container}>
+        {!programs.length ? (
+          <Text style={styles.noPrograms}>
+            No training programs yet? Add one!
+          </Text>
+        ) : null}
+        <FlatList
+          data={programs}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => {
+            return (
+              <TrainingProgramBox
+                program={item}
+                onPress={() => {
+                  navigation.navigate("ProgramDetails", { program: item });
+                }}
+                setIsWorkoutRunning={() => {
+                  setIsWorkoutRunning(true);
+                }}
+              />
+            );
           }}
         />
-      ) : null}
-    </View>
+        <StandardButton
+          text="Add training program!"
+          onPress={() => {
+            navigation.navigate("AddProgram");
+          }}
+        />
+        {/* guzik do usuwania danych z bazy */}
+        <StandardButton
+          text="DEV: Delete all program data"
+          onPress={() => {
+            dropAllTables();
+          }}
+        />
+        <StandardButton
+          text="DEV: Delete all workout history"
+          onPress={() => {
+            dropAllWorkouts();
+          }}
+        />
+        {isWorkoutRunning ? (
+          <WorkoutBar
+            setIsWorkoutRunning={() => {
+              setIsWorkoutRunning(false);
+            }}
+          />
+        ) : null}
+      </View>
+    </LinearGradient>
   );
 };
 

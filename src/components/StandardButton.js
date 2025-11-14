@@ -13,6 +13,9 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "lightblue",
     height: 50,
+    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+    // borderWidth: 1,
+    // borderColor: "white",
     borderRadius: 10,
     flexDirection: "row",
     padding: 10,

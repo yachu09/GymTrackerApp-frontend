@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
+import Feather from "@expo/vector-icons/Feather";
 
 const WorkoutBar = ({ setIsWorkoutRunning }) => {
-  const [seconds, setSeconds] = useState(3590);
+  const [seconds, setSeconds] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setSeconds((prev) => prev + 1);
     }, 1000);
 
-    return () => clearInterval(interval); // cleanup przy unmount
+    return () => clearInterval(interval);
   }, []);
 
   const formatTime = (s) => {
@@ -21,8 +23,23 @@ const WorkoutBar = ({ setIsWorkoutRunning }) => {
     return `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
   };
 
+  const onSave = () => {};
+  const onDelete = () => {
+    //TODO delete workout from local db
+
+    setIsModalVisible(false);
+    setIsWorkoutRunning(false);
+  };
+
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        if (isModalVisible) {
+          setIsModalVisible(false);
+        } else {
+        }
+      }}
+    >
       <View style={styles.container}>
         <View style={styles.row}>
           <View style={styles.column}>
@@ -31,10 +48,29 @@ const WorkoutBar = ({ setIsWorkoutRunning }) => {
           </View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => setIsWorkoutRunning()}
+            onPress={() => {
+              setIsModalVisible(true);
+              // setIsWorkoutRunning();
+            }}
           >
             <Text style={styles.buttonText}>End Workout</Text>
           </TouchableOpacity>
+          {isModalVisible && (
+            <View style={styles.localModalContainer}>
+              <View style={styles.localModalContent}>
+                <TouchableOpacity>
+                  <Feather name="save" size={24} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    onDelete();
+                  }}
+                >
+                  <Feather name="trash-2" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>
@@ -44,14 +80,15 @@ const WorkoutBar = ({ setIsWorkoutRunning }) => {
 //FIXME fix styling to match JEFIT workout bar
 const styles = StyleSheet.create({
   container: {
+    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     margin: 15,
     backgroundColor: "lightgray",
-    padding: 10,
     height: 50,
     borderRadius: 25,
   },
   column: {
     flexDirection: "column",
+    padding: 10,
   },
   row: {
     flexDirection: "row",
@@ -59,17 +96,42 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "lightblue",
-    height: 40,
-    borderRadius: 20,
+    width: 100,
+    height: 50,
+    borderRadius: 25,
     justifyContent: "center",
   },
   buttonText: {
-    fontSize: 10,
+    fontSize: 12,
     paddingHorizontal: 10,
+    alignSelf: "center",
   },
   timer: {
     fontSize: 10,
     color: "blue",
+  },
+  localModalContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    // backgroundColor: "rgba(0,0,0,0.6)",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "flex-end",
+    zIndex: 10,
+  },
+  localModalContent: {
+    backgroundColor: "#ed4242",
+    padding: 10,
+    borderRadius: 10,
+    flexDirection: "row",
+    height: 50,
+    borderRadius: 25,
+    width: 100,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
 
