@@ -122,6 +122,37 @@ export function useWorkouts() {
     }
   };
 
+  const dropWorkoutById = async (workoutId) => {
+    try {
+      const db = await getDb();
+      await db.withTransactionAsync(async () => {
+        await db.runAsync("DELETE FROM workoutSets WHERE workoutId = ?;", [
+          workoutId,
+        ]);
+        await db.runAsync("DELETE FROM workouts WHERE id = ?;", [workoutId]);
+      });
+      console.log(`Treningi o ID: ${workoutId} zostały usunięte.`);
+      await loadWorkouts();
+    } catch (err) {}
+    return;
+  };
+
+  const getLatestWorkoutId = async () => {
+    try {
+      const db = await getDb();
+      const rows = await db.getAllAsync(
+        `SELECT id FROM workouts ORDER BY date DESC LIMIT 1;`
+      );
+
+      if (rows.length === 0) return null;
+
+      return rows[0].id;
+    } catch (e) {
+      console.error("getLatestWorkoutId error:", e);
+      return null;
+    }
+  };
+
   const dropAllWorkouts = async () => {
     try {
       const db = await getDb();
@@ -143,5 +174,7 @@ export function useWorkouts() {
     startWorkout,
     addWorkoutSet,
     dropAllWorkouts,
+    dropWorkoutById,
+    getLatestWorkoutId,
   };
 }

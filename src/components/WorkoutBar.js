@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 
-const WorkoutBar = ({ setIsWorkoutRunning }) => {
+const WorkoutBar = ({ onDelete }) => {
   const [seconds, setSeconds] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -23,13 +23,7 @@ const WorkoutBar = ({ setIsWorkoutRunning }) => {
     return `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
   };
 
-  const onSave = () => {};
-  const onDelete = () => {
-    //TODO delete workout from local db
-
-    setIsModalVisible(false);
-    setIsWorkoutRunning(false);
-  };
+  // const onSave = () => {};
 
   return (
     <TouchableOpacity
@@ -50,7 +44,6 @@ const WorkoutBar = ({ setIsWorkoutRunning }) => {
             style={styles.button}
             onPress={() => {
               setIsModalVisible(true);
-              // setIsWorkoutRunning();
             }}
           >
             <Text style={styles.buttonText}>End Workout</Text>
@@ -61,11 +54,7 @@ const WorkoutBar = ({ setIsWorkoutRunning }) => {
                 <TouchableOpacity>
                   <Feather name="save" size={24} color="black" />
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    onDelete();
-                  }}
-                >
+                <TouchableOpacity onPress={() => onDelete()}>
                   <Feather name="trash-2" size={24} color="black" />
                 </TouchableOpacity>
               </View>

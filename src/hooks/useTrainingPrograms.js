@@ -47,10 +47,10 @@ export function useTrainingPrograms() {
       });
 
       setPrograms(programsWithExercises);
-      console.log(
-        "Programy z ćwiczeniami i seriami:",
-        JSON.stringify(programsWithExercises, null, 2)
-      );
+      // console.log(
+      //   "Programy z ćwiczeniami i seriami:",
+      //   JSON.stringify(programsWithExercises, null, 2)
+      // );
     } catch (e) {
       console.error("loadPrograms error:", e);
     }

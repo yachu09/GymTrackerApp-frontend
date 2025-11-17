@@ -15,7 +15,10 @@ const WorkoutPlanningScreen = () => {
   const navigation = useNavigation();
   const [isWorkoutRunning, setIsWorkoutRunning] = useState(false);
 
-  const { dropAllWorkouts } = useWorkouts();
+  const { dropAllWorkouts, dropWorkoutById, getLatestWorkoutId } =
+    useWorkouts();
+
+  const [latestWorkoutId, setLatestWorkoutId] = useState(null);
 
   // useEffect(() => {
   //   // if (programs.length) {
@@ -34,11 +37,14 @@ const WorkoutPlanningScreen = () => {
   // }, []);
   useFocusEffect(
     React.useCallback(() => {
-      const initAndLoad = () => {
+      const initAndLoad = async () => {
         try {
           initDatabase();
           loadPrograms();
+          const id = await getLatestWorkoutId();
+          setLatestWorkoutId(id);
           console.log("init and load");
+          console.log("latest workout ID:", id);
         } catch (e) {
           console.error("init and load error (WorkoutPlanningScreen)", e);
         }
@@ -87,6 +93,7 @@ const WorkoutPlanningScreen = () => {
             dropAllTables();
           }}
         />
+        {/* guzik do usuwania historii treningów */}
         <StandardButton
           text="DEV: Delete all workout history"
           onPress={() => {
@@ -95,7 +102,8 @@ const WorkoutPlanningScreen = () => {
         />
         {isWorkoutRunning ? (
           <WorkoutBar
-            setIsWorkoutRunning={() => {
+            onDelete={() => {
+              dropWorkoutById(latestWorkoutId);
               setIsWorkoutRunning(false);
             }}
           />
