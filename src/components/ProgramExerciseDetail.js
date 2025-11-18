@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import NumericTextInput from "./NumericTextInput";
-import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 
 const ProgramExerciseDetail = ({ exercise }) => {
+  const { addSetsRepsAndBreakTime } = useContext(TrainingProgramsContext);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [sets, setSets] = useState(0);
@@ -13,22 +15,9 @@ const ProgramExerciseDetail = ({ exercise }) => {
   const [repsOfSets, setRepsOfSets] = useState([]);
 
   const [confirmed, setConfirmed] = useState(false);
-  //repsOfSets is an "keyed array" - an array of objects
-  // const repsOfSets = [
-  // {
-  //   set: '1',
-  //   reps: 10
-  // },
-  // {
-  //   set: 2,
-  //   reps: 12
-  // }
-  // ];
-
-  const { addSetsRepsAndBreakTime } = useTrainingPrograms();
 
   useEffect(() => {
-    console.log(`exercise: ${exercise.exerciseName}`);
+    // console.log(`exercise: ${exercise.exerciseName}`);
     console.log(JSON.stringify(repsOfSets, null, 2));
   }, [repsOfSets]);
 
@@ -54,7 +43,6 @@ const ProgramExerciseDetail = ({ exercise }) => {
   }, [exercise]);
 
   const items = [];
-
   for (let i = 0; i < sets; i++) {
     items.push(
       <View style={styles.repsContainer} key={i}>
@@ -97,7 +85,6 @@ const ProgramExerciseDetail = ({ exercise }) => {
   const assignRepsToSets = (reps, setNumber) => {
     setRepsOfSets((prev) => {
       const existingIndex = prev.findIndex((s) => s.set === setNumber);
-
       if (existingIndex !== -1) {
         const updated = [...prev];
         updated[existingIndex] = { ...updated[existingIndex], reps: reps };
@@ -173,7 +160,7 @@ const ProgramExerciseDetail = ({ exercise }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "lightblue",
-    borderRadius: 10,
+    borderRadius: 25,
     marginHorizontal: 15,
     marginTop: 10,
     padding: 10,

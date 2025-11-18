@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import StandardTextInput from "../components/StandardTextInput";
 import { useNavigation } from "@react-navigation/native";
 import StandardButton from "../components/StandardButton";
 import { LinearGradient } from "expo-linear-gradient";
+import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 
 const AddProgramScreen = ({ route }) => {
-  const { programs, loadPrograms, addProgramWithExercises } =
-    useTrainingPrograms();
+  const { state: programs, addProgramWithExercises } = useContext(
+    TrainingProgramsContext
+  );
+
   const [term, setTerm] = useState("");
   const navigation = useNavigation();
 
@@ -17,37 +19,35 @@ const AddProgramScreen = ({ route }) => {
   //   console.log("Aktualny stan bazy:", JSON.stringify(programs, null, 2));
   // }, [programs]);
 
-  const createProgram = async () => {
-    console.log(`term: ${term}`);
-    if (term.length && exercisesToProgram.length) {
-      try {
-        const programId = await addProgramWithExercises(
-          term,
-          exercisesToProgram
-        );
-        console.log(`Utworzono nowy plan - id: ${programId}`);
-
-        //nawigacja na początek stacka
-        navigation.popToTop();
-      } catch (err) {
-        console.error("Błąd podczas tworzenia programu:", err);
-      }
-    } else {
-      console.log("Nie utworzono nowego planu, brakuje nazwy");
-    }
-  };
-
   const idsToAdd = route.params.idsToAdd;
   const exercises = route.params.exercises;
-  let exercisesToProgram = [];
-  if (idsToAdd.length && exercises.length) {
-    exercisesToProgram = exercises.filter((exercise) =>
-      idsToAdd.includes(exercise.id)
-    );
-    // console.log(
-    //   `Selected exercises: ${JSON.stringify(exercisesToProgram, null, 2)}`
-    // );
-  }
+
+  const exercisesToProgram =
+    idsToAdd?.length && exercises?.length
+      ? exercises.filter((exercise) => idsToAdd.includes(exercise.id))
+      : [];
+
+  const createProgram = async () => {
+    if (!term.length) {
+      console.log("nie utworzono planu: brakuje nazwy");
+      return;
+    }
+
+    if (!exercisesToProgram.length) {
+      console.log("nie dodano ćwiczeń (lista jest pusta)");
+      return;
+    }
+
+    try {
+      console.log(`tworzenie planu: "${term}"...`);
+      const programId = await addProgramWithExercises(term, exercisesToProgram);
+
+      console.log(`utworzono nowy plan o id: ${programId}`);
+      navigation.popToTop();
+    } catch (err) {
+      console.error("błąd podczas tworzenia programu:", err);
+    }
+  };
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>

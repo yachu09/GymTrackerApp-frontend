@@ -3,15 +3,21 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 import TrainingProgramBox from "../components/TrainingProgramBox";
 import StandardButton from "../components/StandardButton";
 import { useNavigation } from "@react-navigation/native";
-import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import { initDatabase } from "../database/localDatabase";
 import { useFocusEffect } from "@react-navigation/native";
 import WorkoutBar from "../components/WorkoutBar";
 import { LinearGradient } from "expo-linear-gradient";
 import { Context as WorkoutContext } from "../context/WorkoutContext";
+import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 
 const WorkoutPlanningScreen = () => {
-  const { programs, loadPrograms, dropAllTables } = useTrainingPrograms();
+  const {
+    state: programs,
+    loadPrograms,
+    addProgramWithExercises,
+    dropAllTables,
+  } = useContext(TrainingProgramsContext);
+
   const navigation = useNavigation();
 
   const {
