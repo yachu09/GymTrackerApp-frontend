@@ -1,50 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import TrainingProgramBox from "../components/TrainingProgramBox";
 import StandardButton from "../components/StandardButton";
 import { useNavigation } from "@react-navigation/native";
 import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
-import { useWorkouts } from "../hooks/useWorkouts";
 import { initDatabase } from "../database/localDatabase";
 import { useFocusEffect } from "@react-navigation/native";
 import WorkoutBar from "../components/WorkoutBar";
 import { LinearGradient } from "expo-linear-gradient";
+import { Context as WorkoutContext } from "../context/WorkoutContext";
 
 const WorkoutPlanningScreen = () => {
   const { programs, loadPrograms, dropAllTables } = useTrainingPrograms();
   const navigation = useNavigation();
-  const [isWorkoutRunning, setIsWorkoutRunning] = useState(false);
 
-  const { dropAllWorkouts, dropWorkoutById, getLatestWorkoutId } =
-    useWorkouts();
+  const {
+    state: { workouts, isWorkoutRunning, currentWorkoutId },
+    loadWorkouts,
+    startWorkout,
+    endWorkout,
+    addWorkoutSet,
+    deleteWorkoutById,
+    deleteAllWorkouts,
+    getLatestWorkoutId,
+  } = useContext(WorkoutContext);
 
-  const [latestWorkoutId, setLatestWorkoutId] = useState(null);
-
-  // useEffect(() => {
-  //   // if (programs.length) {
-  //   //   loadPrograms();
-  //   //   console.log("programs loaded");
-  //   // } else {
-  //   //   initDatabase();
-  //   //   loadPrograms();
-  //   // }
-  //   const initAndLoad = async () => {
-  //     await initDatabase();
-  //     await loadPrograms();
-  //     console.log("db init and programs loaded");
-  //   };
-  //   initAndLoad();
-  // }, []);
   useFocusEffect(
     React.useCallback(() => {
       const initAndLoad = async () => {
         try {
           initDatabase();
           loadPrograms();
-          const id = await getLatestWorkoutId();
-          setLatestWorkoutId(id);
+          // const id = getLatestWorkoutId();
           console.log("init and load");
-          console.log("latest workout ID:", id);
+          // console.log("latest workout ID:", id);
         } catch (e) {
           console.error("init and load error (WorkoutPlanningScreen)", e);
         }
@@ -73,9 +62,6 @@ const WorkoutPlanningScreen = () => {
                 onPress={() => {
                   navigation.navigate("ProgramDetails", { program: item });
                 }}
-                setIsWorkoutRunning={() => {
-                  setIsWorkoutRunning(true);
-                }}
               />
             );
           }}
@@ -97,17 +83,10 @@ const WorkoutPlanningScreen = () => {
         <StandardButton
           text="DEV: Delete all workout history"
           onPress={() => {
-            dropAllWorkouts();
+            deleteAllWorkouts();
           }}
         />
-        {isWorkoutRunning ? (
-          <WorkoutBar
-            onDelete={() => {
-              dropWorkoutById(latestWorkoutId);
-              setIsWorkoutRunning(false);
-            }}
-          />
-        ) : null}
+        {isWorkoutRunning ? <WorkoutBar /> : null}
       </View>
     </LinearGradient>
   );

@@ -1,3 +1,5 @@
+//ten hook już nie jest potrzebny -> logika przeniesiona do workoutRepository oraz WorkoutContext
+
 import { useState, useEffect, useRef } from "react";
 import { getDb, initDatabase } from "../database/localDatabase";
 
@@ -72,6 +74,7 @@ export function useWorkouts() {
         "Załadowane treningi:",
         JSON.stringify(workoutsWithDetails, null, 2)
       );
+      return workoutsWithDetails;
     } catch (e) {
       console.error("loadWorkouts error:", e);
     }

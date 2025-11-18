@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -12,8 +12,8 @@ import StandardButton from "../components/StandardButton";
 import SetNumber from "../components/SetNumber";
 import NumericTextInput from "../components/NumericTextInput";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useWorkouts } from "../hooks/useWorkouts";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Context as WorkoutContext } from "../context/WorkoutContext";
 
 const { width } = Dimensions.get("window");
 
@@ -28,12 +28,14 @@ const WorkoutScreen = ({ route }) => {
   const [isDone, setIsDone] = useState(false);
 
   const [focusedSet, setFocusedSet] = useState(null);
-  // const [focusedSet, setFocusedSet] = useState({ exerciseId: 1, setId: 2 });
   const [setInputs, setSetInputs] = useState({});
 
-  const { startWorkout, addWorkoutSet, loadWorkouts } = useWorkouts();
-
-  const [workoutId, setWorkoutId] = useState(null);
+  const {
+    state: { workouts, currentWorkoutId },
+    startWorkout,
+    addWorkoutSet,
+    loadWorkouts,
+  } = useContext(WorkoutContext);
 
   useEffect(() => {
     let interval = null;
@@ -58,10 +60,10 @@ const WorkoutScreen = ({ route }) => {
     };
   }, [isBreak]);
 
+  // po załadowaniu ekranu
   useEffect(() => {
     const start = async () => {
-      const workoutId = await startWorkout(program.id);
-      setWorkoutId(workoutId);
+      startWorkout(program.id);
     };
     start();
   }, []);
@@ -98,17 +100,24 @@ const WorkoutScreen = ({ route }) => {
     const key = `${exerciseId}_${setId}`;
     const data = setInputs[key];
     if (!data) return;
-    if (!workoutId) {
+    if (!currentWorkoutId) {
       console.log("nie ma workout id");
       return;
     }
-    if (!workoutId) {
+    if (!currentWorkoutId) {
       console.log("nie ma workout id nie zlogowano seta");
       return;
     }
-    await addWorkoutSet(workoutId, exerciseId, setId, data.weight, data.reps);
+    await addWorkoutSet(
+      currentWorkoutId,
+      exerciseId,
+      setId,
+      data.weight,
+      data.reps
+    );
 
-    await loadWorkouts();
+    // await loadWorkouts();
+    loadWorkouts();
     setTimeLeft(initialSeconds);
     setIsBreak(true);
   };

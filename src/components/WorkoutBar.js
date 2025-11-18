@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
+import { Context as WorkoutContext } from "../context/WorkoutContext";
 
-const WorkoutBar = ({ onDelete }) => {
+const WorkoutBar = () => {
   const [seconds, setSeconds] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const {
+    state: { currentWorkoutId },
+    endWorkout,
+    deleteWorkoutById,
+  } = useContext(WorkoutContext);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,6 +31,10 @@ const WorkoutBar = ({ onDelete }) => {
   };
 
   // const onSave = () => {};
+  const onDelete = () => {
+    deleteWorkoutById(currentWorkoutId);
+    endWorkout();
+  };
 
   return (
     <TouchableOpacity
