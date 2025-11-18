@@ -19,6 +19,7 @@
     "expo-status-bar": "~3.0.8",
     "react": "19.1.0",
     "react-native": "0.81.4",
+    "react-native-calendars": "^1.1313.0",
     "react-native-gifted-charts": "^1.4.65",
     "react-native-svg": "15.12.1"
   },

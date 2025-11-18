@@ -4,6 +4,7 @@ import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import StandardTextInput from "../components/StandardTextInput";
 import { useNavigation } from "@react-navigation/native";
 import StandardButton from "../components/StandardButton";
+import { LinearGradient } from "expo-linear-gradient";
 
 const AddProgramScreen = ({ route }) => {
   const { programs, loadPrograms, addProgramWithExercises } =
@@ -49,35 +50,37 @@ const AddProgramScreen = ({ route }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <StandardTextInput
-        placeholder="Program name"
-        term={term}
-        onTermChange={(newTerm) => {
-          setTerm(newTerm);
-        }}
-      />
-      <Text style={styles.selectedExercisesText}>
-        {exercisesToProgram.length
-          ? `You have selected ${exercisesToProgram.length} exercises`
-          : "Select exercises first"}
-      </Text>
-      <StandardButton
-        text="Add exercises"
-        onPress={() => {
-          navigation.navigate("ExerciseSearch", {
-            fromProgramPlanning: true,
-          });
-        }}
-      />
-      <StandardButton
-        style={styles.createProgramButton}
-        text="Create training program"
-        onPress={() => {
-          createProgram();
-        }}
-      />
-    </View>
+    <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
+      <View style={styles.container}>
+        <StandardTextInput
+          placeholder="Program name"
+          term={term}
+          onTermChange={(newTerm) => {
+            setTerm(newTerm);
+          }}
+        />
+        <Text style={styles.selectedExercisesText}>
+          {exercisesToProgram.length
+            ? `You have selected ${exercisesToProgram.length} exercises`
+            : "Select exercises first"}
+        </Text>
+        <StandardButton
+          text="Add exercises"
+          onPress={() => {
+            navigation.navigate("ExerciseSearch", {
+              fromProgramPlanning: true,
+            });
+          }}
+        />
+        <StandardButton
+          style={styles.createProgramButton}
+          text="Create training program"
+          onPress={() => {
+            createProgram();
+          }}
+        />
+      </View>
+    </LinearGradient>
   );
 };
 

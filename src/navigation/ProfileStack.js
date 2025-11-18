@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfileScreen from "../screens/ProfileScreen";
 import BodyMeasurementsScreen from "../screens/BodyMeasurementsScreen";
 import WorkoutCalendarScreen from "../screens/WorkoutCalendarScreen";
+import WorkoutDetailsScreen from "../screens/WorkoutDetailsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,11 @@ export default function SearchStack() {
         name="WorkoutCalendar"
         component={WorkoutCalendarScreen}
         options={{ title: "Workout Calendar" }}
+      />
+      <Stack.Screen
+        name="WorkoutDetails"
+        component={WorkoutDetailsScreen}
+        options={{ title: "Workout Details" }}
       />
     </Stack.Navigator>
   );

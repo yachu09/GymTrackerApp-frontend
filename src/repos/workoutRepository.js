@@ -138,3 +138,27 @@ export const getLatestWorkoutIdFromDb = async () => {
 
   return rows[0].id;
 };
+
+export const addDummyDataInDb = async () => {
+  const db = await getDb();
+
+  try {
+    console.log("Dodaję dummy data...");
+
+    const statements = [
+      `INSERT INTO workouts (programId, date) VALUES (1, "2025-11-09 02:10:32")`,
+      `INSERT INTO workouts (programId, date) VALUES (1, "2025-11-10 01:18:27")`,
+      `INSERT INTO workouts (programId, date) VALUES (1, "2025-11-12 02:12:23")`,
+      `INSERT INTO workouts (programId, date) VALUES (1, "2025-11-13 02:15:26")`,
+      `INSERT INTO workouts (programId, date) VALUES (1, "2025-11-16 11:11:11")`,
+    ];
+
+    for (const sql of statements) {
+      await db.runAsync(sql);
+    }
+
+    console.log("Dodano dummy data.");
+  } catch (e) {
+    console.error("addDummyDataInDb ERROR:", e);
+  }
+};

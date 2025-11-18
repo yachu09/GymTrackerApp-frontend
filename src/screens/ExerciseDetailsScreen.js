@@ -7,6 +7,7 @@ import {
   Linking,
   TouchableOpacity,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ExerciseDetailsScreen = ({ route }) => {
   const exercise = route.params.exercise;
@@ -17,28 +18,30 @@ const ExerciseDetailsScreen = ({ route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.name}>{exercise.name}</Text>
-      <Image source={{ uri: exercise.imageUrl }} style={styles.image} />
-      <Text style={styles.description}>{exercise.description}</Text>
-      <TouchableOpacity
-        onPress={() => {
-          openLink();
-        }}
-      >
-        <Text
-          style={{
-            color: "blue",
-            fontSize: 18,
-            fontWeight: "bold",
-            alignSelf: "center",
-            marginTop: 20,
+    <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
+      <View style={styles.container}>
+        <Text style={styles.name}>{exercise.name}</Text>
+        <Image source={{ uri: exercise.imageUrl }} style={styles.image} />
+        <Text style={styles.description}>{exercise.description}</Text>
+        <TouchableOpacity
+          onPress={() => {
+            openLink();
           }}
         >
-          Watch a tutorial video
-        </Text>
-      </TouchableOpacity>
-    </View>
+          <Text
+            style={{
+              color: "blue",
+              fontSize: 18,
+              fontWeight: "bold",
+              alignSelf: "center",
+              marginTop: 20,
+            }}
+          >
+            Watch a tutorial video
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
   );
 };
 

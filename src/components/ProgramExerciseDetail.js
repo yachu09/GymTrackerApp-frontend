@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button } from "react-native";
 import NumericTextInput from "./NumericTextInput";
 import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ProgramExerciseDetail = ({ exercise }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -108,57 +109,64 @@ const ProgramExerciseDetail = ({ exercise }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.exerciseName}>{exercise.exerciseName}</Text>
-      <View style={styles.setsContainer}>
-        <Text style={styles.setsText}>Number of sets: </Text>
-        <NumericTextInput
-          term={sets}
-          handleChange={(text) => handleChange(text, "sets")}
-          placeholder={exercise.sets.length}
-        />
-      </View>
-      {items.length ? <View>{items}</View> : null}
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
-        <Text style={styles.repsText}>Break time: </Text>
-        <NumericTextInput
-          handleChange={(text) => handleChange(text, "break")}
-          placeholder={exercise.sets.length ? exercise.sets[0].breakTime : 0}
-        />
-        <Text style={styles.repsText}>seconds</Text>
-      </View>
-      {confirmed ? (
-        <MaterialIcons name="done" size={20} style={styles.confirmed} />
-      ) : (
-        <Button
-          style={{ marginTop: 40 }}
-          title="Confirm"
-          onPress={() => {
-            if (repsOfSets.length) {
-              addSetsRepsAndBreakTime(exercise.id, repsOfSets, breakTime);
-              setConfirmed(true);
-            } else {
-              setIsModalVisible(true);
-            }
-          }}
-        />
-      )}
-      {isModalVisible && (
-        <View style={styles.localModalContainer}>
-          <View style={styles.localModalContent}>
-            <Text style={{ color: "white", marginBottom: 10 }}>
-              Enter number of sets and reps
-            </Text>
-            <Button
-              title="Okay"
-              onPress={() => {
-                setIsModalVisible(false);
-              }}
-            />
-          </View>
+    <LinearGradient
+      start={{ x: 0, y: 0.5 }}
+      end={{ x: 0, y: 1 }}
+      style={styles.container}
+      colors={["lightblue", "#58b4e3ff"]}
+    >
+      <View>
+        <Text style={styles.exerciseName}>{exercise.exerciseName}</Text>
+        <View style={styles.setsContainer}>
+          <Text style={styles.setsText}>Number of sets: </Text>
+          <NumericTextInput
+            term={sets}
+            handleChange={(text) => handleChange(text, "sets")}
+            placeholder={exercise.sets.length}
+          />
         </View>
-      )}
-    </View>
+        {items.length ? <View>{items}</View> : null}
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <Text style={styles.repsText}>Break time: </Text>
+          <NumericTextInput
+            handleChange={(text) => handleChange(text, "break")}
+            placeholder={exercise.sets.length ? exercise.sets[0].breakTime : 0}
+          />
+          <Text style={styles.repsText}>seconds</Text>
+        </View>
+        {confirmed ? (
+          <MaterialIcons name="done" size={20} style={styles.confirmed} />
+        ) : (
+          <Button
+            style={{ marginTop: 40 }}
+            title="Confirm"
+            onPress={() => {
+              if (repsOfSets.length) {
+                addSetsRepsAndBreakTime(exercise.id, repsOfSets, breakTime);
+                setConfirmed(true);
+              } else {
+                setIsModalVisible(true);
+              }
+            }}
+          />
+        )}
+        {isModalVisible && (
+          <View style={styles.localModalContainer}>
+            <View style={styles.localModalContent}>
+              <Text style={{ color: "white", marginBottom: 10 }}>
+                Enter number of sets and reps
+              </Text>
+              <Button
+                title="Okay"
+                onPress={() => {
+                  setIsModalVisible(false);
+                }}
+              />
+            </View>
+          </View>
+        )}
+      </View>
+    </LinearGradient>
   );
 };
 
@@ -168,6 +176,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 15,
     marginTop: 10,
+    padding: 10,
   },
   setsText: {
     alignSelf: "center",

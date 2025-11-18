@@ -6,6 +6,7 @@ import {
   deleteWorkoutInDb,
   deleteAllWorkoutsInDb,
   getLatestWorkoutIdFromDb,
+  addDummyDataInDb,
 } from "../repos/workoutRepository";
 import { initDatabase } from "../database/localDatabase";
 
@@ -51,6 +52,16 @@ const startWorkout = (dispatch) => {
     });
 
     return workoutId;
+  };
+};
+
+const addDummyData = () => {
+  return async () => {
+    try {
+      await addDummyDataInDb();
+    } catch (e) {
+      console.error("addDummyData error:", e);
+    }
   };
 };
 
@@ -120,6 +131,7 @@ export const { Context, Provider } = createDataContext(
     deleteWorkoutById,
     deleteAllWorkouts,
     getLatestWorkoutId,
+    addDummyData,
   },
   {
     workouts: [],

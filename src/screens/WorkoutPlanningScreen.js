@@ -86,6 +86,8 @@ const WorkoutPlanningScreen = () => {
             deleteAllWorkouts();
           }}
         />
+        {/* usun gdy wyjebiesz guziki DEV */}
+        <View style={{ height: 10 }}></View>
         {isWorkoutRunning ? <WorkoutBar /> : null}
       </View>
     </LinearGradient>

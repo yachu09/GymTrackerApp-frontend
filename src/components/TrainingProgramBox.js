@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const TrainingProgramBox = ({ program, onPress }) => {
   const navigation = useNavigation();
@@ -31,25 +32,34 @@ const TrainingProgramBox = ({ program, onPress }) => {
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={styles.container}>
-        <Text style={styles.programName}>{program.name}</Text>
-        <Text>{program.exercises.length} exercises</Text>
-        {/* jeśli tak renderuje przycisk aby zacząć trening */}
-        {isProgramSetUp(program) ? (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              navigation.navigate("Workout", { program });
-            }}
-          >
-            <Text style={styles.buttonText}>Start Workout</Text>
-          </TouchableOpacity>
-        ) : (
-          <Text style={{ marginTop: 10, fontWeight: "bold", color: "#ed4242" }}>
-            Finish setting up your program!
-          </Text>
-        )}
-      </View>
+      <LinearGradient
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.container}
+        colors={["lightblue", "#58b4e3ff"]}
+      >
+        <View style={styles.viewContainer}>
+          <Text style={styles.programName}>{program.name}</Text>
+          <Text>{program.exercises.length} exercises</Text>
+          {/* jeśli tak renderuje przycisk aby zacząć trening */}
+          {isProgramSetUp(program) ? (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate("Workout", { program });
+              }}
+            >
+              <Text style={styles.buttonText}>Start Workout</Text>
+            </TouchableOpacity>
+          ) : (
+            <Text
+              style={{ marginTop: 10, fontWeight: "bold", color: "#ed4242" }}
+            >
+              Finish setting up your program!
+            </Text>
+          )}
+        </View>
+      </LinearGradient>
     </TouchableOpacity>
   );
 };
@@ -59,11 +69,15 @@ const styles = StyleSheet.create({
     backgroundColor: "lightblue",
     height: 100,
     // justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "stretch",
+    // alignItems: "center",
+    // alignSelf: "stretch",
     marginHorizontal: 15,
     marginTop: 10,
-    borderRadius: 10,
+    borderRadius: 25,
+  },
+  viewContainer: {
+    alignItems: "center",
+    alignSelf: "stretch",
   },
   programName: {
     marginTop: 10,
@@ -73,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: 30,
     width: 100,
-    borderRadius: 20,
+    borderRadius: 25,
     justifyContent: "center",
     marginTop: 10,
   },
