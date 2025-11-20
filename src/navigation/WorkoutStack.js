@@ -34,7 +34,7 @@ export default function WorkoutStack() {
       <Stack.Screen
         name="Workout"
         component={WorkoutScreen}
-        options={{ title: "workout screen" }}
+        options={{ title: "Undefined Workout" }}
       />
     </Stack.Navigator>
   );

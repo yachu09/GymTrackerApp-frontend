@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, FlatList } from "react-native";
+import { Text, View, StyleSheet, FlatList, ScrollView } from "react-native";
 import useExercises from "../hooks/useExercises";
 import SearchBar from "../components/SearchBar";
 import ExercisesList from "../components/ExercisesList";
@@ -102,6 +102,7 @@ const ExerciseSearchScreen = ({ route }) => {
         ) : null}
 
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={groupedExercises}
           keyExtractor={(item) => item.muscleGroup}
           renderItem={({ item }) => {

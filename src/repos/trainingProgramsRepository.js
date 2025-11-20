@@ -24,8 +24,7 @@ export const loadProgramsFromDb = async () => {
   });
 
   console.log(
-    "%cLoaded programs (repository):",
-    "color: #222; font-weight: bold;",
+    "Loaded programs (repository):",
     JSON.stringify(programsWithExercises, null, 2)
   );
 
@@ -86,8 +85,7 @@ export const addSetsRepsBreakToDb = async (
   });
 
   console.log(
-    `%cZapisano ${repsOfSets.length} serii (breakTime: ${breakTime}s) dla ćwiczenia ${programExerciseId}`,
-    "color: orange; font-weight: bold;"
+    `zapisano ${repsOfSets.length} serii (breakTime: ${breakTime}s) dla ćwiczenia ${programExerciseId}`
   );
 };
 
@@ -99,4 +97,37 @@ export const deleteAllProgramsInDb = async () => {
     await db.runAsync("DROP TABLE IF EXISTS trainingPrograms;");
   });
   console.log("Wszystkie programy treningowe zostały usunięte.");
+};
+
+export const deleteProgramInDb = async (programId) => {
+  const db = await getDb();
+
+  try {
+    await db.withTransactionAsync(async () => {
+      const exercises = await db.getAllAsync(
+        "SELECT id FROM programExercises WHERE programId = ?;",
+        [programId]
+      );
+
+      for (const { id: programExerciseId } of exercises) {
+        await db.runAsync(
+          "DELETE FROM exerciseSets WHERE programExerciseId = ?;",
+          [programExerciseId]
+        );
+      }
+
+      await db.runAsync("DELETE FROM programExercises WHERE programId = ?;", [
+        programId,
+      ]);
+
+      await db.runAsync("DELETE FROM trainingPrograms WHERE id = ?;", [
+        programId,
+      ]);
+    });
+
+    console.log(`Usunięto plan treningowy o ID: ${programId}`);
+  } catch (error) {
+    console.error("błąd podczas usuwania planu:", error);
+    throw error;
+  }
 };

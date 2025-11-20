@@ -28,9 +28,10 @@ const WorkoutCalendarScreen = () => {
     }
   }, [workouts]);
 
+  //nie działą xd
   const revokeDummyData = async () => {
     await addDummyData();
-    loadWorkouts();
+    // loadWorkouts();
   };
 
   const createMarkedDates = (workouts) => {

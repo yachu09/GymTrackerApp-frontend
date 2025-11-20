@@ -18,14 +18,27 @@ const workoutReducer = (state, action) => {
       return {
         ...state,
         isWorkoutRunning: true,
-        currentWorkoutId: action.payload,
+        currentWorkoutId: action.payload.workoutId,
+        currentProgramId: action.payload.programId,
+        workoutDuration: 0,
+        timerRunning: true,
       };
     case "END_WORKOUT":
       return {
         ...state,
         isWorkoutRunning: false,
         currentWorkoutId: null,
+        timerRunning: false,
       };
+    case "TICK_TIMER":
+      return {
+        ...state,
+        workoutDuration: state.timerRunning
+          ? state.workoutDuration + 1
+          : state.workoutDuration,
+      };
+    case "RESET_TIMER":
+      return { ...state, workoutDuration: 0, timerRunning: false };
     default:
       return state;
   }
@@ -48,7 +61,7 @@ const startWorkout = (dispatch) => {
 
     dispatch({
       type: "START_WORKOUT",
-      payload: workoutId,
+      payload: { workoutId, programId },
     });
 
     return workoutId;
@@ -121,6 +134,14 @@ const getLatestWorkoutId = (dispatch) => {
   };
 };
 
+const tickTimer = (dispatch) => {
+  return () => dispatch({ type: "TICK_TIMER" });
+};
+
+const resetTimer = (dispatch) => {
+  return () => dispatch({ type: "RESET_TIMER" });
+};
+
 export const { Context, Provider } = createDataContext(
   workoutReducer,
   {
@@ -132,10 +153,14 @@ export const { Context, Provider } = createDataContext(
     deleteAllWorkouts,
     getLatestWorkoutId,
     addDummyData,
+    tickTimer,
+    resetTimer,
   },
   {
     workouts: [],
     isWorkoutRunning: false,
     currentWorkoutId: null,
+    workoutDuration: 0,
+    timerRunning: false,
   }
 );

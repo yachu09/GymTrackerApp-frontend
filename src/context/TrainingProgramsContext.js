@@ -5,6 +5,7 @@ import {
   addProgramWithExercisesToDb,
   addSetsRepsBreakToDb,
   deleteAllProgramsInDb,
+  deleteProgramInDb,
 } from "../repos/trainingProgramsRepository";
 
 const programsReducer = (state, action) => {
@@ -13,6 +14,9 @@ const programsReducer = (state, action) => {
       return action.payload;
     case "CLEAR_PROGRAMS":
       return [];
+    case "DELETE_PROGRAM":
+      return state.filter((program) => program.id !== action.payload);
+
     default:
       return state;
   }
@@ -22,8 +26,7 @@ const loadPrograms = (dispatch) => {
   return async () => {
     const programs = await loadProgramsFromDb();
     console.log(
-      "%cProgramy z ćwiczeniami i seriami (Context):",
-      "color: #0077cc; font-weight: bold;",
+      "Context: programy z ćwiczeniami i seriami: ",
       JSON.stringify(programs, null, 2)
     );
     dispatch({ type: "SET_PROGRAMS", payload: programs });
@@ -33,10 +36,7 @@ const loadPrograms = (dispatch) => {
 const addProgramWithExercises = (dispatch) => {
   return async (name, exercisesArr) => {
     const programId = await addProgramWithExercisesToDb(name, exercisesArr);
-    console.log(
-      `%cDodano program: "${name}" (ID: ${programId})`,
-      "color: green; font-weight: bold;"
-    );
+    console.log(`dodano program: "${name}" (ID: ${programId})`);
     await loadPrograms(dispatch)();
     return programId;
   };
@@ -46,8 +46,7 @@ const addSetsRepsAndBreakTime = (dispatch) => {
   return async (programExerciseId, repsOfSets, breakTime) => {
     await addSetsRepsBreakToDb(programExerciseId, repsOfSets, breakTime);
     console.log(
-      `%cDodano serie do ćwiczenia ${programExerciseId} (Break: ${breakTime}s)`,
-      "color: purple; font-weight: bold;"
+      `dodano serie do ćwiczenia ${programExerciseId} (Break: ${breakTime}s)`
     );
     await loadPrograms(dispatch)();
   };
@@ -57,10 +56,19 @@ const dropAllTables = (dispatch) => {
   return async () => {
     await deleteAllProgramsInDb();
     dispatch({ type: "CLEAR_PROGRAMS" });
-    console.log(
-      "%cWszystkie tabele z trainingPrograms zostały usunięte.",
-      "color: red; font-weight: bold;"
-    );
+    console.log("wszystkie tabele z trainingPrograms zostały usunięte.");
+  };
+};
+
+const deleteProgram = (dispatch) => {
+  return async (programId) => {
+    try {
+      await deleteProgramInDb(programId);
+      dispatch({ type: "delete_program", payload: programId });
+      console.log(`Context: usunięto plan ID ${programId}`);
+    } catch (error) {
+      console.error("Context error deleteProgram:", error);
+    }
   };
 };
 
@@ -71,6 +79,7 @@ export const { Context, Provider } = createDataContext(
     addProgramWithExercises,
     addSetsRepsAndBreakTime,
     dropAllTables,
+    deleteProgram,
   },
   []
 );

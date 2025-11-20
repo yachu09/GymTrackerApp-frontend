@@ -2,24 +2,30 @@ import React, { useState, useEffect, useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { Context as WorkoutContext } from "../context/WorkoutContext";
+import { useNavigation } from "@react-navigation/native";
 
 const WorkoutBar = () => {
-  const [seconds, setSeconds] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const {
-    state: { currentWorkoutId },
+    state: {
+      currentWorkoutId,
+      workoutDuration,
+      timerRunning,
+      currentProgramId,
+    },
     endWorkout,
+    tickTimer,
     deleteWorkoutById,
   } = useContext(WorkoutContext);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds((prev) => prev + 1);
-    }, 1000);
+  const navigation = useNavigation();
 
+  useEffect(() => {
+    if (!timerRunning) return;
+    const interval = setInterval(() => tickTimer(), 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [timerRunning]);
 
   const formatTime = (s) => {
     const hours = Math.floor(s / 3600);
@@ -30,7 +36,9 @@ const WorkoutBar = () => {
     return `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
   };
 
-  // const onSave = () => {};
+  const onSave = () => {
+    endWorkout();
+  };
   const onDelete = () => {
     deleteWorkoutById(currentWorkoutId);
     endWorkout();
@@ -42,13 +50,14 @@ const WorkoutBar = () => {
         if (isModalVisible) {
           setIsModalVisible(false);
         } else {
+          navigation.navigate("Workout", { programId: currentProgramId });
         }
       }}
     >
       <View style={styles.container}>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.timer}>{formatTime(seconds)}</Text>
+            <Text style={styles.timer}>{formatTime(workoutDuration)}</Text>
             <Text>//Aktualne cwiczenie</Text>
           </View>
           <TouchableOpacity
@@ -62,7 +71,7 @@ const WorkoutBar = () => {
           {isModalVisible && (
             <View style={styles.localModalContainer}>
               <View style={styles.localModalContent}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => onSave()}>
                   <Feather name="save" size={24} color="black" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => onDelete()}>
@@ -125,7 +134,6 @@ const styles = StyleSheet.create({
   localModalContent: {
     backgroundColor: "#ed4242",
     padding: 10,
-    borderRadius: 10,
     flexDirection: "row",
     height: 50,
     borderRadius: 25,

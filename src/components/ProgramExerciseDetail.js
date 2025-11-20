@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   localModalContent: {
     backgroundColor: "#ed4242",
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 25,
   },
 });
 

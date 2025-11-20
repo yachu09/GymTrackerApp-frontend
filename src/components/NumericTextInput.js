@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     width: 40,
     margin: 5,
-    borderRadius: 10,
+    borderRadius: 25,
     alignSelf: "center",
   },
 });
