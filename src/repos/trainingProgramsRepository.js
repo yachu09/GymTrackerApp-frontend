@@ -23,10 +23,10 @@ export const loadProgramsFromDb = async () => {
     return { ...program, exercises: programExercises };
   });
 
-  console.log(
-    "Loaded programs (repository):",
-    JSON.stringify(programsWithExercises, null, 2)
-  );
+  // console.log(
+  //   "Loaded programs (repository):",
+  //   JSON.stringify(programsWithExercises, null, 2)
+  // );
 
   return programsWithExercises;
 };

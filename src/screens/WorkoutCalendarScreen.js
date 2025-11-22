@@ -42,26 +42,24 @@ const WorkoutCalendarScreen = () => {
       marked[dateString] = {
         selected: true,
         selectedColor: "blue",
+        workoutId: workout.id,
       };
     });
 
     return marked;
   };
 
-  // const createMarkedDates = (workouts) => {
-  //   const marked = {};
+  const onDayPress = (day) => {
+    const selectedWorkout = markedDates[day.dateString];
 
-  //   workouts.forEach((workout) => {
-  //     const dateString = workout.date.split(" ")[0];
-  //     marked[dateString] = {
-  //       ...workout,
-  //       selected: true,
-  //       selectedColor: "blue",
-  //     };
-  //   });
-
-  //   return marked;
-  // };
+    if (!selectedWorkout) {
+      console.log("Brak treningu w tym dniu.");
+      return;
+    }
+    navigation.navigate("WorkoutDetails", {
+      workoutId: selectedWorkout.workoutId,
+    });
+  };
 
   console.log("marked dates: ", JSON.stringify(markedDates, null, 2));
 
@@ -78,7 +76,8 @@ const WorkoutCalendarScreen = () => {
           markedDates={markedDates}
           onDayPress={(day) => {
             console.log("Kliknięto dzień:", day.dateString);
-            navigation.navigate("WorkoutDetails");
+            // navigation.navigate("WorkoutDetails");
+            onDayPress(day);
           }}
         />
         <Button

@@ -25,10 +25,10 @@ const programsReducer = (state, action) => {
 const loadPrograms = (dispatch) => {
   return async () => {
     const programs = await loadProgramsFromDb();
-    console.log(
-      "Context: programy z ćwiczeniami i seriami: ",
-      JSON.stringify(programs, null, 2)
-    );
+    // console.log(
+    //   "Context: programy z ćwiczeniami i seriami: ",
+    //   JSON.stringify(programs, null, 2)
+    // );
     dispatch({ type: "SET_PROGRAMS", payload: programs });
   };
 };

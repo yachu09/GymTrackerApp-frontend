@@ -37,6 +37,7 @@ const WorkoutPlanningScreen = () => {
         try {
           initDatabase();
           loadPrograms();
+          // await loadWorkouts();
           // const id = getLatestWorkoutId();
           console.log("init and load");
           // console.log("latest workout ID:", id);

@@ -24,6 +24,7 @@ import { Context as TrainingProgramsContext } from "../context/TrainingProgramsC
 import { useNavigation } from "@react-navigation/native";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { LinearGradient } from "expo-linear-gradient";
+import Feather from "@expo/vector-icons/Feather";
 
 const { width } = Dimensions.get("window");
 
@@ -37,6 +38,9 @@ const WorkoutScreen = ({ route }) => {
     startWorkout,
     addWorkoutSet,
     loadWorkouts,
+    endWorkout,
+    deleteWorkoutById,
+    updateWorkoutSet, // używane w handleLogSet
   } = useContext(WorkoutContext);
 
   const { state: allPrograms } = useContext(TrainingProgramsContext);
@@ -51,8 +55,9 @@ const WorkoutScreen = ({ route }) => {
 
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const [isBreak, setIsBreak] = useState(false);
-  //FIXME do zarządzania kolorem haczyka czy ćwiczenie jest wykonane
-  const [isDone, setIsDone] = useState(false);
+  //do zarządzania kolorem haczyka czy ćwiczenie jest wykonane
+  const [loggedSets, setLoggedSets] = useState(new Set());
+
   const [focusedSet, setFocusedSet] = useState(null);
   const [setInputs, setSetInputs] = useState({});
   const flatListRef = useRef(null);
@@ -70,15 +75,51 @@ const WorkoutScreen = ({ route }) => {
     viewAreaCoveragePercentThreshold: 50,
   }).current;
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerBackTitle: "Back",
       headerRight: () => (
-        <TouchableOpacity onPress={() => {}}>
-          <SimpleLineIcons name="options-vertical" size={24} color="black" />
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              setIsModalVisible(true);
+            }}
+          >
+            {isModalVisible ? null : (
+              <Text style={styles.buttonText}>End Workout</Text>
+            )}
+          </TouchableOpacity>
+          {isModalVisible && (
+            <View style={styles.localModalContainer}>
+              <View style={styles.localModalContent}>
+                <TouchableOpacity onPress={() => onSave()}>
+                  <Feather name="save" size={24} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => onDelete()}>
+                  <Feather name="trash-2" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, isModalVisible]);
+
+  const onSave = async () => {
+    const id = currentWorkoutId;
+    await endWorkout();
+    navigation.navigate("WorkoutSummary", { workoutId: id });
+  };
+
+  const onDelete = async () => {
+    await deleteWorkoutById(currentWorkoutId);
+    await endWorkout();
+    navigation.navigate("WorkoutPlanning");
+  };
 
   useEffect(() => {
     navigation.setOptions({ title: program.name });
@@ -88,7 +129,7 @@ const WorkoutScreen = ({ route }) => {
     if (!isWorkoutRunning) {
       startWorkout(program.id);
     }
-  }, [isWorkoutRunning]);
+  }, []);
 
   // Licznik przerwy treningowej
   useEffect(() => {
@@ -99,7 +140,7 @@ const WorkoutScreen = ({ route }) => {
           if (prev <= 1) {
             clearInterval(interval);
             setIsBreak(false);
-            return initialSeconds; // reset czasu po zakończeniu przerwy
+            return initialSeconds;
           }
           return prev - 1;
         });
@@ -128,6 +169,50 @@ const WorkoutScreen = ({ route }) => {
       });
     }
   }, [workouts]);
+
+  // 🔵 Odtworzenie zalogowanych serii z bieżącego workoutu (np. po powrocie na ekran)
+  useEffect(() => {
+    if (!workout) return;
+
+    const logged = new Set();
+
+    workout.exercises?.forEach((exercise) => {
+      exercise.sets?.forEach((set) => {
+        // programExerciseId odpowiada item.id, a setNumber odpowiada set.id z programu
+        const key = `${exercise.programExerciseId}_${set.setNumber}`;
+        logged.add(key);
+      });
+    });
+
+    setLoggedSets(logged);
+  }, [workout]);
+
+  // 🔄 Wczytanie wartości weight/reps z bazy do inputów (placeholdery i initial values)
+  useEffect(() => {
+    if (!workout) return;
+
+    const newInputs = {};
+
+    workout.exercises?.forEach((exercise) => {
+      exercise.sets?.forEach((set) => {
+        const key = `${exercise.programExerciseId}_${set.setNumber}`;
+        newInputs[key] = {
+          weight:
+            set.weight !== null && set.weight !== undefined
+              ? String(set.weight)
+              : "0",
+          reps:
+            set.reps !== null && set.reps !== undefined ? String(set.reps) : "",
+        };
+      });
+    });
+
+    // łączymy z istniejącymi (np. niezapisane jeszcze zmiany)
+    setSetInputs((prev) => ({
+      ...prev,
+      ...newInputs,
+    }));
+  }, [workout]);
 
   // uruchamia się po odświeżeniu treningów
   const handleInputChange = (exerciseId, setId, field, value) => {
@@ -160,7 +245,7 @@ const WorkoutScreen = ({ route }) => {
     const alreadyLogged = currentEx?.sets?.some((s) => s.setNumber === setId);
 
     if (alreadyLogged) {
-      console.log(`⚠️ Set ${setId} już był zapisany — nadpisujemy!`);
+      console.log(`set ${setId} już był zapisany — nadpisujemy!`);
       await updateWorkoutSet(
         currentWorkoutId,
         exerciseId,
@@ -178,7 +263,14 @@ const WorkoutScreen = ({ route }) => {
       );
     }
 
-    //await loadWorkouts();
+    await loadWorkouts();
+    // 🔹 dodajemy serię jako zalogowaną (na bieżąco)
+    setLoggedSets((prev) => {
+      const next = new Set(prev);
+      next.add(key);
+      return next;
+    });
+
     // Resetowanie fokusu
     setFocusedSet(null);
     setTimeLeft(initialSeconds);
@@ -189,14 +281,6 @@ const WorkoutScreen = ({ route }) => {
     setIsBreak(false);
     setTimeLeft(initialSeconds); // chwilowe rozwiązanie
   };
-
-  // 📌 Debugowanie
-  console.log("programId z route:", route.params.programId);
-  console.log("allPrograms:", allPrograms);
-  console.log("program:", program);
-  console.log("currentWorkoutId:", currentWorkoutId);
-  console.log("workouts:", workouts);
-  console.log("workout:", workout);
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
@@ -245,32 +329,34 @@ const WorkoutScreen = ({ route }) => {
                     ]}
                   >
                     <SetNumber number={index + 1} />
+
+                    {/* WEIGHT */}
                     <NumericTextInput
                       term={values.weight}
                       onFocus={() => handleFocus(item.id, set.id)}
                       handleChange={(val) =>
                         handleInputChange(item.id, set.id, "weight", val)
                       }
+                      placeholder={values.weight || "0"}
                     />
                     <Text style={{ alignSelf: "center" }}>kgs</Text>
 
+                    {/* REPS */}
                     <NumericTextInput
                       term={values.reps}
                       onFocus={() => handleFocus(item.id, set.id)}
                       handleChange={(val) =>
                         handleInputChange(item.id, set.id, "reps", val)
                       }
-                      placeholder={set.reps}
+                      placeholder={values.reps || String(set.reps)}
                     />
                     <Text style={{ alignSelf: "center" }}>reps</Text>
 
                     <MaterialIcons
                       name="done"
                       size={20}
-                      style={[
-                        styles.done,
-                        { color: isDone ? "blue" : "black" },
-                      ]}
+                      style={styles.done}
+                      color={loggedSets.has(key) ? "blue" : "black"}
                     />
                   </View>
                 );
@@ -350,6 +436,43 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     color: "blue",
+  },
+  button: {
+    backgroundColor: "transparent",
+    width: 100,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: "center",
+  },
+  buttonText: {
+    fontWeight: "bold",
+    fontSize: 12,
+    paddingBottom: 12,
+    alignSelf: "center",
+  },
+  localModalContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "transparent",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "flex-end",
+    zIndex: 10,
+  },
+  localModalContent: {
+    // backgroundColor: "#ed4242",
+    backgroundColor: "transparent",
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    height: 50,
+    borderRadius: 25,
+    width: 100,
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingBottom: 12,
   },
 });
 

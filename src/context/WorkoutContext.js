@@ -81,6 +81,7 @@ const addDummyData = () => {
 const endWorkout = (dispatch) => {
   return () => {
     dispatch({ type: "END_WORKOUT" });
+    dispatch({ type: "RESET_TIMER" });
   };
 };
 
@@ -106,7 +107,7 @@ const deleteWorkoutById = (dispatch) => {
       await deleteWorkoutInDb(workoutId);
 
       const updated = await loadWorkoutsFromDb();
-      dispatch({ type: "set_workouts", payload: updated });
+      dispatch({ type: "SET_WORKOUTS", payload: updated });
     } catch (e) {
       console.error("deleteWorkoutById error:", e);
     }
@@ -119,7 +120,7 @@ const deleteAllWorkouts = (dispatch) => {
       await deleteAllWorkoutsInDb();
       await initDatabase();
 
-      dispatch({ type: "set_workouts", payload: [] });
+      dispatch({ type: "SET_WORKOUTS", payload: [] });
       // console.log("Wyczyszczono wszystkie workouty.");
     } catch (e) {
       console.error("deleteAllWorkouts error:", e);
