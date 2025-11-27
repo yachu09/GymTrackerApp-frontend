@@ -7,6 +7,7 @@ import {
   deleteAllWorkoutsInDb,
   getLatestWorkoutIdFromDb,
   addDummyDataInDb,
+  endWorkoutInDb,
 } from "../repos/workoutRepository";
 import { initDatabase } from "../database/localDatabase";
 
@@ -79,7 +80,15 @@ const addDummyData = () => {
 };
 
 const endWorkout = (dispatch) => {
-  return () => {
+  return async (workoutId, workoutDuration, skipDbSave = false) => {
+    if (!skipDbSave) {
+      try {
+        await endWorkoutInDb(workoutId, workoutDuration);
+      } catch (e) {
+        console.error("endWorkout DB error:", e);
+      }
+    }
+
     dispatch({ type: "END_WORKOUT" });
     dispatch({ type: "RESET_TIMER" });
   };

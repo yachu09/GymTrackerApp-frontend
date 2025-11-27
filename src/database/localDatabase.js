@@ -51,6 +51,7 @@ export const initDatabase = async () => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       programId INTEGER NOT NULL,
       date TEXT DEFAULT (datetime('now')),
+      duration INTEGER DEFAULT 0,
       FOREIGN KEY (programId) REFERENCES trainingPrograms(id)
     );
 

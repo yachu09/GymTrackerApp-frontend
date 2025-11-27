@@ -64,6 +64,18 @@ const WorkoutSummaryScreen = ({ route }) => {
     }
   };
 
+  const formatDuration = (seconds) => {
+    if (!seconds || seconds <= 0) return "00:00:00";
+    const h = Math.floor(seconds / 3600)
+      .toString()
+      .padStart(2, "0");
+    const m = Math.floor((seconds % 3600) / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  };
+
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
       <ViewShot
@@ -97,7 +109,7 @@ const WorkoutSummaryScreen = ({ route }) => {
             <View style={styles.infoContainer}>
               <FontAwesome5 name="clock" size={30} color="black" />
               <Text>Duration</Text>
-              <Text>00:00:00</Text>
+              <Text>{formatDuration(workout.duration)}</Text>
             </View>
             <View style={styles.infoContainer}>
               <FontAwesome5 name="trophy" size={30} color="black" />

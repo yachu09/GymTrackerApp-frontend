@@ -4,6 +4,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import BodyMeasurementsScreen from "../screens/BodyMeasurementsScreen";
 import WorkoutCalendarScreen from "../screens/WorkoutCalendarScreen";
 import WorkoutDetailsScreen from "../screens/WorkoutDetailsScreen";
+import PersonalRecordsScreen from "../screens/PersonalRecordsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,11 @@ export default function SearchStack() {
         name="WorkoutDetails"
         component={WorkoutDetailsScreen}
         options={{ title: "Workout Details" }}
+      />
+      <Stack.Screen
+        name="PersonalRecords"
+        component={PersonalRecordsScreen}
+        options={{ title: "Personal Records" }}
       />
     </Stack.Navigator>
   );

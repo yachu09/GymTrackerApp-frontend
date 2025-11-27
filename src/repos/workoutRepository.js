@@ -1,4 +1,4 @@
-import { getDb } from "../database/localDatabase";
+import { getDb, initDatabase } from "../database/localDatabase";
 
 //pobieranie pełnej listy workoutów
 export const loadWorkoutsFromDb = async () => {
@@ -6,19 +6,22 @@ export const loadWorkoutsFromDb = async () => {
 
   console.log("Pobieram listę treningów...");
 
+  // Pobranie workoutów wraz z czasem trwania
   const workouts = await db.getAllAsync(`
-    SELECT w.id, w.programId, w.date, tp.name as programName
+    SELECT w.id, w.programId, w.date, w.duration, tp.name as programName
     FROM workouts w
     JOIN trainingPrograms tp ON w.programId = tp.id
     ORDER BY w.date DESC;
   `);
 
+  // Pobranie wszystkich wykonanych serii
   const workoutSets = await db.getAllAsync(`
     SELECT ws.*, pe.exerciseName, pe.imageUrl, pe.muscleGroup
     FROM workoutSets ws
     JOIN programExercises pe ON ws.programExerciseId = pe.id;
   `);
 
+  // Grupowanie serii w obrębie treningu
   const workoutsWithDetails = workouts.map((workout) => {
     const setsForWorkout = workoutSets.filter(
       (s) => s.workoutId === workout.id
@@ -44,7 +47,11 @@ export const loadWorkoutsFromDb = async () => {
       }, {})
     );
 
-    return { ...workout, exercises: groupedExercises };
+    // Zwracamy dane treningu + szczegóły ćwiczeń
+    return {
+      ...workout, // zawiera już: id, programId, date, duration, programName
+      exercises: groupedExercises,
+    };
   });
 
   console.log(
@@ -115,17 +122,40 @@ export const deleteWorkoutInDb = async (workoutId) => {
 };
 
 //usuwanie całej historii treningów
+// export const deleteAllWorkoutsInDb = async () => {
+//   const db = await getDb();
+
+//   console.log("Usuwam całą historię treningów...");
+
+//   await db.withTransactionAsync(async () => {
+//     await db.runAsync("DELETE FROM workoutSets;");
+//     await db.runAsync("DELETE FROM workouts;");
+//   });
+
+//   console.log("Wyczyściłem wszystkie treningi.");
+// };
 export const deleteAllWorkoutsInDb = async () => {
   const db = await getDb();
 
-  console.log("Usuwam całą historię treningów...");
+  console.log("Dropuję historię treningów...");
 
   await db.withTransactionAsync(async () => {
-    await db.runAsync("DELETE FROM workoutSets;");
-    await db.runAsync("DELETE FROM workouts;");
+    await db.runAsync("DROP TABLE IF EXISTS workoutSets;");
+    await db.runAsync("DROP TABLE IF EXISTS workouts;");
   });
 
-  console.log("Wyczyściłem wszystkie treningi.");
+  // Ponowna inicjalizacja struktur
+  await initDatabase();
+
+  console.log("Wyczyszczono wszystkie treningi (DROP + RECREATE).");
+};
+
+export const endWorkoutInDb = async (workoutId, durationInSeconds) => {
+  const db = await getDb();
+  await db.runAsync(`UPDATE workouts SET duration = ? WHERE id = ?;`, [
+    durationInSeconds,
+    workoutId,
+  ]);
 };
 
 export const getLatestWorkoutIdFromDb = async () => {

@@ -37,11 +37,11 @@ const WorkoutBar = () => {
   };
 
   const onSave = () => {
-    endWorkout();
+    endWorkout(currentWorkoutId, workoutDuration);
   };
   const onDelete = () => {
     deleteWorkoutById(currentWorkoutId);
-    endWorkout();
+    endWorkout(null, null, true);
   };
 
   return (

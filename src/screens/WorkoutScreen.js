@@ -113,13 +113,13 @@ const WorkoutScreen = ({ route }) => {
 
   const onSave = async () => {
     const id = currentWorkoutId;
-    await endWorkout();
+    await endWorkout(id, workoutDuration);
     navigation.navigate("WorkoutSummary", { workoutId: id });
   };
 
   const onDelete = async () => {
     await deleteWorkoutById(currentWorkoutId);
-    await endWorkout();
+    await endWorkout(null, null, true);
     navigation.navigate("WorkoutPlanning");
   };
 

@@ -21,6 +21,12 @@ const ProfileScreen = () => {
             navigation.navigate("WorkoutCalendar");
           }}
         />
+        <StandardButton
+          text="Personal Records"
+          onPress={() => {
+            navigation.navigate("PersonalRecords");
+          }}
+        />
       </View>
     </LinearGradient>
   );
