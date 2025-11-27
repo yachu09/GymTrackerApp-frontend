@@ -11,6 +11,7 @@ const SetNumber = ({ number, isSelected }) => {
 
 const styles = StyleSheet.create({
   container: {
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
     backgroundColor: "lightblue",
     height: 40,
     width: 40,
