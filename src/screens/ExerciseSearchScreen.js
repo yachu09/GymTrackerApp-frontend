@@ -93,9 +93,10 @@ const ExerciseSearchScreen = ({ route }) => {
           <StandardButton
             text="Add selected exercises"
             onPress={() => {
-              navigation.navigate("AddProgram", {
+              navigation.navigate("AddProgramDay", {
                 idsToAdd: selectedExercises,
                 exercises: exercises,
+                programId: route.params.programId,
               });
             }}
           />

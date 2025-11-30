@@ -1,10 +1,12 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WorkoutPlanningScreen from "../screens/WorkoutPlanningScreen";
-import AddProgramScreen from "../screens/AddProgramScreen";
+import AddProgramDayScreen from "../screens/AddProgramDayScreen";
 import ExerciseSearchScreen from "../screens/ExerciseSearchScreen";
 import ProgramDetailsScreen from "../screens/ProgramDetailsScreen";
+import ProgramDayDetailsScreen from "../screens/ProgramDayDetailsScreen";
 import WorkoutScreen from "../screens/WorkoutScreen";
 import WorkoutSummaryScreen from "../screens/WorkoutSummaryScreen";
+import AddNewProgramScreen from "../screens/AddNewProgramScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,13 +21,23 @@ export default function WorkoutStack() {
       <Stack.Screen
         name="ProgramDetails"
         component={ProgramDetailsScreen}
-        options={{ title: "Program Details" }}
+        options={{ title: "Training Days" }}
       />
       <Stack.Screen
-        name="AddProgram"
-        component={AddProgramScreen}
-        options={{ title: "Add a program" }}
+        name="ProgramDayDetails"
+        component={ProgramDayDetailsScreen}
+        options={{ title: "Program Day Details" }}
+      />
+      <Stack.Screen
+        name="AddProgramDay"
+        component={AddProgramDayScreen}
+        options={{ title: "Add a program day" }}
         initialParams={{ idsToAdd: [], exercises: [] }}
+      />
+      <Stack.Screen
+        name="AddNewProgram"
+        component={AddNewProgramScreen}
+        options={{ title: "Add a program" }}
       />
       <Stack.Screen
         name="ExerciseSearch"

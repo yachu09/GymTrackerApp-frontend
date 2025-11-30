@@ -68,7 +68,6 @@ const WorkoutScreen = ({ route }) => {
     viewAreaCoveragePercentThreshold: 50,
   }).current;
 
-  // 🔹 NOWOŚĆ — obliczanie One Rep Max dla SERII KTÓRA JEST FOCUSOWANA
   const focusedKey = focusedSet
     ? `${focusedSet.exerciseId}_${focusedSet.setId}`
     : null;

@@ -6,10 +6,8 @@ import StandardButton from "../components/StandardButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 
-const AddProgramScreen = ({ route }) => {
-  const { state: programs, addProgramWithExercises } = useContext(
-    TrainingProgramsContext
-  );
+const AddNewProgramScreen = ({ route }) => {
+  const { state: programs, addProgram } = useContext(TrainingProgramsContext);
 
   const [term, setTerm] = useState("");
   const navigation = useNavigation();
@@ -19,28 +17,14 @@ const AddProgramScreen = ({ route }) => {
   //   console.log("Aktualny stan bazy:", JSON.stringify(programs, null, 2));
   // }, [programs]);
 
-  const idsToAdd = route.params.idsToAdd;
-  const exercises = route.params.exercises;
-
-  const exercisesToProgram =
-    idsToAdd?.length && exercises?.length
-      ? exercises.filter((exercise) => idsToAdd.includes(exercise.id))
-      : [];
-
   const createProgram = async () => {
     if (!term.length) {
       console.log("nie utworzono planu: brakuje nazwy");
       return;
     }
-
-    if (!exercisesToProgram.length) {
-      console.log("nie dodano ćwiczeń (lista jest pusta)");
-      return;
-    }
-
     try {
       console.log(`tworzenie planu: "${term}"...`);
-      const programId = await addProgramWithExercises(term, exercisesToProgram);
+      const programId = await addProgram(term);
 
       console.log(`utworzono nowy plan o id: ${programId}`);
       navigation.popToTop();
@@ -59,21 +43,7 @@ const AddProgramScreen = ({ route }) => {
             setTerm(newTerm);
           }}
         />
-        <Text style={styles.selectedExercisesText}>
-          {exercisesToProgram.length
-            ? `You have selected ${exercisesToProgram.length} exercises`
-            : "Select exercises first"}
-        </Text>
         <StandardButton
-          text="Add exercises"
-          onPress={() => {
-            navigation.navigate("ExerciseSearch", {
-              fromProgramPlanning: true,
-            });
-          }}
-        />
-        <StandardButton
-          style={styles.createProgramButton}
           text="Create training program"
           onPress={() => {
             createProgram();
@@ -94,4 +64,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddProgramScreen;
+export default AddNewProgramScreen;

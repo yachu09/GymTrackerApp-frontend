@@ -2,10 +2,12 @@
 import createDataContext from "./createDataContext";
 import {
   loadProgramsFromDb,
-  addProgramWithExercisesToDb,
+  addProgramToDb,
+  addTrainingDayWithExercisesToDb,
   addSetsRepsBreakToDb,
   deleteAllProgramsInDb,
   deleteProgramInDb,
+  deleteTrainingDayInDb,
 } from "../repos/trainingProgramsRepository";
 
 const programsReducer = (state, action) => {
@@ -16,59 +18,69 @@ const programsReducer = (state, action) => {
       return [];
     case "DELETE_PROGRAM":
       return state.filter((program) => program.id !== action.payload);
-
     default:
       return state;
   }
 };
 
+// 🔹 Ładowanie programów z dniami i ćwiczeniami
 const loadPrograms = (dispatch) => {
   return async () => {
     const programs = await loadProgramsFromDb();
-    // console.log(
-    //   "Context: programy z ćwiczeniami i seriami: ",
-    //   JSON.stringify(programs, null, 2)
-    // );
     dispatch({ type: "SET_PROGRAMS", payload: programs });
   };
 };
 
-const addProgramWithExercises = (dispatch) => {
-  return async (name, exercisesArr) => {
-    const programId = await addProgramWithExercisesToDb(name, exercisesArr);
-    console.log(`dodano program: "${name}" (ID: ${programId})`);
+// 🔹 Tworzenie pustego programu
+const addProgram = (dispatch) => {
+  return async (name) => {
+    const programId = await addProgramToDb(name);
     await loadPrograms(dispatch)();
     return programId;
   };
 };
 
+// 🔹 Dodanie dnia z ćwiczeniami
+const addProgramDay = (dispatch) => {
+  return async (programId, dayName, exercisesArr) => {
+    const dayId = await addTrainingDayWithExercisesToDb(
+      programId,
+      dayName,
+      exercisesArr
+    );
+    await loadPrograms(dispatch)();
+    return dayId;
+  };
+};
+
+// 🔹 Dodanie serii, powtórzeń i przerwy dla ćwiczenia
 const addSetsRepsAndBreakTime = (dispatch) => {
   return async (programExerciseId, repsOfSets, breakTime) => {
     await addSetsRepsBreakToDb(programExerciseId, repsOfSets, breakTime);
-    console.log(
-      `dodano serie do ćwiczenia ${programExerciseId} (Break: ${breakTime}s)`
-    );
     await loadPrograms(dispatch)();
   };
 };
 
+// 🔹 Usuwanie wszystkich tabel (reset)
 const dropAllTables = (dispatch) => {
   return async () => {
     await deleteAllProgramsInDb();
     dispatch({ type: "CLEAR_PROGRAMS" });
-    console.log("wszystkie tabele z trainingPrograms zostały usunięte.");
   };
 };
 
+// 🔹 Usuwanie pojedynczego programu
 const deleteProgram = (dispatch) => {
   return async (programId) => {
-    try {
-      await deleteProgramInDb(programId);
-      dispatch({ type: "delete_program", payload: programId });
-      console.log(`Context: usunięto plan ID ${programId}`);
-    } catch (error) {
-      console.error("Context error deleteProgram:", error);
-    }
+    await deleteProgramInDb(programId);
+    dispatch({ type: "DELETE_PROGRAM", payload: programId });
+  };
+};
+
+const deleteProgramDay = (dispatch) => {
+  return async (programDayId) => {
+    await deleteTrainingDayInDb(programDayId);
+    await loadPrograms(dispatch)(); // odśwież stan
   };
 };
 
@@ -76,10 +88,12 @@ export const { Context, Provider } = createDataContext(
   programsReducer,
   {
     loadPrograms,
-    addProgramWithExercises,
+    addProgram,
+    addProgramDay,
     addSetsRepsAndBreakTime,
     dropAllTables,
     deleteProgram,
+    deleteProgramDay,
   },
   []
 );

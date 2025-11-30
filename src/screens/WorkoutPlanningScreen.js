@@ -1,5 +1,11 @@
 import React, { useState, useContext } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import TrainingProgramBox from "../components/TrainingProgramBox";
 import StandardButton from "../components/StandardButton";
 import { useNavigation } from "@react-navigation/native";
@@ -35,8 +41,8 @@ const WorkoutPlanningScreen = () => {
     React.useCallback(() => {
       const initAndLoad = async () => {
         try {
-          initDatabase();
-          loadPrograms();
+          await initDatabase();
+          await loadPrograms();
           // await loadWorkouts();
           // const id = getLatestWorkoutId();
           console.log("init and load");
@@ -67,7 +73,7 @@ const WorkoutPlanningScreen = () => {
               <TrainingProgramBox
                 program={item}
                 onPress={() => {
-                  navigation.navigate("ProgramDetails", { program: item });
+                  navigation.navigate("ProgramDetails", { programId: item.id });
                 }}
               />
             );
@@ -76,7 +82,7 @@ const WorkoutPlanningScreen = () => {
         <StandardButton
           text="Add training program!"
           onPress={() => {
-            navigation.navigate("AddProgram");
+            navigation.navigate("AddNewProgram");
           }}
         />
         {/* guzik do usuwania danych z bazy */}
@@ -110,6 +116,29 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     marginTop: 200,
+  },
+  localModalContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "transparent",
+    borderRadius: 25,
+    marginHorizontal: 40,
+    // marginVertical: 240,
+    height: 120,
+    marginTop: 320,
+    // justifyContent: "center",
+    alignItems: "center",
+    zIndex: 30,
+  },
+  localModalContent: {
+    // paddingHorizontal: 20,
+    backgroundColor: "transparent",
+    borderRadius: 15,
+    width: "100%",
+    alignItems: "center",
   },
 });
 

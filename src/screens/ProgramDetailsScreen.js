@@ -1,41 +1,64 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Text, View, StyleSheet, FlatList } from "react-native";
-import ProgramExerciseDetail from "../components/ProgramExerciseDetail";
-import StandardButton from "../components/StandardButton";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import StandardButton from "../components/StandardButton";
+import ProgramDayBox from "../components/ProgramDayBox";
+import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 
 const ProgramDetailsScreen = ({ route }) => {
   const navigation = useNavigation();
-  const program = route.params.program;
+  const programId = route.params.programId;
+
+  const { state: programs } = useContext(TrainingProgramsContext);
+
+  const program = programs.find((p) => p.id === programId);
+
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
-      <View>
-        <Text style={styles.programName}>{program.name}</Text>
+      <View style={styles.container}>
+        {/* <Text>Details of {program.name} program</Text> */}
+        {!program.days.length ? (
+          <Text style={styles.noDays}>
+            Add training days to finish {"\n"} setting up your program!
+          </Text>
+        ) : null}
         <FlatList
-          data={program.exercises}
+          data={program.days}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => {
-            return <ProgramExerciseDetail exercise={item} />;
+            return (
+              <ProgramDayBox
+                day={item}
+                onPress={() => {
+                  navigation.navigate("ProgramDayDetails", { day: item });
+                }}
+              />
+            );
           }}
         />
         <StandardButton
-          text="Done"
+          text="Add Training Day"
           onPress={() => {
-            navigation.pop();
+            console.log(program.id);
+            navigation.navigate("AddProgramDay", { programId: program.id });
           }}
         />
+        <View style={{ height: 10 }}></View>
       </View>
     </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
-  programName: {
+  container: {
+    flex: 1,
+  },
+  noDays: {
     fontSize: 18,
     fontWeight: "bold",
     alignSelf: "center",
+    marginTop: 200,
   },
 });
 

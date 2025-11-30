@@ -4,8 +4,11 @@ import { LineChart } from "react-native-gifted-charts";
 import { LinearGradient } from "expo-linear-gradient";
 import StandardButton from "../components/StandardButton";
 import { weightData } from "../data/dummyData/weightData";
+import WeighLoggingModal from "../components/WeightLoggingModal";
 
 const BodyMeasurementsScreen = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const Period = {
     WEEK: "week",
     MONTH: "month",
@@ -68,7 +71,10 @@ const BodyMeasurementsScreen = () => {
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
-      <StandardButton text="Log your today's weight" />
+      <StandardButton
+        text="Log your today's weight"
+        onPress={() => setIsModalVisible(true)}
+      />
 
       <View style={styles.buttonsRow}>
         <StandardButton text="Week" onPress={() => setPeriod(Period.WEEK)} />
@@ -109,6 +115,9 @@ const BodyMeasurementsScreen = () => {
           Lowest body weight this {period}: ? kgs
         </Text>
       </View>
+      {isModalVisible && (
+        <WeighLoggingModal onClose={() => setIsModalVisible(false)} />
+      )}
     </LinearGradient>
   );
 };
@@ -129,6 +138,27 @@ const styles = StyleSheet.create({
   weightStatsText: {
     fontWeight: "bold",
     fontSize: 16,
+  },
+  localModalContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "white",
+    borderRadius: 25,
+    marginHorizontal: 40,
+    marginVertical: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 20,
+  },
+  localModalContent: {
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 15,
+    width: "100%",
+    alignItems: "center",
   },
 });
 
