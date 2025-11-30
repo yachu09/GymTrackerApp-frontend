@@ -28,10 +28,11 @@ const styles = StyleSheet.create({
   background: {
     backgroundColor: "lightgray",
     height: 50,
-    borderRadius: 10,
+    borderRadius: 25,
     marginHorizontal: 15,
     flexDirection: "row",
     marginTop: 15,
+    paddingHorizontal: 10,
   },
   inputStyle: {
     flex: 1,

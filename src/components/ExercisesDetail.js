@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     backgroundColor: "#f0f0f0",
     padding: 10,
-    borderRadius: 8,
+    borderRadius: 25,
     alignItems: "flex-start",
     width: 250,
   },
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 150,
-    borderRadius: 10,
+    borderRadius: 25,
     marginBottom: 5,
   },
   description: {

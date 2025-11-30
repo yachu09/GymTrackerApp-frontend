@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchStack from "./SearchStack";
 import { FontAwesome6, Feather } from "@expo/vector-icons";
 import WorkoutStack from "./WorkoutStack";
+import ProfileStack from "./ProfileStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -31,6 +32,16 @@ export default function MainTabs() {
           title: "Search",
           tabBarIcon: ({ color, size }) => (
             <Feather name="search" color={"gray"} size={20} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ProfileStack"
+        component={ProfileStack}
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome6 name="image-portrait" color={"gray"} size={20} />
           ),
         }}
       />

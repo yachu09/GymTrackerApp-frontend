@@ -28,6 +28,7 @@ const ExercisesList = ({
 
       <FlatList
         horizontal
+        showsHorizontalScrollIndicator={false}
         data={exercises}
         keyExtractor={(exercise) => exercise.id}
         renderItem={({ item }) => {

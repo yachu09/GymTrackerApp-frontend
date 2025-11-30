@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { useTrainingPrograms } from "../hooks/useTrainingPrograms";
 import StandardTextInput from "../components/StandardTextInput";
 import { useNavigation } from "@react-navigation/native";
-import AddProgramButton from "../components/AddProgramButton";
+import StandardButton from "../components/StandardButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 
 const AddProgramScreen = ({ route }) => {
-  const { programs, loadPrograms, addProgramWithExercises } =
-    useTrainingPrograms();
+  const { state: programs, addProgramWithExercises } = useContext(
+    TrainingProgramsContext
+  );
+
   const [term, setTerm] = useState("");
   const navigation = useNavigation();
 
@@ -16,68 +19,68 @@ const AddProgramScreen = ({ route }) => {
   //   console.log("Aktualny stan bazy:", JSON.stringify(programs, null, 2));
   // }, [programs]);
 
-  const createProgram = async () => {
-    console.log(`term: ${term}`);
-    if (term.length && exercisesToProgram.length) {
-      try {
-        const programId = await addProgramWithExercises(
-          term,
-          exercisesToProgram
-        );
-        console.log(`Utworzono nowy plan - id: ${programId}`);
+  const idsToAdd = route.params.idsToAdd;
+  const exercises = route.params.exercises;
 
-        //nawigacja na początek stacka
-        navigation.popToTop();
-      } catch (err) {
-        console.error("Błąd podczas tworzenia programu:", err);
-      }
-    } else {
-      console.log("Nie utworzono nowego planu, brakuje nazwy");
+  const exercisesToProgram =
+    idsToAdd?.length && exercises?.length
+      ? exercises.filter((exercise) => idsToAdd.includes(exercise.id))
+      : [];
+
+  const createProgram = async () => {
+    if (!term.length) {
+      console.log("nie utworzono planu: brakuje nazwy");
+      return;
+    }
+
+    if (!exercisesToProgram.length) {
+      console.log("nie dodano ćwiczeń (lista jest pusta)");
+      return;
+    }
+
+    try {
+      console.log(`tworzenie planu: "${term}"...`);
+      const programId = await addProgramWithExercises(term, exercisesToProgram);
+
+      console.log(`utworzono nowy plan o id: ${programId}`);
+      navigation.popToTop();
+    } catch (err) {
+      console.error("błąd podczas tworzenia programu:", err);
     }
   };
 
-  const idsToAdd = route.params.idsToAdd;
-  const exercises = route.params.exercises;
-  let exercisesToProgram = [];
-  if (idsToAdd.length && exercises.length) {
-    exercisesToProgram = exercises.filter((exercise) =>
-      idsToAdd.includes(exercise.id)
-    );
-    // console.log(
-    //   `Selected exercises: ${JSON.stringify(exercisesToProgram, null, 2)}`
-    // );
-  }
-
   return (
-    <View style={styles.container}>
-      <StandardTextInput
-        placeholder="Program name"
-        term={term}
-        onTermChange={(newTerm) => {
-          setTerm(newTerm);
-        }}
-      />
-      <Text style={styles.selectedExercisesText}>
-        {exercisesToProgram.length
-          ? `You have selected ${exercisesToProgram.length} exercises`
-          : "Select exercises first"}
-      </Text>
-      <AddProgramButton
-        text="Add exercises"
-        onPress={() => {
-          navigation.navigate("ExerciseSearch", {
-            fromProgramPlanning: true,
-          });
-        }}
-      />
-      <AddProgramButton
-        style={styles.createProgramButton}
-        text="Create training program"
-        onPress={() => {
-          createProgram();
-        }}
-      />
-    </View>
+    <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
+      <View style={styles.container}>
+        <StandardTextInput
+          placeholder="Program name"
+          term={term}
+          onTermChange={(newTerm) => {
+            setTerm(newTerm);
+          }}
+        />
+        <Text style={styles.selectedExercisesText}>
+          {exercisesToProgram.length
+            ? `You have selected ${exercisesToProgram.length} exercises`
+            : "Select exercises first"}
+        </Text>
+        <StandardButton
+          text="Add exercises"
+          onPress={() => {
+            navigation.navigate("ExerciseSearch", {
+              fromProgramPlanning: true,
+            });
+          }}
+        />
+        <StandardButton
+          style={styles.createProgramButton}
+          text="Create training program"
+          onPress={() => {
+            createProgram();
+          }}
+        />
+      </View>
+    </LinearGradient>
   );
 };
 
