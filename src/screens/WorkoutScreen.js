@@ -31,6 +31,7 @@ const { width } = Dimensions.get("window");
 const WorkoutScreen = ({ route }) => {
   const navigation = useNavigation();
   const programId = route.params.programId;
+  const dayId = route.params.dayId;
 
   const {
     state: { workouts, currentWorkoutId, workoutDuration, isWorkoutRunning },
@@ -39,16 +40,17 @@ const WorkoutScreen = ({ route }) => {
     loadWorkouts,
     endWorkout,
     deleteWorkoutById,
-    updateWorkoutSet,
   } = useContext(WorkoutContext);
 
   const { state: allPrograms } = useContext(TrainingProgramsContext);
+
   const program = allPrograms.find((p) => p.id === programId);
+  const programDay = program?.days?.find((d) => d.id === dayId);
+  const exercises = programDay?.exercises || [];
+
   const workout = workouts.find((w) => w.id === currentWorkoutId);
-  const exercises = program.exercises;
 
   const initialSeconds = 10;
-
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const [isBreak, setIsBreak] = useState(false);
   const [loggedSets, setLoggedSets] = useState(new Set());
@@ -123,12 +125,16 @@ const WorkoutScreen = ({ route }) => {
   };
 
   useEffect(() => {
-    navigation.setOptions({ title: program.name });
-  }, [program.name]);
+    if (program && programDay) {
+      navigation.setOptions({
+        title: `${program.name} - ${programDay.dayName}`,
+      });
+    }
+  }, [program?.name]);
 
   useEffect(() => {
-    if (!isWorkoutRunning) {
-      startWorkout(program.id);
+    if (!isWorkoutRunning && dayId) {
+      startWorkout(dayId); // 🔥 ZMIANA NA dayId
     }
   }, []);
 
@@ -154,13 +160,13 @@ const WorkoutScreen = ({ route }) => {
 
   // automatyczne przejście na następne ćwiczenie po załadowaniu danych z bazy
   useEffect(() => {
-    if (!workouts.length) return;
+    if (!workouts.length || !exercises.length) return;
     const refreshedWorkout = workouts.find((w) => w.id === currentWorkoutId);
     if (!refreshedWorkout) return;
 
     if (
       refreshedWorkout.exercises?.[currentPage]?.sets.length ===
-        program.exercises[currentPage].sets.length &&
+        exercises[currentPage]?.sets.length &&
       currentPage < exercises.length - 1
     ) {
       flatListRef.current?.scrollToIndex({
@@ -231,28 +237,13 @@ const WorkoutScreen = ({ route }) => {
 
     if (!data || !currentWorkoutId) return;
 
-    const currentEx = workout?.exercises?.find(
-      (e) => e.programExerciseId === exerciseId
+    await addWorkoutSet(
+      currentWorkoutId,
+      exerciseId,
+      setId,
+      data.weight,
+      data.reps
     );
-    const alreadyLogged = currentEx?.sets?.some((s) => s.setNumber === setId);
-
-    if (alreadyLogged) {
-      await updateWorkoutSet(
-        currentWorkoutId,
-        exerciseId,
-        setId,
-        data.weight,
-        data.reps
-      );
-    } else {
-      await addWorkoutSet(
-        currentWorkoutId,
-        exerciseId,
-        setId,
-        data.weight,
-        data.reps
-      );
-    }
 
     await loadWorkouts();
 
@@ -271,6 +262,14 @@ const WorkoutScreen = ({ route }) => {
     setIsBreak(false);
     setTimeLeft(initialSeconds);
   };
+
+  if (!programDay || !exercises?.length) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>No exercises found for this day.</Text>
+      </View>
+    );
+  }
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>

@@ -14,7 +14,9 @@ const WorkoutDetailsScreen = ({ route }) => {
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
       <View>
-        <Text style={styles.programNameText}>{workout.programName}</Text>
+        <Text style={styles.programNameText}>
+          {workout.programName} - {workout.dayName}
+        </Text>
         <Text style={styles.dateText}>{workout.date}</Text>
         <FlatList
           data={workout.exercises}

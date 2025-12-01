@@ -16,7 +16,7 @@ export default function WorkoutStack() {
       <Stack.Screen
         name="WorkoutPlanning"
         component={WorkoutPlanningScreen}
-        options={{ title: "Let's workout!" }}
+        options={{ title: "Training Programs" }}
       />
       <Stack.Screen
         name="ProgramDetails"
@@ -26,7 +26,7 @@ export default function WorkoutStack() {
       <Stack.Screen
         name="ProgramDayDetails"
         component={ProgramDayDetailsScreen}
-        options={{ title: "Program Day Details" }}
+        options={{ title: "Exercises Info" }}
       />
       <Stack.Screen
         name="AddProgramDay"

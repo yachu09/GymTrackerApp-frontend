@@ -76,7 +76,6 @@ const WorkoutCalendarScreen = () => {
           markedDates={markedDates}
           onDayPress={(day) => {
             console.log("Kliknięto dzień:", day.dateString);
-            // navigation.navigate("WorkoutDetails");
             onDayPress(day);
           }}
         />

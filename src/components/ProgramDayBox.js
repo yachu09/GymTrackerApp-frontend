@@ -67,7 +67,10 @@ const ProgramDayBox = ({ day, program, onPress }) => {
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                navigation.navigate("Workout", { programId: day.id });
+                navigation.navigate("Workout", {
+                  programId: program.id,
+                  dayId: day.id,
+                });
               }}
             >
               <Text style={styles.buttonText}>Start Workout</Text>

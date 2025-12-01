@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { Context as WorkoutContext } from "../context/WorkoutContext";
+import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 import { useNavigation } from "@react-navigation/native";
 
 const WorkoutBar = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const {
-    state: {
-      currentWorkoutId,
-      workoutDuration,
-      timerRunning,
-      currentProgramId,
-    },
+    state: { currentWorkoutId, currentDayId, workoutDuration, timerRunning },
     endWorkout,
     tickTimer,
     deleteWorkoutById,
   } = useContext(WorkoutContext);
 
+  const { state: allPrograms } = useContext(TrainingProgramsContext);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -31,26 +28,39 @@ const WorkoutBar = () => {
     const hours = Math.floor(s / 3600);
     const mins = Math.floor((s % 3600) / 60);
     const secs = s % 60;
-
-    const pad = (num) => String(num).padStart(2, "0");
+    const pad = (n) => String(n).padStart(2, "0");
     return `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
   };
 
   const onSave = () => {
     endWorkout(currentWorkoutId, workoutDuration);
   };
+
   const onDelete = () => {
     deleteWorkoutById(currentWorkoutId);
     endWorkout(null, null, true);
   };
+
+  // 🔍 Znajdź program na podstawie currentDayId
+  const program = allPrograms.find((p) =>
+    p.days.some((d) => d.id === currentDayId)
+  );
+  const programId = program?.id;
+
+  const programDayName = program
+    ? program.days.find((d) => d.id === currentDayId)?.dayName
+    : "Unknown Day";
 
   return (
     <TouchableOpacity
       onPress={() => {
         if (isModalVisible) {
           setIsModalVisible(false);
-        } else {
-          navigation.navigate("Workout", { programId: currentProgramId });
+        } else if (programId && currentDayId) {
+          navigation.navigate("Workout", {
+            programId,
+            dayId: currentDayId,
+          });
         }
       }}
     >
@@ -58,8 +68,11 @@ const WorkoutBar = () => {
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.timer}>{formatTime(workoutDuration)}</Text>
-            <Text>//Aktualne cwiczenie</Text>
+            <Text style={{ fontWeight: "bold", marginLeft: 5 }}>
+              {program.name} - {programDayName}
+            </Text>
           </View>
+
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -86,7 +99,6 @@ const WorkoutBar = () => {
   );
 };
 
-//FIXME fix styling to match JEFIT workout bar
 const styles = StyleSheet.create({
   container: {
     boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -116,8 +128,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   timer: {
-    fontSize: 10,
+    fontSize: 12,
     color: "blue",
+    marginLeft: 5,
   },
   localModalContainer: {
     position: "absolute",
@@ -125,8 +138,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    // backgroundColor: "rgba(0,0,0,0.6)",
-    borderRadius: 10,
     justifyContent: "center",
     alignItems: "flex-end",
     zIndex: 10,

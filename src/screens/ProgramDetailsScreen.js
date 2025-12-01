@@ -30,8 +30,12 @@ const ProgramDetailsScreen = ({ route }) => {
             return (
               <ProgramDayBox
                 day={item}
+                program={program}
                 onPress={() => {
-                  navigation.navigate("ProgramDayDetails", { day: item });
+                  navigation.navigate("ProgramDayDetails", {
+                    day: item,
+                    program: program,
+                  });
                 }}
               />
             );
