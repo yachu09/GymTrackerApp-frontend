@@ -134,7 +134,7 @@ const WorkoutScreen = ({ route }) => {
 
   useEffect(() => {
     if (!isWorkoutRunning && dayId) {
-      startWorkout(dayId); // 🔥 ZMIANA NA dayId
+      startWorkout(dayId);
     }
   }, []);
 

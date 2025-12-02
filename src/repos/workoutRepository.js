@@ -156,11 +156,13 @@ export const addDummyDataInDb = async () => {
     console.log("Dodaję dummy data...");
 
     const statements = [
-      `INSERT INTO workouts (programDayId, date) VALUES (1, "2025-11-09 02:10:32")`,
-      `INSERT INTO workouts (programDayId, date) VALUES (1, "2025-11-10 01:18:27")`,
-      `INSERT INTO workouts (programDayId, date) VALUES (2, "2025-11-12 02:12:23")`,
-      `INSERT INTO workouts (programDayId, date) VALUES (2, "2025-11-13 02:15:26")`,
-      `INSERT INTO workouts (programDayId, date) VALUES (1, "2025-11-16 11:11:11")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-09 02:10:32")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (10, "2025-11-10 01:18:27")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-16 02:12:23")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (10, "2025-11-17 02:15:26")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-23 11:11:11")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (10, "2025-11-24 11:11:11")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-30 11:11:11")`,
     ];
 
     for (const sql of statements) {
