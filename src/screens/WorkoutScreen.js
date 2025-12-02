@@ -9,22 +9,27 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   FlatList,
   Dimensions,
   TouchableOpacity,
 } from "react-native";
+
 import StandardButton from "../components/StandardButton";
-import SetNumber from "../components/SetNumber";
-import NumericTextInput from "../components/NumericTextInput";
-import { MaterialIcons } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import Feather from "@expo/vector-icons/Feather";
+
 import { Context as WorkoutContext } from "../context/WorkoutContext";
 import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
+
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import Feather from "@expo/vector-icons/Feather";
+
 import useOneRepMax from "../hooks/useOneRepMax";
+import useWorkoutRestTimer from "../hooks/useWorkoutRestTimer";
+import useWorkoutSetInputs from "../hooks/useWorkoutSetInputs";
+import useWorkoutLogger from "../hooks/useWorkoutLogger";
+
+import ExercisePage from "../components/workout/ExercisePage";
 
 const { width } = Dimensions.get("window");
 
@@ -50,25 +55,36 @@ const WorkoutScreen = ({ route }) => {
 
   const workout = workouts.find((w) => w.id === currentWorkoutId);
 
-  const initialSeconds = 10;
-  const [timeLeft, setTimeLeft] = useState(initialSeconds);
-  const [isBreak, setIsBreak] = useState(false);
-  const [loggedSets, setLoggedSets] = useState(new Set());
-  const [focusedSet, setFocusedSet] = useState(null);
-  const [setInputs, setSetInputs] = useState({});
+  const { timeLeft, isBreak, startBreak, skipBreak } = useWorkoutRestTimer();
+
+  const {
+    inputs: setInputs,
+    focusedSet,
+    setFocusedSet,
+    handleFocus,
+    handleInputChange,
+  } = useWorkoutSetInputs(workout);
+
+  const breakTimeGetter = (exerciseId, setNumber) => {
+    const ex = programDay?.exercises?.find((e) => e.id === exerciseId);
+    if (!ex) return null;
+    const s = ex.sets?.find((ss) => ss.setNumber === setNumber);
+    return s?.breakTime ?? null;
+  };
+
+  const { loggedSets, logSet } = useWorkoutLogger({
+    workout,
+    exercises,
+    currentWorkoutId,
+    addWorkoutSet,
+    loadWorkouts,
+    startBreak,
+    breakTimeGetter,
+  });
+
   const flatListRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const onViewableItemsChanged = useRef(({ viewableItems }) => {
-    if (viewableItems.length > 0) {
-      setCurrentPage(viewableItems[0].index);
-    }
-  }).current;
-
-  const viewabilityConfig = useRef({
-    viewAreaCoveragePercentThreshold: 50,
-  }).current;
 
   const focusedKey = focusedSet
     ? `${focusedSet.exerciseId}_${focusedSet.setId}`
@@ -80,6 +96,16 @@ const WorkoutScreen = ({ route }) => {
 
   const [oneRepMax] = useOneRepMax(currentWeight, currentReps);
 
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      setCurrentPage(viewableItems[0].index);
+    }
+  }).current;
+
+  const viewabilityConfig = useRef({
+    viewAreaCoveragePercentThreshold: 50,
+  }).current;
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitle: "Back",
@@ -87,20 +113,20 @@ const WorkoutScreen = ({ route }) => {
         <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => {
-              setIsModalVisible(true);
-            }}
+            onPress={() => setIsModalVisible(true)}
           >
-            {isModalVisible ? null : (
+            {!isModalVisible && (
               <Text style={styles.buttonText}>End Workout</Text>
             )}
           </TouchableOpacity>
+
           {isModalVisible && (
             <View style={styles.localModalContainer}>
               <View style={styles.localModalContent}>
                 <TouchableOpacity onPress={() => onSave()}>
                   <Feather name="save" size={24} color="black" />
                 </TouchableOpacity>
+
                 <TouchableOpacity onPress={() => onDelete()}>
                   <Feather name="trash-2" size={24} color="black" />
                 </TouchableOpacity>
@@ -130,7 +156,7 @@ const WorkoutScreen = ({ route }) => {
         title: `${program.name} - ${programDay.dayName}`,
       });
     }
-  }, [program?.name]);
+  }, [program?.name, programDay?.dayName]);
 
   useEffect(() => {
     if (!isWorkoutRunning && dayId) {
@@ -138,27 +164,6 @@ const WorkoutScreen = ({ route }) => {
     }
   }, []);
 
-  // Licznik przerwy treningowej
-  useEffect(() => {
-    let interval = null;
-    if (isBreak) {
-      interval = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            setIsBreak(false);
-            return initialSeconds;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isBreak]);
-
-  // automatyczne przejście na następne ćwiczenie po załadowaniu danych z bazy
   useEffect(() => {
     if (!workouts.length || !exercises.length) return;
     const refreshedWorkout = workouts.find((w) => w.id === currentWorkoutId);
@@ -176,96 +181,17 @@ const WorkoutScreen = ({ route }) => {
     }
   }, [workouts]);
 
-  useEffect(() => {
-    if (!workout) return;
-
-    const logged = new Set();
-    workout.exercises?.forEach((exercise) => {
-      exercise.sets?.forEach((set) => {
-        const key = `${exercise.programExerciseId}_${set.setNumber}`;
-        logged.add(key);
-      });
-    });
-
-    setLoggedSets(logged);
-  }, [workout]);
-
-  useEffect(() => {
-    if (!workout) return;
-
-    const newInputs = {};
-    workout.exercises?.forEach((exercise) => {
-      exercise.sets?.forEach((set) => {
-        const key = `${exercise.programExerciseId}_${set.setNumber}`;
-        newInputs[key] = {
-          weight:
-            set.weight !== null && set.weight !== undefined
-              ? String(set.weight)
-              : "0",
-          reps:
-            set.reps !== null && set.reps !== undefined ? String(set.reps) : "",
-        };
-      });
-    });
-    setSetInputs((prev) => ({
-      ...prev,
-      ...newInputs,
-    }));
-  }, [workout]);
-
-  // uruchamia się po odświeżeniu treningów
-  const handleInputChange = (exerciseId, setId, field, value) => {
-    const key = `${exerciseId}_${setId}`;
-    setSetInputs((prev) => ({
-      ...prev,
-      [key]: {
-        ...prev[key],
-        [field]: value,
-      },
-    }));
-  };
-
-  const handleFocus = (exerciseId, setId) => {
-    setFocusedSet({ exerciseId, setId });
-  };
-
   const handleLogSet = async () => {
     if (!focusedSet) return;
-    const { exerciseId, setId } = focusedSet;
-    const key = `${exerciseId}_${setId}`;
-    const data = setInputs[key];
 
-    if (!data || !currentWorkoutId) return;
-
-    await addWorkoutSet(
-      currentWorkoutId,
-      exerciseId,
-      setId,
-      data.weight,
-      data.reps
-    );
-
-    await loadWorkouts();
-
-    setLoggedSets((prev) => {
-      const next = new Set(prev);
-      next.add(key);
-      return next;
-    });
+    await logSet(focusedSet, setInputs);
 
     setFocusedSet(null);
-    setTimeLeft(initialSeconds);
-    setIsBreak(true);
-  };
-
-  const skipRest = () => {
-    setIsBreak(false);
-    setTimeLeft(initialSeconds);
   };
 
   if (!programDay || !exercises?.length) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.centered}>
         <Text>No exercises found for this day.</Text>
       </View>
     );
@@ -289,80 +215,23 @@ const WorkoutScreen = ({ route }) => {
             index,
           })}
           renderItem={({ item }) => (
-            <View style={styles.page}>
-              <Image source={{ uri: item.imageUrl }} style={styles.image} />
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginHorizontal: 40,
-                  marginBottom: 10,
-                }}
-              >
-                <Text style={styles.name}>{item.exerciseName}</Text>
-
-                {focusedSet && oneRepMax ? (
-                  <Text style={styles.name}>1RM: {oneRepMax.toFixed(1)}</Text>
-                ) : (
-                  <Text style={styles.name}>1RM: -</Text>
-                )}
-              </View>
-
-              {item.sets.map((set, index) => {
-                const key = `${item.id}_${set.id}`;
-                const values = setInputs[key] || {};
-                const isFocused =
-                  focusedSet?.exerciseId === item.id &&
-                  focusedSet?.setId === set.id;
-
-                return (
-                  <View
-                    key={set.id || index}
-                    style={[
-                      styles.setContainer,
-                      isFocused && styles.focusedRow,
-                    ]}
-                  >
-                    <SetNumber number={index + 1} />
-
-                    <NumericTextInput
-                      term={values.weight}
-                      onFocus={() => handleFocus(item.id, set.id)}
-                      handleChange={(val) =>
-                        handleInputChange(item.id, set.id, "weight", val)
-                      }
-                      placeholder={values.weight || "0"}
-                    />
-                    <Text style={{ alignSelf: "center" }}>kgs</Text>
-
-                    <NumericTextInput
-                      term={values.reps}
-                      onFocus={() => handleFocus(item.id, set.id)}
-                      handleChange={(val) =>
-                        handleInputChange(item.id, set.id, "reps", val)
-                      }
-                      placeholder={values.reps || String(set.reps)}
-                    />
-                    <Text style={{ alignSelf: "center" }}>reps</Text>
-
-                    <MaterialIcons
-                      name="done"
-                      size={20}
-                      style={styles.done}
-                      color={loggedSets.has(key) ? "blue" : "black"}
-                    />
-                  </View>
-                );
-              })}
-            </View>
+            <ExercisePage
+              exercise={item}
+              setInputs={setInputs}
+              loggedSets={loggedSets}
+              focusedSet={focusedSet}
+              handleFocus={handleFocus}
+              handleInputChange={handleInputChange}
+              oneRepMax={oneRepMax}
+            />
           )}
         />
 
         <View style={styles.timerContainer}>
           <Text style={styles.timerText}>{timeLeft}</Text>
-          <TouchableOpacity style={{ flex: 1 }} onPress={skipRest}>
-            <Text style={{ fontSize: 10, alignSelf: "center" }}>Skip rest</Text>
+
+          <TouchableOpacity style={{ flex: 1 }} onPress={skipBreak}>
+            <Text style={styles.skipText}>Skip rest</Text>
             <Ionicons
               name="play-skip-forward-circle-outline"
               size={30}
@@ -382,33 +251,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  setContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  focusedRow: {
-    backgroundColor: "lightgray",
-  },
-  image: {
-    width: width,
-    height: 150,
-    borderRadius: 10,
-    marginBottom: 5,
-  },
-  page: {
-    width: width,
-    height: "100%",
-    alignContent: "center",
-    backgroundColor: "transparent",
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: "bold",
-    alignSelf: "center",
-  },
-  done: {
-    alignSelf: "center",
-    marginRight: 15,
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   timerContainer: {
     backgroundColor: "lightblue",
@@ -419,6 +265,7 @@ const styles = StyleSheet.create({
     width: 120,
     marginHorizontal: 15,
     marginTop: 10,
+    justifyViewport: "center",
     justifyContent: "center",
   },
   timerText: {
@@ -426,6 +273,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     color: "blue",
+  },
+  skipText: {
+    fontSize: 10,
+    alignSelf: "center",
   },
   button: {
     backgroundColor: "transparent",
