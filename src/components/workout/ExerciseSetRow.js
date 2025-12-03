@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import SetNumber from "../SetNumber";
-import NumericTextInput from "../NumericTextInput";
+import NumericTextInput from "../shared/NumericTextInput";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const ExerciseSetRow = ({

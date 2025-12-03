@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
-import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import Feather from "@expo/vector-icons/Feather";
@@ -38,16 +37,14 @@ const TrainingProgramBox = ({ program, onPress }) => {
         </TouchableOpacity>
         <View style={styles.viewContainer}>
           <Text style={styles.programName}>{program.name}</Text>
-          <Text>{program.days.length} Training day/s</Text>
-          {/* jeśli tak renderuje przycisk aby zacząć trening */}
-          <TouchableOpacity
+          <Text style={{ fontSize: 18, paddingTop: 5 }}>
+            {program.days.length} Training day/s
+          </Text>
+          {/* <View
             style={styles.button}
-            onPress={() => {
-              // navigation.navigate("Workout", { programId: program.id });
-            }}
           >
             <Text style={styles.buttonText}>See more</Text>
-          </TouchableOpacity>
+          </View> */}
         </View>
         {isModalVisible && (
           <View style={styles.localModalContainer}>
@@ -123,6 +120,8 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   programName: {
+    paddingTop: 5,
+    fontSize: 24,
     marginTop: 10,
     fontWeight: "bold",
   },

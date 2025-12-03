@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
-import { View, FlatList, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, Text } from "react-native";
 import usePersonalRecords from "../hooks/usePersonalRecords";
 import PersonalRecordBox from "../components/PersonalRecordBox";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/shared/SearchBar";
 import { LinearGradient } from "expo-linear-gradient";
 
 const PersonalRecordsScreen = () => {

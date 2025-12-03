@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
-import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import Feather from "@expo/vector-icons/Feather";
@@ -157,6 +156,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   programName: {
+    fontSize: 18,
     marginTop: 10,
     fontWeight: "bold",
   },

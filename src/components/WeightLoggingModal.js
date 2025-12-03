@@ -7,7 +7,7 @@ import {
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import StandardTextInput from "./StandardTextInput";
+import StandardTextInput from "./shared/StandardTextInput";
 
 const WeightLoggingModal = ({ onClose }) => {
   const [date, setDate] = useState(new Date());

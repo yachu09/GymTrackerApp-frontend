@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import StandardTextInput from "../components/StandardTextInput";
+import React, { useState, useContext } from "react";
+import { View, StyleSheet } from "react-native";
+import StandardTextInput from "../components/shared/StandardTextInput";
 import { useNavigation } from "@react-navigation/native";
-import StandardButton from "../components/StandardButton";
+import StandardButton from "../components/shared/StandardButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 

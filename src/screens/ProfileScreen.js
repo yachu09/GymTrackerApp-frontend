@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import StandardButton from "../components/StandardButton";
+import StandardButton from "../components/shared/StandardButton";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import useWorkoutStreak from "../hooks/useWorkoutStreak";

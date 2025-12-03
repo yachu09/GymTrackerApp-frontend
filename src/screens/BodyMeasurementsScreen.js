@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 import { LinearGradient } from "expo-linear-gradient";
-import StandardButton from "../components/StandardButton";
+import StandardButton from "../components/shared/StandardButton";
 import { weightData } from "../data/dummyData/weightData";
 import WeighLoggingModal from "../components/WeightLoggingModal";
 

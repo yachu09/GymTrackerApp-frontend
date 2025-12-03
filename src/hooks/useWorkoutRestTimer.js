@@ -1,3 +1,4 @@
+// hooks/useWorkoutRestTimer.js
 import { useState, useEffect, useRef } from "react";
 
 export default function useWorkoutRestTimer() {
@@ -44,5 +45,6 @@ export default function useWorkoutRestTimer() {
     isBreak,
     startBreak,
     skipBreak,
+    breakDuration: initialSecondsRef.current,
   };
 }

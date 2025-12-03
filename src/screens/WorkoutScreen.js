@@ -14,7 +14,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import StandardButton from "../components/StandardButton";
+import StandardButton from "../components/shared/StandardButton";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
 
@@ -30,6 +30,7 @@ import useWorkoutSetInputs from "../hooks/useWorkoutSetInputs";
 import useWorkoutLogger from "../hooks/useWorkoutLogger";
 
 import ExercisePage from "../components/workout/ExercisePage";
+import RestTimer from "../components/workout/RestTimer";
 
 const { width } = Dimensions.get("window");
 
@@ -55,7 +56,8 @@ const WorkoutScreen = ({ route }) => {
 
   const workout = workouts.find((w) => w.id === currentWorkoutId);
 
-  const { timeLeft, isBreak, startBreak, skipBreak } = useWorkoutRestTimer();
+  const { timeLeft, isBreak, startBreak, skipBreak, breakDuration } =
+    useWorkoutRestTimer();
 
   const {
     inputs: setInputs,
@@ -227,19 +229,12 @@ const WorkoutScreen = ({ route }) => {
           )}
         />
 
-        <View style={styles.timerContainer}>
-          <Text style={styles.timerText}>{timeLeft}</Text>
-
-          <TouchableOpacity style={{ flex: 1 }} onPress={skipBreak}>
-            <Text style={styles.skipText}>Skip rest</Text>
-            <Ionicons
-              name="play-skip-forward-circle-outline"
-              size={30}
-              style={{ marginLeft: 20 }}
-            />
-          </TouchableOpacity>
-        </View>
-
+        {/* <RestTimer timeLeft={timeLeft} onSkip={skipBreak} /> */}
+        <RestTimer
+          timeLeft={timeLeft}
+          totalTime={breakDuration}
+          onSkip={skipBreak}
+        />
         <StandardButton text="Log Set" onPress={handleLogSet} />
         <View style={{ marginBottom: 10 }} />
       </View>
@@ -255,28 +250,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  timerContainer: {
-    backgroundColor: "lightblue",
-    height: 60,
-    borderRadius: 25,
-    flexDirection: "row",
-    padding: 10,
-    width: 120,
-    marginHorizontal: 15,
-    marginTop: 10,
-    justifyViewport: "center",
-    justifyContent: "center",
-  },
-  timerText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    alignSelf: "center",
-    color: "blue",
-  },
-  skipText: {
-    fontSize: 10,
-    alignSelf: "center",
   },
   button: {
     backgroundColor: "transparent",

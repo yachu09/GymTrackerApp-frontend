@@ -4,7 +4,7 @@ import { Context as WorkoutContext } from "../context/WorkoutContext";
 import { useNavigation } from "@react-navigation/native";
 import useTotalWeight from "../hooks/useTotalWeight";
 import { LinearGradient } from "expo-linear-gradient";
-import StandardButton from "../components/StandardButton";
+import StandardButton from "../components/shared/StandardButton";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import ViewShot from "react-native-view-shot";

@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, FlatList, ScrollView } from "react-native";
+import React, { useEffect, useState, useLayoutEffect } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import useExercises from "../hooks/useExercises";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/shared/SearchBar";
 import ExercisesList from "../components/ExercisesList";
-import { AntDesign } from "@expo/vector-icons";
-import StandardButton from "../components/StandardButton";
+import StandardButton from "../components/shared/StandardButton";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const ExerciseSearchScreen = ({ route }) => {
   const [term, setTerm] = useState("");
@@ -16,6 +22,26 @@ const ExerciseSearchScreen = ({ route }) => {
   const [exercisesToAdd, setExercisesToAdd] = useState([]);
 
   const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View
+          style={{
+            paddingLeft: 5,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("AddExercise");
+            }}
+          >
+            <AntDesign name="plus" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+      ),
+    });
+  }, [navigation]);
 
   const [selectedExercises, setSelectedExercises] = useState([]);
 

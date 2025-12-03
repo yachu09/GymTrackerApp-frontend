@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, StyleSheet, FlatList } from "react-native";
 import ProgramExerciseDetail from "../components/ProgramExerciseDetail";
-import StandardButton from "../components/StandardButton";
+import StandardButton from "../components/shared/StandardButton";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 

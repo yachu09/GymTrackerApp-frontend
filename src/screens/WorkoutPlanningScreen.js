@@ -1,13 +1,7 @@
-import React, { useState, useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import React, { useContext } from "react";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import TrainingProgramBox from "../components/TrainingProgramBox";
-import StandardButton from "../components/StandardButton";
+import StandardButton from "../components/shared/StandardButton";
 import { useNavigation } from "@react-navigation/native";
 import { initDatabase } from "../database/localDatabase";
 import { useFocusEffect } from "@react-navigation/native";

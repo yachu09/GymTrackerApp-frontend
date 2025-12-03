@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Text, View, StyleSheet, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import StandardButton from "../components/StandardButton";
+import StandardButton from "../components/shared/StandardButton";
 import ProgramDayBox from "../components/ProgramDayBox";
 import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 
