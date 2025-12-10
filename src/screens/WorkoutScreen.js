@@ -32,6 +32,9 @@ import useWorkoutLogger from "../hooks/useWorkoutLogger";
 import ExercisePage from "../components/workout/ExercisePage";
 import RestTimer from "../components/workout/RestTimer";
 
+import ExerciseStatsCard from "../components/workout/ExerciseStatsCard";
+import useWorkoutMuscleStats from "../hooks/useWorkoutMuscleStats";
+
 const { width } = Dimensions.get("window");
 
 const WorkoutScreen = ({ route }) => {
@@ -54,7 +57,15 @@ const WorkoutScreen = ({ route }) => {
   const programDay = program?.days?.find((d) => d.id === dayId);
   const exercises = programDay?.exercises || [];
 
+  const exercisesWithSummary = [
+    ...exercises,
+    { id: "summary-slot", isSummary: true },
+  ];
+
   const workout = workouts.find((w) => w.id === currentWorkoutId);
+
+  const { stats, muscleGroupTotals, totalSets } =
+    useWorkoutMuscleStats(workout);
 
   const { timeLeft, isBreak, startBreak, skipBreak, breakDuration } =
     useWorkoutRestTimer();
@@ -153,6 +164,21 @@ const WorkoutScreen = ({ route }) => {
   };
 
   useEffect(() => {
+    if (!workout || !exercises.length) return;
+
+    const allCompleted = workout.exercises.every(
+      (loggedEx, idx) => loggedEx.sets.length === exercises[idx].sets.length
+    );
+
+    if (allCompleted) {
+      flatListRef.current?.scrollToIndex({
+        index: exercises.length,
+        animated: true,
+      });
+    }
+  }, [workout]);
+
+  useEffect(() => {
     if (program && programDay) {
       navigation.setOptions({
         title: `${program.name} - ${programDay.dayName}`,
@@ -204,7 +230,7 @@ const WorkoutScreen = ({ route }) => {
       <View style={styles.container}>
         <FlatList
           ref={flatListRef}
-          data={exercises}
+          data={exercisesWithSummary}
           keyExtractor={(exercise) => exercise.id.toString()}
           horizontal
           pagingEnabled
@@ -216,17 +242,40 @@ const WorkoutScreen = ({ route }) => {
             offset: width * index,
             index,
           })}
-          renderItem={({ item }) => (
-            <ExercisePage
-              exercise={item}
-              setInputs={setInputs}
-              loggedSets={loggedSets}
-              focusedSet={focusedSet}
-              handleFocus={handleFocus}
-              handleInputChange={handleInputChange}
-              oneRepMax={oneRepMax}
-            />
-          )}
+          renderItem={({ item }) =>
+            item.isSummary ? (
+              <View style={{ padding: 16, width: width }}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 18,
+                    alignSelf: "center",
+                  }}
+                >
+                  Muscle Breakdown ({totalSets} sets)
+                </Text>
+
+                {stats.map((ex, i) => (
+                  <ExerciseStatsCard
+                    key={i}
+                    name={ex.name}
+                    completedSets={ex.completedSets}
+                    contribution={ex.contributionPercent}
+                  />
+                ))}
+              </View>
+            ) : (
+              <ExercisePage
+                exercise={item}
+                setInputs={setInputs}
+                loggedSets={loggedSets}
+                focusedSet={focusedSet}
+                handleFocus={handleFocus}
+                handleInputChange={handleInputChange}
+                oneRepMax={oneRepMax}
+              />
+            )
+          }
         />
 
         {/* <RestTimer timeLeft={timeLeft} onSkip={skipBreak} /> */}

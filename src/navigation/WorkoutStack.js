@@ -7,6 +7,7 @@ import ProgramDayDetailsScreen from "../screens/ProgramDayDetailsScreen";
 import WorkoutScreen from "../screens/WorkoutScreen";
 import WorkoutSummaryScreen from "../screens/WorkoutSummaryScreen";
 import AddNewProgramScreen from "../screens/AddNewProgramScreen";
+import AddExerciseScreen from "../screens/AddExerciseScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +54,11 @@ export default function WorkoutStack() {
         name="WorkoutSummary"
         component={WorkoutSummaryScreen}
         options={{ title: "Workout Summary" }}
+      />
+      <Stack.Screen
+        name="AddExercise"
+        component={AddExerciseScreen}
+        options={{ title: "Add an exercise" }}
       />
     </Stack.Navigator>
   );

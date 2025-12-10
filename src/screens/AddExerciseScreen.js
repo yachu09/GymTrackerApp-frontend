@@ -8,6 +8,7 @@ import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import useUploadExercise from "../hooks/useUploadExercise";
 import { useNavigation } from "@react-navigation/native";
+import Feather from "@expo/vector-icons/Feather";
 
 const AddExerciseScreen = () => {
   const navigation = useNavigation();
@@ -50,8 +51,7 @@ const AddExerciseScreen = () => {
 
   const pickerItems = muscleGroupsToPicker();
 
-  //zablokuj znaki specjalnie oraz liczby, do tego kapitalizuj pierwsza litere nazwy i ogranicz długość opisu.
-  // Zrób zabezpieczenie również w API
+  //kapitalizuj pierwsza litere nazwy
   const addExercise = async () => {
     const nameRegex = /^[A-Za-z ]+$/;
 
@@ -106,6 +106,12 @@ const AddExerciseScreen = () => {
       {/* <View style={styles.container}> */}
       {success ? (
         <View style={styles.successContainer}>
+          <Feather
+            name="check-circle"
+            size={88}
+            color="#3fc034ff"
+            style={styles.successIcon}
+          />
           <Text style={styles.success}>Exercise added successfully!</Text>
           <StandardButton
             text="Okay!"
@@ -117,7 +123,7 @@ const AddExerciseScreen = () => {
       ) : (
         <View style={styles.container}>
           <View style={styles.form}>
-            <Text style={styles.label}>Name: </Text>
+            <Text style={styles.label}>Name and description: </Text>
             <StandardTextInput
               placeholder="Enter exercise name"
               term={name}
@@ -133,7 +139,7 @@ const AddExerciseScreen = () => {
             {noNameError ? (
               <Text style={styles.errorMessage}>Name is missing</Text>
             ) : null}
-            <Text style={styles.label}>Description: </Text>
+            {/* <Text style={styles.label}>Description: </Text> */}
             <StandardTextInput
               placeholder="Enter short description"
               term={description}
@@ -153,6 +159,7 @@ const AddExerciseScreen = () => {
             <Picker
               selectedValue={selected}
               onValueChange={(value) => setSelected(value)}
+              itemStyle={{ fontSize: 18, height: 120 }}
             >
               {pickerItems}
             </Picker>
@@ -188,7 +195,7 @@ const AddExerciseScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 16,
+    // paddingTop: 16,
     justifyContent: "space-between",
   },
   form: {
@@ -201,25 +208,36 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     alignSelf: "center",
-    marginTop: 10,
+    marginTop: 20,
   },
   errorMessage: {
     color: "red",
     alignSelf: "center",
   },
   image: {
-    width: 150,
-    height: 150,
-    borderRadius: 10,
+    marginTop: 20,
+    alignSelf: "center",
+    width: 160,
+    height: 160,
+    borderRadius: 25,
+    borderColor: "white",
+    borderWidth: 10,
     marginBottom: 5,
   },
   successContainer: {
+    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 40,
   },
   success: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#3fc034ff",
+  },
+  successIcon: {
+    alignSelf: "center",
+    marginBottom: 10,
   },
 });
 
