@@ -153,13 +153,12 @@ const AddExerciseScreen = () => {
             {noDescriptionError ? (
               <Text style={styles.errorMessage}>Description is missing</Text>
             ) : null}
-            {/* make some kind of enum in API and change text input to picker */}
             <Text style={styles.label}>Muscle Group: </Text>
-            {/* <StandardTextInput placeholder="Enter muscle group" /> */}
             <Picker
               selectedValue={selected}
               onValueChange={(value) => setSelected(value)}
               itemStyle={{ fontSize: 18, height: 120 }}
+              style={{ paddingHorizontal: 10 }}
             >
               {pickerItems}
             </Picker>

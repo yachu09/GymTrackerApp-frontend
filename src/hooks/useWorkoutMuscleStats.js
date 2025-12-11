@@ -3,7 +3,13 @@ import { useMemo } from "react";
 export default function useWorkoutMuscleStats(workout) {
   return useMemo(() => {
     if (!workout || !workout.exercises?.length) {
-      return { stats: [], muscleGroupTotals: {}, totalSets: 0 };
+      return {
+        stats: [],
+        muscleGroupTotals: {},
+        totalSets: 0,
+        topMuscleGroup: null,
+        topMusclePercent: 0,
+      };
     }
 
     const stats = [];
@@ -42,6 +48,23 @@ export default function useWorkoutMuscleStats(workout) {
       );
     }
 
-    return { stats, muscleGroupTotals, totalSets };
+    let topMuscleGroup = null;
+    let topMusclePercent = 0;
+
+    if (Object.keys(muscleGroupTotals).length > 0) {
+      const sorted = Object.entries(muscleGroupTotals).sort(
+        (a, b) => b[1] - a[1]
+      );
+      topMuscleGroup = sorted[0][0];
+      topMusclePercent = sorted[0][1];
+    }
+
+    return {
+      stats,
+      muscleGroupTotals,
+      totalSets,
+      topMuscleGroup,
+      topMusclePercent,
+    };
   }, [workout]);
 }

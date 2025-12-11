@@ -12,7 +12,7 @@ const ExerciseStatsCard = ({ name, completedSets, contribution }) => {
         <View style={[styles.barFill, { width: `${contribution}%` }]} />
       </View>
 
-      <Text style={styles.percent}>{contribution}% of total</Text>
+      <Text style={styles.percent}>{contribution}% of all workout sets</Text>
     </View>
   );
 };
@@ -28,10 +28,12 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: "bold",
     fontSize: 16,
+    alignSelf: "center",
   },
   sets: {
     color: "gray",
     marginTop: 3,
+    alignSelf: "center",
   },
   barContainer: {
     height: 8,
@@ -48,6 +50,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 12,
     color: "gray",
+    alignSelf: "center",
   },
 });
 

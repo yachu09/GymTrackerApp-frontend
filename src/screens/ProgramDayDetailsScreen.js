@@ -9,7 +9,10 @@ const ProgramDayDetailsScreen = ({ route }) => {
   const navigation = useNavigation();
   const programDay = route.params.day;
   return (
-    <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
+    <LinearGradient
+      style={{ flex: 1, paddingBottom: 120 }}
+      colors={["#FFFFFF", "lightblue"]}
+    >
       <View>
         <Text style={styles.programDayName}>{programDay.dayName}</Text>
         <FlatList
@@ -33,9 +36,10 @@ const ProgramDayDetailsScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {},
   programDayName: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "bold",
     alignSelf: "center",
+    marginTop: 10,
   },
 });
 

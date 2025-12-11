@@ -12,7 +12,10 @@ const WorkoutDetailsScreen = ({ route }) => {
   const workout = workouts.find((w) => w.id === workoutId);
   console.log(JSON.stringify(workout, null, 2));
   return (
-    <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
+    <LinearGradient
+      style={{ flex: 1, paddingBottom: 80 }}
+      colors={["#FFFFFF", "lightblue"]}
+    >
       <View>
         <Text style={styles.programNameText}>
           {workout.programName} - {workout.dayName}
@@ -21,7 +24,7 @@ const WorkoutDetailsScreen = ({ route }) => {
         <FlatList
           data={workout.exercises}
           keyExtractor={(exercise) => exercise.programExerciseId.toString()}
-          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => <WorkoutExerciseDetail exercise={item} />}
         />
       </View>

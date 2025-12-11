@@ -32,8 +32,7 @@ import useWorkoutLogger from "../hooks/useWorkoutLogger";
 import ExercisePage from "../components/workout/ExercisePage";
 import RestTimer from "../components/workout/RestTimer";
 
-import ExerciseStatsCard from "../components/workout/ExerciseStatsCard";
-import useWorkoutMuscleStats from "../hooks/useWorkoutMuscleStats";
+import WorkoutBreakdown from "../components/workout/WorkoutBreakdown";
 
 const { width } = Dimensions.get("window");
 
@@ -63,9 +62,6 @@ const WorkoutScreen = ({ route }) => {
   ];
 
   const workout = workouts.find((w) => w.id === currentWorkoutId);
-
-  const { stats, muscleGroupTotals, totalSets } =
-    useWorkoutMuscleStats(workout);
 
   const { timeLeft, isBreak, startBreak, skipBreak, breakDuration } =
     useWorkoutRestTimer();
@@ -99,6 +95,8 @@ const WorkoutScreen = ({ route }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const [isLastPage, setIsLastPage] = useState(false);
+
   const focusedKey = focusedSet
     ? `${focusedSet.exerciseId}_${focusedSet.setId}`
     : null;
@@ -111,7 +109,9 @@ const WorkoutScreen = ({ route }) => {
 
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
     if (viewableItems.length > 0) {
-      setCurrentPage(viewableItems[0].index);
+      const index = viewableItems[0].index;
+      setCurrentPage(index);
+      setIsLastPage(index === exercisesWithSummary.length - 1);
     }
   }).current;
 
@@ -244,25 +244,8 @@ const WorkoutScreen = ({ route }) => {
           })}
           renderItem={({ item }) =>
             item.isSummary ? (
-              <View style={{ padding: 16, width: width }}>
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 18,
-                    alignSelf: "center",
-                  }}
-                >
-                  Muscle Breakdown ({totalSets} sets)
-                </Text>
-
-                {stats.map((ex, i) => (
-                  <ExerciseStatsCard
-                    key={i}
-                    name={ex.name}
-                    completedSets={ex.completedSets}
-                    contribution={ex.contributionPercent}
-                  />
-                ))}
+              <View style={{ width: width, paddingBottom: 120 }}>
+                <WorkoutBreakdown workout={workout} />
               </View>
             ) : (
               <ExercisePage
@@ -278,13 +261,24 @@ const WorkoutScreen = ({ route }) => {
           }
         />
 
-        {/* <RestTimer timeLeft={timeLeft} onSkip={skipBreak} /> */}
-        <RestTimer
-          timeLeft={timeLeft}
-          totalTime={breakDuration}
-          onSkip={skipBreak}
-        />
-        <StandardButton text="Log Set" onPress={handleLogSet} />
+        {!isLastPage ?? (
+          <RestTimer
+            timeLeft={timeLeft}
+            totalTime={breakDuration}
+            onSkip={skipBreak}
+          />
+        )}
+        {isLastPage ? (
+          <StandardButton
+            text="Save Workout"
+            onPress={() => {
+              onSave();
+            }}
+          />
+        ) : (
+          <StandardButton text="Log Set" onPress={handleLogSet} />
+        )}
+
         <View style={{ marginBottom: 10 }} />
       </View>
     </LinearGradient>
