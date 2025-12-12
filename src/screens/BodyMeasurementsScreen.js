@@ -1,120 +1,205 @@
 import React, { useState, useMemo } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 import { LinearGradient } from "expo-linear-gradient";
-import StandardButton from "../components/shared/StandardButton";
 import { weightData } from "../data/dummyData/weightData";
 import WeighLoggingModal from "../components/WeightLoggingModal";
+import StandardButton from "../components/shared/StandardButton";
+
+const MONTH_NAMES = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+const WEEKDAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const BodyMeasurementsScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const Period = {
+  const PERIOD = {
     WEEK: "week",
     MONTH: "month",
     YEAR: "year",
   };
 
-  const [period, setPeriod] = useState(Period.WEEK);
+  const [period, setPeriod] = useState(PERIOD.WEEK);
 
-  const baseData = useMemo(
-    () =>
-      weightData.map((item) => ({
-        value: item.value,
-        date: item.date,
-        label: item.date,
-        dataPointText: item.value.toString(),
-      })),
-    []
-  );
+  const baseData = useMemo(() => {
+    return weightData.map((item) => ({
+      value: item.value,
+      date: new Date(item.date),
+    }));
+  }, []);
 
-  const filteredData = useMemo(() => {
-    if (!baseData.length) return [];
+  const getWeekData = () => {
+    return baseData.map(({ value, date }) => ({
+      value,
+      label: WEEKDAY[date.getDay()], // Mon, Tue, Wed...
+    }));
+  };
 
-    if (period === Period.YEAR) return baseData;
+  const getMonthAverages = () => {
+    const groups = {};
 
-    const days = period === Period.WEEK ? 7 : 30;
-    const count = Math.min(days, baseData.length);
-    return baseData.slice(-count);
+    baseData.forEach(({ value, date }) => {
+      const key = `${date.getFullYear()}-${date.getMonth()}`;
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(value);
+    });
+
+    return Object.keys(groups)
+      .sort()
+      .map((key) => {
+        const [year, month] = key.split("-").map(Number);
+        const avg = groups[key].reduce((a, b) => a + b, 0) / groups[key].length;
+        return {
+          value: Number(avg.toFixed(1)),
+          label: MONTH_NAMES[month],
+        };
+      });
+  };
+
+  const getYearAverages = () => {
+    const groups = {};
+
+    baseData.forEach(({ value, date }) => {
+      const key = date.getFullYear();
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(value);
+    });
+
+    return Object.keys(groups)
+      .sort()
+      .map((year) => {
+        const avg =
+          groups[year].reduce((a, b) => a + b, 0) / groups[year].length;
+        return {
+          value: Number(avg.toFixed(1)),
+          label: year.toString(),
+        };
+      });
+  };
+
+  const filtered = useMemo(() => {
+    switch (period) {
+      case PERIOD.WEEK:
+        return getWeekData();
+      case PERIOD.MONTH:
+        return getMonthAverages();
+      case PERIOD.YEAR:
+        return getYearAverages();
+      default:
+        return [];
+    }
   }, [period, baseData]);
 
-  const { normalizedData, yAxisLabelTexts, noOfSections } = useMemo(() => {
-    if (!filteredData.length) {
-      return {
-        normalizedData: [],
-        yAxisLabelTexts: [],
-        noOfSections: 0,
-      };
-    }
+  const stats = useMemo(() => {
+    if (!filtered.length) return { avg: 0, min: 0, max: 0 };
 
-    const values = filteredData.map((d) => d.value);
-    const rawMin = Math.min(...values);
-    const rawMax = Math.max(...values);
+    const vals = filtered.map((d) => d.value);
+    const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
 
-    const bottom = Math.floor(rawMin) - 1;
-    const top = Math.ceil(rawMax) + 1;
+    return {
+      avg: avg.toFixed(1),
+      min: Math.min(...vals).toFixed(1),
+      max: Math.max(...vals).toFixed(1),
+    };
+  }, [filtered]);
 
-    const normalizedData = filteredData.map((d) => ({
-      ...d,
-      value: d.value - bottom,
-    }));
+  const avgWeight =
+    filtered.reduce((a, b) => a + b.value, 0) / (filtered.length || 1);
 
-    const yAxisLabelTexts = [];
-    for (let v = bottom; v <= top; v++) {
-      yAxisLabelTexts.push(v.toString());
-    }
+  const yMin = Math.floor(avgWeight - 2);
+  const yMax = Math.ceil(avgWeight + 2);
 
-    const noOfSections = Math.max(yAxisLabelTexts.length - 1, 1);
+  const yLabels = [];
+  for (let v = yMin; v <= yMax; v++) yLabels.push(v.toString());
 
-    return { normalizedData, yAxisLabelTexts, noOfSections };
-  }, [filteredData]);
+  const normalizedData = filtered.map((item) => ({
+    ...item,
+    value: item.value - yMin,
+  }));
+
+  const PeriodButton = ({ label, active, onPress }) => (
+    <TouchableOpacity onPress={onPress} style={styles.button}>
+      <LinearGradient
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 0, y: 1 }}
+        // style={styles.button}
+        style={{ flex: 1, justifyContent: "center", borderRadius: 25 }}
+        colors={["lightblue", "#58b4e3ff"]}
+      >
+        <Text style={styles.buttonText}>{label}</Text>
+      </LinearGradient>
+    </TouchableOpacity>
+  );
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
+    <LinearGradient style={{ flex: 1 }} colors={["#ffffff", "lightblue"]}>
       <StandardButton
         text="Log your today's weight"
         onPress={() => setIsModalVisible(true)}
       />
 
-      <View style={styles.buttonsRow}>
-        <StandardButton text="Week" onPress={() => setPeriod(Period.WEEK)} />
-        <StandardButton text="Month" onPress={() => setPeriod(Period.MONTH)} />
-        <StandardButton text="Year" onPress={() => setPeriod(Period.YEAR)} />
+      <View style={styles.periodRow}>
+        <PeriodButton
+          label="Week"
+          active={period === PERIOD.WEEK}
+          onPress={() => setPeriod(PERIOD.WEEK)}
+        />
+        <PeriodButton
+          label="Month"
+          active={period === PERIOD.MONTH}
+          onPress={() => setPeriod(PERIOD.MONTH)}
+        />
+        <PeriodButton
+          label="Year"
+          active={period === PERIOD.YEAR}
+          onPress={() => setPeriod(PERIOD.YEAR)}
+        />
       </View>
 
       <View style={styles.chartContainer}>
         <LineChart
           data={normalizedData}
-          yAxisLabelTexts={yAxisLabelTexts}
-          noOfSections={noOfSections}
-          fromZero={true}
           curved
-          isAnimated
-          dataPointsColor="blue"
-          color="lightblue"
           thickness={3}
-          yAxisThickness={0}
-          xAxisThickness={0}
-          yAxisLabelTextStyle={{ fontSize: 10 }}
-          xAxisLabelTextStyle={{ fontSize: 8 }}
-          textColor1="blue"
-          textShiftY={-8}
-          textShiftX={-3}
-          textFontSize={12}
+          isAnimated
+          color="blue"
+          dataPointsColor="blue"
+          startFillColor="rgba(0, 70, 255, 0.25)"
+          endFillColor="rgba(0, 70, 255, 0.05)"
+          yAxisOffset={0}
+          maxValue={yMax - yMin}
+          yAxisLabelTexts={yLabels}
+          noOfSections={yLabels.length - 1}
+          spacing={60}
+          height={250}
+          xAxisLabelTextStyle={{ fontSize: 10, color: "#222" }}
+          yAxisTextStyle={{ fontSize: 12, color: "#222" }}
+          scrollable
+          scrollToEnd
+          scrollAnimation
         />
       </View>
 
-      <View style={styles.weightStatsView}>
-        <Text style={styles.weightStatsText}>
-          Your average weight from this {period} is ? kgs
+      <View style={styles.statsContainer}>
+        <Text style={styles.statsText}>
+          Average ({period}): {stats.avg} kg
         </Text>
-        <Text style={styles.weightStatsText}>
-          Highest body weight this {period}: ? kgs
-        </Text>
-        <Text style={styles.weightStatsText}>
-          Lowest body weight this {period}: ? kgs
-        </Text>
+        <Text style={styles.statsText}>Highest: {stats.max} kg</Text>
+        <Text style={styles.statsText}>Lowest: {stats.min} kg</Text>
       </View>
+
       {isModalVisible && (
         <WeighLoggingModal onClose={() => setIsModalVisible(false)} />
       )}
@@ -123,42 +208,41 @@ const BodyMeasurementsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  chartContainer: {
-    marginTop: 50,
-    marginHorizontal: 15,
-  },
-  buttonsRow: {
+  periodRow: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-  },
-  weightStatsView: {
-    alignItems: "center",
     marginTop: 20,
   },
-  weightStatsText: {
+  chartContainer: {
+    marginTop: 40,
+    marginHorizontal: 20,
+  },
+
+  statsContainer: {
+    marginTop: 25,
+    alignItems: "center",
+  },
+  statsText: {
     fontWeight: "bold",
     fontSize: 16,
+    marginVertical: 4,
   },
-  localModalContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "white",
+
+  button: {
+    backgroundColor: "lightblue",
+    height: 50,
+    width: 100,
+    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     borderRadius: 25,
-    marginHorizontal: 40,
-    marginVertical: 100,
+    flexDirection: "row",
+    marginHorizontal: 15,
     justifyContent: "center",
-    alignItems: "center",
-    zIndex: 20,
   },
-  localModalContent: {
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 15,
-    width: "100%",
-    alignItems: "center",
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    alignSelf: "center",
+    color: "black",
   },
 });
 
