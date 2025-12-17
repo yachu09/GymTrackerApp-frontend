@@ -8,6 +8,8 @@ import {
   deleteAllProgramsInDb,
   deleteProgramInDb,
   deleteTrainingDayInDb,
+  updateProgramNameInDb,
+  updateTrainingDayNameInDb,
 } from "../repos/trainingProgramsRepository";
 
 const programsReducer = (state, action) => {
@@ -23,7 +25,6 @@ const programsReducer = (state, action) => {
   }
 };
 
-// 🔹 Ładowanie programów z dniami i ćwiczeniami
 const loadPrograms = (dispatch) => {
   return async () => {
     const programs = await loadProgramsFromDb();
@@ -31,7 +32,6 @@ const loadPrograms = (dispatch) => {
   };
 };
 
-// 🔹 Tworzenie pustego programu
 const addProgram = (dispatch) => {
   return async (name) => {
     const programId = await addProgramToDb(name);
@@ -40,7 +40,6 @@ const addProgram = (dispatch) => {
   };
 };
 
-// 🔹 Dodanie dnia z ćwiczeniami
 const addProgramDay = (dispatch) => {
   return async (programId, dayName, exercisesArr) => {
     const dayId = await addTrainingDayWithExercisesToDb(
@@ -53,7 +52,6 @@ const addProgramDay = (dispatch) => {
   };
 };
 
-// 🔹 Dodanie serii, powtórzeń i przerwy dla ćwiczenia
 const addSetsRepsAndBreakTime = (dispatch) => {
   return async (programExerciseId, repsOfSets, breakTime) => {
     await addSetsRepsBreakToDb(programExerciseId, repsOfSets, breakTime);
@@ -61,7 +59,6 @@ const addSetsRepsAndBreakTime = (dispatch) => {
   };
 };
 
-// 🔹 Usuwanie wszystkich tabel (reset)
 const dropAllTables = (dispatch) => {
   return async () => {
     await deleteAllProgramsInDb();
@@ -69,7 +66,6 @@ const dropAllTables = (dispatch) => {
   };
 };
 
-// 🔹 Usuwanie pojedynczego programu
 const deleteProgram = (dispatch) => {
   return async (programId) => {
     await deleteProgramInDb(programId);
@@ -80,7 +76,21 @@ const deleteProgram = (dispatch) => {
 const deleteProgramDay = (dispatch) => {
   return async (programDayId) => {
     await deleteTrainingDayInDb(programDayId);
-    await loadPrograms(dispatch)(); // odśwież stan
+    await loadPrograms(dispatch)();
+  };
+};
+
+const updateProgramName = (dispatch) => {
+  return async (programId, newName) => {
+    await updateProgramNameInDb(programId, newName);
+    await loadPrograms(dispatch)();
+  };
+};
+
+const updateTrainingDayName = (dispatch) => {
+  return async (programDayId, newDayName) => {
+    await updateTrainingDayNameInDb(programDayId, newDayName);
+    await loadPrograms(dispatch)();
   };
 };
 
@@ -94,6 +104,8 @@ export const { Context, Provider } = createDataContext(
     dropAllTables,
     deleteProgram,
     deleteProgramDay,
+    updateProgramName,
+    updateTrainingDayName,
   },
   []
 );

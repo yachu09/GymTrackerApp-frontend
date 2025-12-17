@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import Feather from "@expo/vector-icons/Feather";
@@ -12,6 +12,7 @@ const TrainingProgramBox = ({ program, onPress }) => {
     state: programs,
     deleteProgram,
     loadPrograms,
+    updateProgramName,
   } = useContext(TrainingProgramsContext);
 
   const navigation = useNavigation();
@@ -20,6 +21,12 @@ const TrainingProgramBox = ({ program, onPress }) => {
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [term, setTerm] = useState(program.name);
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (term) setErrorMessage("");
+  }, [term]);
 
   return (
     <TouchableOpacity
@@ -61,13 +68,22 @@ const TrainingProgramBox = ({ program, onPress }) => {
               term={term}
               onTermChange={(newTerm) => setTerm(newTerm)}
               onTermSubmit={() => {
-                //handle program name update
+                if (term) {
+                  updateProgramName(program.id, term);
+                  setIsEditMode(false);
+                  setErrorMessage("");
+                } else {
+                  setErrorMessage("No program name!");
+                }
               }}
             />
           ) : (
             <Text style={styles.programName}>{program.name}</Text>
           )}
           {/* <Text style={styles.programName}>{program.name}</Text> */}
+          {errorMessage && isEditMode && (
+            <Text style={{ color: "red" }}>{errorMessage}</Text>
+          )}
           <Text style={{ fontSize: 18, paddingTop: 5 }}>
             {program.days.length} Training day/s
           </Text>

@@ -224,3 +224,27 @@ export const deleteTrainingDayInDb = async (programDayId) => {
     throw error;
   }
 };
+
+export const updateProgramNameInDb = async (programId, newName) => {
+  const db = await getDb();
+
+  await db.runAsync("UPDATE trainingPrograms SET name = ? WHERE id = ?;", [
+    newName,
+    programId,
+  ]);
+
+  console.log(`Zmieniono nazwę programu ID=${programId} na "${newName}"`);
+};
+
+export const updateTrainingDayNameInDb = async (programDayId, newDayName) => {
+  const db = await getDb();
+
+  await db.runAsync(
+    "UPDATE trainingProgramDays SET dayName = ? WHERE id = ?;",
+    [newDayName, programDayId]
+  );
+
+  console.log(
+    `Zmieniono nazwę dnia treningowego ID=${programDayId} na "${newDayName}"`
+  );
+};

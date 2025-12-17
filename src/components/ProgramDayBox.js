@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -7,17 +7,28 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 import { hasWorkoutTodayInDb } from "../repos/workoutRepository";
 import { Alert } from "react-native";
+import EditTextInput from "./shared/EditTextInput";
 
 const ProgramDayBox = ({ day, program, onPress }) => {
   const {
     state: programs,
     deleteProgramDay,
     loadPrograms,
+    updateTrainingDayName,
   } = useContext(TrainingProgramsContext);
 
   const navigation = useNavigation();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [term, setTerm] = useState(day.dayName);
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (term) setErrorMessage("");
+  }, [term]);
 
   //sprawdza czy dzien treningowy ma przypisane serie powtórzenia i czas przerwy
   const isDaySetUp = (day) => {
@@ -69,38 +80,77 @@ const ProgramDayBox = ({ day, program, onPress }) => {
         style={styles.container}
         colors={["lightblue", "#58b4e3ff"]}
       >
+        {/* delete */}
         <TouchableOpacity
           style={styles.rightIconContainer}
           onPress={() => setIsModalVisible(true)}
         >
           <Feather name="trash-2" size={20} color="black" />
         </TouchableOpacity>
+        {/* edit */}
         <TouchableOpacity
           style={styles.leftIconContainer}
-          // onPress={() => setIsModalVisible(true)}
+          onPress={() => {
+            if (isEditMode) {
+              setIsEditMode(false);
+            } else {
+              setIsEditMode(true);
+            }
+          }}
         >
           <Entypo name="edit" size={20} color="black" />
         </TouchableOpacity>
         <View style={styles.viewContainer}>
-          <Text style={styles.programName}>{day.dayName}</Text>
-          <Text>{day.exercises.length} exercises</Text>
-          {/* jeśli tak renderuje przycisk aby zacząć trening */}
-          {isDaySetUp(day) ? (
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                workoutStart();
+          {isEditMode ? (
+            <EditTextInput
+              placeholder={day.dayName}
+              term={term}
+              onTermChange={(newTerm) => setTerm(newTerm)}
+              onTermSubmit={() => {
+                if (term) {
+                  //TODO update program day name
+                  updateTrainingDayName(day.id, term);
+                  setIsEditMode(false);
+                  setErrorMessage("");
+                } else {
+                  setErrorMessage("No day name!");
+                }
               }}
-            >
-              <Text style={styles.buttonText}>Start Workout</Text>
-            </TouchableOpacity>
+            />
           ) : (
-            <Text
-              style={{ marginTop: 10, fontWeight: "bold", color: "#ed4242" }}
-            >
-              Finish setting up your training day!
-            </Text>
+            <>
+              <Text style={styles.programName}>{day.dayName}</Text>
+              <Text>{day.exercises.length} exercises</Text>
+            </>
           )}
+          {errorMessage && isEditMode && (
+            <Text style={{ color: "red" }}>{errorMessage}</Text>
+          )}
+          {/* <Text style={styles.programName}>{day.dayName}</Text>
+          <Text>{day.exercises.length} exercises</Text> */}
+          {/* jeśli tak renderuje przycisk aby zacząć trening */}
+          {isDaySetUp(day)
+            ? !isEditMode && (
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    workoutStart();
+                  }}
+                >
+                  <Text style={styles.buttonText}>Start Workout</Text>
+                </TouchableOpacity>
+              )
+            : !isEditMode && (
+                <Text
+                  style={{
+                    marginTop: 10,
+                    fontWeight: "bold",
+                    color: "#ed4242",
+                  }}
+                >
+                  Finish setting up your training day!
+                </Text>
+              )}
         </View>
         {isModalVisible && (
           <View style={styles.localModalContainer}>
