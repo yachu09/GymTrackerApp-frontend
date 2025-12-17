@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
-import NumericTextInput from "./NumericTextInput";
+import NumericTextInput from "./shared/NumericTextInput";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";

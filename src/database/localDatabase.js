@@ -24,16 +24,24 @@ export const initDatabase = async () => {
       name TEXT NOT NULL
     );
 
-    CREATE TABLE IF NOT EXISTS programExercises (
+    CREATE TABLE IF NOT EXISTS trainingProgramDays (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       programId INTEGER NOT NULL,
+      dayOrder INTEGER NOT NULL,
+      dayName TEXT NOT NULL,
+      FOREIGN KEY (programId) REFERENCES trainingPrograms(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS programExercises (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      programDayId INTEGER NOT NULL,
       exerciseId INTEGER NOT NULL,
       exerciseName TEXT NOT NULL,
       description TEXT,
       muscleGroup TEXT,
       imageUrl TEXT,
-      FOREIGN KEY (programId) REFERENCES trainingPrograms(id)
-    ); 
+      FOREIGN KEY (programDayId) REFERENCES trainingProgramDays(id)
+    );
 
     CREATE TABLE IF NOT EXISTS exerciseSets(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,7 +49,7 @@ export const initDatabase = async () => {
       setNumber INTEGER NOT NULL,
       reps INTEGER NOT NULL,
       breakTime INTEGER,
-      FOREIGN KEY (programExerciseId) REFERENCES programExercsises(id)
+      FOREIGN KEY (programExerciseId) REFERENCES programExercises(id)
     );
   `);
 
@@ -49,10 +57,10 @@ export const initDatabase = async () => {
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS workouts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      programId INTEGER NOT NULL,
+      programDayId INTEGER NOT NULL,
       date TEXT DEFAULT (datetime('now')),
       duration INTEGER DEFAULT 0,
-      FOREIGN KEY (programId) REFERENCES trainingPrograms(id)
+      FOREIGN KEY (programDayId) REFERENCES trainingProgramDays(id)
     );
 
     CREATE TABLE IF NOT EXISTS workoutSets (
@@ -65,6 +73,17 @@ export const initDatabase = async () => {
       FOREIGN KEY (workoutId) REFERENCES workouts(id),
       FOREIGN KEY (programExerciseId) REFERENCES programExercises(id),
       UNIQUE(workoutId, programExerciseId, setNumber)
+    );
+  `);
+
+  //tabela odpowiedzialna za przechowywanie danych wagi
+  //FIXME zmien date na to:
+  //date TEXT NOT NULL UNIQUE,
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS weight (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      date TEXT NOT NULL,
+      weight REAL NOT NULL
     );
   `);
 };

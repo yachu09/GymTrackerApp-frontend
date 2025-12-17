@@ -5,16 +5,39 @@ import { LinearGradient } from "expo-linear-gradient";
 import Feather from "@expo/vector-icons/Feather";
 import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
 
-const TrainingProgramBox = ({ program, onPress }) => {
+const ProgramDayBox = ({ day, program, onPress }) => {
   const {
     state: programs,
-    deleteProgram,
+    deleteProgramDay,
     loadPrograms,
   } = useContext(TrainingProgramsContext);
 
   const navigation = useNavigation();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  //sprawdza czy dzien treningowy ma przypisane serie powtórzenia i czas przerwy
+  const isDaySetUp = (day) => {
+    if (!day?.exercises || day.exercises.length === 0) return false;
+
+    for (const exercise of day.exercises) {
+      if (!exercise.sets || exercise.sets.length === 0) return false;
+
+      for (const set of exercise.sets) {
+        if (
+          set.reps === undefined ||
+          set.reps === null ||
+          set.breakTime === undefined ||
+          set.breakTime === null
+        ) {
+          return false;
+        }
+
+        if (set.reps <= 0) return false;
+      }
+    }
+    return true;
+  };
 
   return (
     <TouchableOpacity
@@ -36,15 +59,28 @@ const TrainingProgramBox = ({ program, onPress }) => {
           <Feather name="trash-2" size={20} color="black" />
         </TouchableOpacity>
         <View style={styles.viewContainer}>
-          <Text style={styles.programName}>{program.name}</Text>
-          <Text style={{ fontSize: 18, paddingTop: 5 }}>
-            {program.days.length} Training day/s
-          </Text>
-          {/* <View
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>See more</Text>
-          </View> */}
+          <Text style={styles.programName}>{day.dayName}</Text>
+          <Text>{day.exercises.length} exercises</Text>
+          {/* jeśli tak renderuje przycisk aby zacząć trening */}
+          {isDaySetUp(day) ? (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate("Workout", {
+                  programId: program.id,
+                  dayId: day.id,
+                });
+              }}
+            >
+              <Text style={styles.buttonText}>Start Workout</Text>
+            </TouchableOpacity>
+          ) : (
+            <Text
+              style={{ marginTop: 10, fontWeight: "bold", color: "#ed4242" }}
+            >
+              Finish setting up your training day!
+            </Text>
+          )}
         </View>
         {isModalVisible && (
           <View style={styles.localModalContainer}>
@@ -61,8 +97,8 @@ const TrainingProgramBox = ({ program, onPress }) => {
                   justifyContent: "center",
                 }}
                 onPress={async () => {
-                  console.log("usun program");
-                  await deleteProgram(program.id);
+                  console.log("usun dzien programu");
+                  await deleteProgramDay(day.id);
                   loadPrograms();
                   setIsModalVisible(false);
                 }}
@@ -120,8 +156,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   programName: {
-    paddingTop: 5,
-    fontSize: 24,
+    fontSize: 18,
     marginTop: 10,
     fontWeight: "bold",
   },
@@ -139,4 +174,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TrainingProgramBox;
+export default ProgramDayBox;

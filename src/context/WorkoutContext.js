@@ -1,3 +1,4 @@
+// context/WorkoutContext.js
 import createDataContext from "./createDataContext";
 import {
   loadWorkoutsFromDb,
@@ -15,22 +16,26 @@ const workoutReducer = (state, action) => {
   switch (action.type) {
     case "SET_WORKOUTS":
       return { ...state, workouts: action.payload };
+
     case "START_WORKOUT":
       return {
         ...state,
         isWorkoutRunning: true,
         currentWorkoutId: action.payload.workoutId,
-        currentProgramId: action.payload.programId,
+        currentDayId: action.payload.dayId,
         workoutDuration: 0,
         timerRunning: true,
       };
+
     case "END_WORKOUT":
       return {
         ...state,
         isWorkoutRunning: false,
         currentWorkoutId: null,
+        currentDayId: null,
         timerRunning: false,
       };
+
     case "TICK_TIMER":
       return {
         ...state,
@@ -38,8 +43,10 @@ const workoutReducer = (state, action) => {
           ? state.workoutDuration + 1
           : state.workoutDuration,
       };
+
     case "RESET_TIMER":
       return { ...state, workoutDuration: 0, timerRunning: false };
+
     default:
       return state;
   }
@@ -57,12 +64,12 @@ const loadWorkouts = (dispatch) => {
 };
 
 const startWorkout = (dispatch) => {
-  return async (programId) => {
-    const workoutId = await startWorkoutInDb(programId);
+  return async (dayId) => {
+    const workoutId = await startWorkoutInDb(dayId);
 
     dispatch({
       type: "START_WORKOUT",
-      payload: { workoutId, programId },
+      payload: { workoutId, dayId },
     });
 
     return workoutId;
@@ -130,7 +137,6 @@ const deleteAllWorkouts = (dispatch) => {
       await initDatabase();
 
       dispatch({ type: "SET_WORKOUTS", payload: [] });
-      // console.log("Wyczyszczono wszystkie workouty.");
     } catch (e) {
       console.error("deleteAllWorkouts error:", e);
     }
@@ -170,6 +176,7 @@ export const { Context, Provider } = createDataContext(
     workouts: [],
     isWorkoutRunning: false,
     currentWorkoutId: null,
+    currentDayId: null,
     workoutDuration: 0,
     timerRunning: false,
   }

@@ -2,6 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ExerciseSearchScreen from "../screens/ExerciseSearchScreen";
 import ExerciseDetailsScreen from "../screens/ExerciseDetailsScreen";
+import AddExerciseScreen from "../screens/AddExerciseScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,11 @@ export default function SearchStack() {
         name="ExerciseDetails"
         component={ExerciseDetailsScreen}
         options={{ title: "Details" }}
+      />
+      <Stack.Screen
+        name="AddExercise"
+        component={AddExerciseScreen}
+        options={{ title: "Add an exercise" }}
       />
     </Stack.Navigator>
   );

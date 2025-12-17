@@ -1,27 +1,27 @@
 import { getDb, initDatabase } from "../database/localDatabase";
 
-//pobieranie pełnej listy workoutów
+// 1. Pobieranie pełnej listy treningów
 export const loadWorkoutsFromDb = async () => {
   const db = await getDb();
 
   console.log("Pobieram listę treningów...");
 
-  // Pobranie workoutów wraz z czasem trwania
   const workouts = await db.getAllAsync(`
-    SELECT w.id, w.programId, w.date, w.duration, tp.name as programName
+    SELECT w.id, w.programDayId, w.date, w.duration,
+           tpd.dayName AS dayName,
+           tp.name AS programName, tp.id AS programId
     FROM workouts w
-    JOIN trainingPrograms tp ON w.programId = tp.id
+    JOIN trainingProgramDays tpd ON w.programDayId = tpd.id
+    JOIN trainingPrograms tp ON tpd.programId = tp.id
     ORDER BY w.date DESC;
   `);
 
-  // Pobranie wszystkich wykonanych serii
   const workoutSets = await db.getAllAsync(`
     SELECT ws.*, pe.exerciseName, pe.imageUrl, pe.muscleGroup
     FROM workoutSets ws
     JOIN programExercises pe ON ws.programExerciseId = pe.id;
   `);
 
-  // Grupowanie serii w obrębie treningu
   const workoutsWithDetails = workouts.map((workout) => {
     const setsForWorkout = workoutSets.filter(
       (s) => s.workoutId === workout.id
@@ -47,9 +47,8 @@ export const loadWorkoutsFromDb = async () => {
       }, {})
     );
 
-    // Zwracamy dane treningu + szczegóły ćwiczeń
     return {
-      ...workout, // zawiera już: id, programId, date, duration, programName
+      ...workout, // zawiera już: programName, dayName, programDayId
       exercises: groupedExercises,
     };
   });
@@ -62,25 +61,24 @@ export const loadWorkoutsFromDb = async () => {
   return workoutsWithDetails;
 };
 
-// tworzenie treningu
-export const startWorkoutInDb = async (programId) => {
+// 2. Tworzenie treningu
+export const startWorkoutInDb = async (programDayId) => {
   const db = await getDb();
 
-  console.log(`Rozpoczynam trening dla programId=${programId}...`);
+  console.log(`Rozpoczynam trening dla dayId=${programDayId}...`);
 
   const result = await db.runAsync(
-    `INSERT INTO workouts (programId, date) VALUES (?, datetime('now'));`,
-    [programId]
+    `INSERT INTO workouts (programDayId, date) VALUES (?, datetime('now'));`,
+    [programDayId]
   );
 
   const workoutId = result.lastInsertRowId;
 
-  console.log(`Rozpoczęto trening (programId=${programId}, id=${workoutId})`);
-
+  console.log(`Rozpoczęto trening (dayId=${programDayId}, id=${workoutId})`);
   return workoutId;
 };
 
-//dodawanie serii do treningu
+// 3. Dodawanie serii do treningu (bez zmian)
 export const addWorkoutSetToDb = async (
   workoutId,
   programExerciseId,
@@ -105,7 +103,6 @@ export const addWorkoutSetToDb = async (
   console.log("Seria zapisana.");
 };
 
-//usuwanie treningu
 export const deleteWorkoutInDb = async (workoutId) => {
   const db = await getDb();
 
@@ -121,19 +118,6 @@ export const deleteWorkoutInDb = async (workoutId) => {
   console.log(`Trening o ID ${workoutId} został usunięty.`);
 };
 
-//usuwanie całej historii treningów
-// export const deleteAllWorkoutsInDb = async () => {
-//   const db = await getDb();
-
-//   console.log("Usuwam całą historię treningów...");
-
-//   await db.withTransactionAsync(async () => {
-//     await db.runAsync("DELETE FROM workoutSets;");
-//     await db.runAsync("DELETE FROM workouts;");
-//   });
-
-//   console.log("Wyczyściłem wszystkie treningi.");
-// };
 export const deleteAllWorkoutsInDb = async () => {
   const db = await getDb();
 
@@ -144,9 +128,7 @@ export const deleteAllWorkoutsInDb = async () => {
     await db.runAsync("DROP TABLE IF EXISTS workouts;");
   });
 
-  // Ponowna inicjalizacja struktur
   await initDatabase();
-
   console.log("Wyczyszczono wszystkie treningi (DROP + RECREATE).");
 };
 
@@ -164,9 +146,7 @@ export const getLatestWorkoutIdFromDb = async () => {
     `SELECT id FROM workouts ORDER BY date DESC LIMIT 1;`
   );
 
-  if (rows.length === 0) return null;
-
-  return rows[0].id;
+  return rows.length ? rows[0].id : null;
 };
 
 export const addDummyDataInDb = async () => {
@@ -176,11 +156,13 @@ export const addDummyDataInDb = async () => {
     console.log("Dodaję dummy data...");
 
     const statements = [
-      `INSERT INTO workouts (programId, date) VALUES (1, "2025-11-09 02:10:32")`,
-      `INSERT INTO workouts (programId, date) VALUES (1, "2025-11-10 01:18:27")`,
-      `INSERT INTO workouts (programId, date) VALUES (1, "2025-11-12 02:12:23")`,
-      `INSERT INTO workouts (programId, date) VALUES (1, "2025-11-13 02:15:26")`,
-      `INSERT INTO workouts (programId, date) VALUES (1, "2025-11-16 11:11:11")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-09 02:10:32")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (10, "2025-11-10 01:18:27")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-16 02:12:23")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (10, "2025-11-17 02:15:26")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-23 11:11:11")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (10, "2025-11-24 11:11:11")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-30 11:11:11")`,
     ];
 
     for (const sql of statements) {

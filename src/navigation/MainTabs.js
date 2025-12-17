@@ -13,6 +13,16 @@ export default function MainTabs() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarStyle: {
+          backgroundColor: "lightblue",
+          borderTopWidth: 0,
+          height: 70,
+        },
+        tabBarActiveTintColor: "blue", // kolor aktywnej ikony/tekstu
+        tabBarInactiveTintColor: "black",
+        tabBarLabelStyle: {
+          fontWeight: "bold",
+        },
       }}
     >
       <Tab.Screen

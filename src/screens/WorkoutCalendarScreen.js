@@ -28,7 +28,6 @@ const WorkoutCalendarScreen = () => {
     }
   }, [workouts]);
 
-  //nie działą xd
   const revokeDummyData = async () => {
     await addDummyData();
     // loadWorkouts();
@@ -76,7 +75,6 @@ const WorkoutCalendarScreen = () => {
           markedDates={markedDates}
           onDayPress={(day) => {
             console.log("Kliknięto dzień:", day.dateString);
-            // navigation.navigate("WorkoutDetails");
             onDayPress(day);
           }}
         />
