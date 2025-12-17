@@ -12,9 +12,13 @@ import { LinearGradient } from "expo-linear-gradient";
 const ExerciseDetailsScreen = ({ route }) => {
   const exercise = route.params.exercise;
 
+  const ytUrl =
+    "https://www.youtube.com/results?search_query=" +
+    encodeURIComponent(`${exercise.name} tutorial`);
   //link chwilowo przekierowuje do tutoriala bench pressa. Można dodać linki do każdego ćwiczenia w API ale trzeba zakładać, że tracą one ważność gdy film zostanie np usunięty więc trzeba zapytać promotora
   const openLink = () => {
-    Linking.openURL("https://www.youtube.com/watch?v=4Y2ZdHCOXok");
+    // Linking.openURL("https://www.youtube.com/watch?v=4Y2ZdHCOXok");
+    Linking.openURL(ytUrl);
   };
 
   return (
@@ -37,7 +41,7 @@ const ExerciseDetailsScreen = ({ route }) => {
               marginTop: 20,
             }}
           >
-            Watch a tutorial video
+            Search for tutorial video
           </Text>
         </TouchableOpacity>
       </View>

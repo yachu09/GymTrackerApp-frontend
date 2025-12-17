@@ -74,12 +74,13 @@ const ProgramDayBox = ({ day, program, onPress }) => {
         else onPress();
       }}
     >
-      <LinearGradient
+      {/* <LinearGradient
         start={{ x: 0, y: 0.5 }}
         end={{ x: 0, y: 1 }}
         style={styles.container}
         colors={["lightblue", "#58b4e3ff"]}
-      >
+      > */}
+      <View style={styles.container}>
         {/* delete */}
         <TouchableOpacity
           style={styles.rightIconContainer}
@@ -186,18 +187,17 @@ const ProgramDayBox = ({ day, program, onPress }) => {
             </View>
           </View>
         )}
-      </LinearGradient>
+      </View>
+      {/* </LinearGradient> */}
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "lightblue",
+    // backgroundColor: "lightblue",
+    backgroundColor: "#60aef1ff",
     height: 100,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // alignSelf: "stretch",
     marginHorizontal: 15,
     marginTop: 10,
     borderRadius: 25,
