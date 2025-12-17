@@ -75,4 +75,15 @@ export const initDatabase = async () => {
       UNIQUE(workoutId, programExerciseId, setNumber)
     );
   `);
+
+  //tabela odpowiedzialna za przechowywanie danych wagi
+  //FIXME zmien date na to:
+  //date TEXT NOT NULL UNIQUE,
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS weight (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      date TEXT NOT NULL,
+      weight REAL NOT NULL
+    );
+  `);
 };
