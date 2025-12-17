@@ -174,3 +174,16 @@ export const addDummyDataInDb = async () => {
     console.error("addDummyDataInDb ERROR:", e);
   }
 };
+
+export const hasWorkoutTodayInDb = async () => {
+  const db = await getDb();
+
+  const rows = await db.getAllAsync(`
+    SELECT 1
+    FROM workouts
+    WHERE date(date) = date('now')
+    LIMIT 1;
+  `);
+
+  return rows.length > 0;
+};

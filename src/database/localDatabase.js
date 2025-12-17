@@ -79,6 +79,7 @@ export const initDatabase = async () => {
   //tabela odpowiedzialna za przechowywanie danych wagi
   //FIXME zmien date na to:
   //date TEXT NOT NULL UNIQUE,
+  // DROP TABLE weight;
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS weight (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

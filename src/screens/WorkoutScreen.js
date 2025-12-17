@@ -261,7 +261,7 @@ const WorkoutScreen = ({ route }) => {
           }
         />
 
-        {!isLastPage ?? (
+        {!isLastPage && (
           <RestTimer
             timeLeft={timeLeft}
             totalTime={breakDuration}

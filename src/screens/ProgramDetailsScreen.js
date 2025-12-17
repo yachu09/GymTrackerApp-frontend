@@ -17,6 +17,7 @@ const ProgramDetailsScreen = ({ route }) => {
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
       <View style={styles.container}>
+        <Text style={styles.programName}>{program.name}</Text>
         {/* <Text>Details of {program.name} program</Text> */}
         {!program.days.length ? (
           <Text style={styles.noDays}>
@@ -63,6 +64,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     marginTop: 200,
+  },
+  programName: {
+    fontSize: 22,
+    fontWeight: "bold",
+    alignSelf: "center",
+    marginTop: 10,
   },
 });
 

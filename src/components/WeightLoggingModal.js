@@ -9,7 +9,11 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import StandardTextInput from "./shared/StandardTextInput";
 import WeightInput from "./WeightInput";
-import { addWeightToDb, loadWeightsFromDb } from "../repos/weightRepository";
+import {
+  addWeightToDb,
+  loadWeightsFromDb,
+  weightExistsForDate,
+} from "../repos/weightRepository";
 
 const WeightLoggingModal = ({ onClose }) => {
   const [date, setDate] = useState(new Date());
@@ -57,11 +61,12 @@ const WeightLoggingModal = ({ onClose }) => {
 
     //sprawdzenie czy istnieje data
     //BUG
-    // const exists = await weightExistsForDate(trimmedDate);
-    // if (exists) {
-    //   setErrorMessage("Weight already logged for this day");
-    //   return;
-    // }
+    const exists = await weightExistsForDate(trimmedDate);
+    if (exists) {
+      setErrorMessage("Weight already logged for this day");
+      console.log("jest juz taki dzien");
+      return;
+    }
 
     // console.log(trimmedDate, weight);
     await addWeightToDb(trimmedDate, weight);

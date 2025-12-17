@@ -1,0 +1,105 @@
+Date : 2025-12-17 15:05:45
+Directory : c:\Users\Admin\Desktop\GymTrackingApp\GymTracker
+Total : 65 files,  14820 codes, 112 comments, 640 blanks, all 15572 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JSON       |          3 |     10,045 |          0 |          3 |     10,048 |
+| JavaScript |         62 |      4,775 |        112 |        637 |      5,524 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                         | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                            |         65 |     14,820 |        112 |        640 |     15,572 |
+| . (Files)                                                                                    |          5 |     10,060 |          3 |          8 |     10,071 |
+| src                                                                                          |         60 |      4,760 |        109 |        632 |      5,501 |
+| src\api                                                                                      |          1 |          4 |          5 |          3 |         12 |
+| src\components                                                                               |         20 |      1,548 |         36 |        159 |      1,743 |
+| src\components (Files)                                                                       |         11 |      1,025 |         30 |         98 |      1,153 |
+| src\components\shared                                                                        |          4 |        149 |          6 |         16 |        171 |
+| src\components\workout                                                                       |          5 |        374 |          0 |         45 |        419 |
+| src\context                                                                                  |          3 |        260 |          8 |         39 |        307 |
+| src\data                                                                                     |          1 |        166 |          0 |          1 |        167 |
+| src\data\dummyData                                                                           |          1 |        166 |          0 |          1 |        167 |
+| src\database                                                                                 |          1 |         77 |          7 |          7 |         91 |
+| src\hooks                                                                                    |         11 |        452 |          7 |        118 |        577 |
+| src\navigation                                                                               |          5 |        209 |          6 |         14 |        229 |
+| src\repos                                                                                    |          3 |        364 |          8 |         76 |        448 |
+| src\screens                                                                                  |         15 |      1,680 |         32 |        215 |      1,927 |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                     | language   | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\App.js                                      | JavaScript |         12 |          0 |          2 |         14 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\app.json                                    | JSON       |         32 |          0 |          1 |         33 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\index.js                                    | JavaScript |          3 |          3 |          3 |          9 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\package-lock.json                           | JSON       |      9,981 |          0 |          1 |      9,982 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\package.json                                | JSON       |         32 |          0 |          1 |         33 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\api\ForgeTrackerAPI.js                  | JavaScript |          4 |          5 |          3 |         12 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\ExercisesDetail.js           | JavaScript |         45 |          1 |          6 |         52 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\ExercisesList.js             | JavaScript |         61 |          0 |          8 |         69 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\PersonalRecordBox.js         | JavaScript |         44 |          3 |          4 |         51 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\ProgramDayBox.js             | JavaScript |        173 |          4 |         14 |        191 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\ProgramExerciseDetail.js     | JavaScript |        189 |          5 |         15 |        209 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\SetNumber.js                 | JavaScript |         24 |          0 |          4 |         28 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\TrainingProgramBox.js        | JavaScript |        130 |          6 |          7 |        143 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\WeightInput.js               | JavaScript |         31 |          0 |          4 |         35 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\WeightLoggingModal.js        | JavaScript |        136 |          8 |         18 |        162 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\WorkoutBar.js                | JavaScript |        143 |          1 |         14 |        158 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\WorkoutExerciseDetail.js     | JavaScript |         49 |          2 |          4 |         55 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\shared\NumericTextInput.js   | JavaScript |         38 |          0 |          4 |         42 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\shared\SearchBar.js          | JavaScript |         38 |          0 |          4 |         42 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\shared\StandardButton.js     | JavaScript |         36 |          3 |          4 |         43 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\shared\StandardTextInput.js  | JavaScript |         37 |          3 |          4 |         44 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\workout\ExercisePage.js      | JavaScript |         74 |          0 |         11 |         85 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\workout\ExerciseSetRow.js    | JavaScript |         58 |          0 |          7 |         65 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\workout\ExerciseStatsCard.js | JavaScript |         51 |          0 |          7 |         58 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\workout\RestTimer.js         | JavaScript |         85 |          0 |         10 |         95 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\workout\WorkoutBreakdown.js  | JavaScript |        106 |          0 |         10 |        116 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\context\TrainingProgramsContext.js      | JavaScript |         83 |          7 |         10 |        100 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\context\WorkoutContext.js               | JavaScript |        160 |          1 |         23 |        184 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\context\createDataContext.js            | JavaScript |         17 |          0 |          6 |         23 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\data\dummyData\weightData.js            | JavaScript |        166 |          0 |          1 |        167 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\database\localDatabase.js               | JavaScript |         77 |          7 |          7 |         91 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\useExercises.js                   | JavaScript |         20 |          0 |          5 |         25 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\useMuscleGroups.js                | JavaScript |         20 |          0 |          5 |         25 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\useOneRepMax.js                   | JavaScript |         16 |          0 |          5 |         21 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\usePersonalRecords.js             | JavaScript |         47 |          0 |         13 |         60 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\useTotalWeight.js                 | JavaScript |         40 |          0 |          6 |         46 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\useUploadExercise.js              | JavaScript |         54 |          3 |         14 |         71 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\useWorkoutLogger.js               | JavaScript |         50 |          1 |         13 |         64 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\useWorkoutMuscleStats.js          | JavaScript |         58 |          0 |         13 |         71 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\useWorkoutRestTimer.js            | JavaScript |         41 |          1 |          9 |         51 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\useWorkoutSetInputs.js            | JavaScript |         45 |          2 |          9 |         56 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\hooks\useWorkoutStreak.js               | JavaScript |         61 |          0 |         26 |         87 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\navigation\AppNavigator.js              | JavaScript |         10 |          1 |          2 |         13 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\navigation\MainTabs.js                  | JavaScript |         57 |          1 |          3 |         61 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\navigation\ProfileStack.js              | JavaScript |         45 |          2 |          3 |         50 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\navigation\SearchStack.js               | JavaScript |         34 |          2 |          3 |         39 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\navigation\WorkoutStack.js              | JavaScript |         63 |          0 |          3 |         66 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\repos\trainingProgramsRepository.js     | JavaScript |        189 |          5 |         33 |        227 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\repos\weightRepository.js               | JavaScript |         26 |          0 |          5 |         31 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\repos\workoutRepository.js              | JavaScript |        149 |          3 |         38 |        190 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\AddExerciseScreen.js            | JavaScript |        213 |          6 |         25 |        244 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\AddNewProgramScreen.js          | JavaScript |         55 |          4 |          9 |         68 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\AddProgramDayScreen.js          | JavaScript |         86 |          4 |         13 |        103 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\BodyMeasurementsScreen.js       | JavaScript |        218 |          1 |         31 |        250 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\ExerciseDetailsScreen.js        | JavaScript |         63 |          1 |          6 |         70 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\ExerciseSearchScreen.js         | JavaScript |        143 |          6 |         16 |        165 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\PersonalRecordsScreen.js        | JavaScript |         49 |          0 |          7 |         56 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\ProfileScreen.js                | JavaScript |         59 |          0 |          6 |         65 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\ProgramDayDetailsScreen.js      | JavaScript |         43 |          0 |          4 |         47 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\ProgramDetailsScreen.js         | JavaScript |         70 |          0 |          7 |         77 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\WorkoutCalendarScreen.js        | JavaScript |         77 |          2 |         16 |         95 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\WorkoutDetailsScreen.js         | JavaScript |         48 |          0 |          4 |         52 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\WorkoutPlanningScreen.js        | JavaScript |        124 |          7 |          9 |        140 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\WorkoutScreen.js                | JavaScript |        284 |          0 |         46 |        330 |
+| c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\WorkoutSummaryScreen.js         | JavaScript |        148 |          1 |         16 |        165 |
+| Total                                                                                        |            |     14,820 |        112 |        640 |     15,572 |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
