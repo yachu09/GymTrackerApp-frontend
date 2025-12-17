@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import Feather from "@expo/vector-icons/Feather";
+import Entypo from "@expo/vector-icons/Entypo";
 import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
+import EditTextInput from "./shared/EditTextInput";
 
 const TrainingProgramBox = ({ program, onPress }) => {
   const {
@@ -15,6 +17,9 @@ const TrainingProgramBox = ({ program, onPress }) => {
   const navigation = useNavigation();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [term, setTerm] = useState(program.name);
 
   return (
     <TouchableOpacity
@@ -29,22 +34,43 @@ const TrainingProgramBox = ({ program, onPress }) => {
         style={styles.container}
         colors={["lightblue", "#58b4e3ff"]}
       >
+        {/* delete */}
         <TouchableOpacity
-          style={styles.iconContainer}
+          style={styles.rightIconContainer}
           onPress={() => setIsModalVisible(true)}
         >
           <Feather name="trash-2" size={20} color="black" />
         </TouchableOpacity>
+        {/* edit */}
+        <TouchableOpacity
+          style={styles.leftIconContainer}
+          onPress={() => {
+            if (isEditMode) {
+              setIsEditMode(false);
+            } else {
+              setIsEditMode(true);
+            }
+          }}
+        >
+          <Entypo name="edit" size={20} color="black" />
+        </TouchableOpacity>
         <View style={styles.viewContainer}>
-          <Text style={styles.programName}>{program.name}</Text>
+          {isEditMode ? (
+            <EditTextInput
+              placeholder={program.name}
+              term={term}
+              onTermChange={(newTerm) => setTerm(newTerm)}
+              onTermSubmit={() => {
+                //handle program name update
+              }}
+            />
+          ) : (
+            <Text style={styles.programName}>{program.name}</Text>
+          )}
+          {/* <Text style={styles.programName}>{program.name}</Text> */}
           <Text style={{ fontSize: 18, paddingTop: 5 }}>
             {program.days.length} Training day/s
           </Text>
-          {/* <View
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>See more</Text>
-          </View> */}
         </View>
         {isModalVisible && (
           <View style={styles.localModalContainer}>
@@ -89,17 +115,21 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "lightblue",
     height: 100,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // alignSelf: "stretch",
     marginHorizontal: 15,
     marginTop: 10,
     borderRadius: 25,
   },
-  iconContainer: {
+  rightIconContainer: {
     position: "absolute",
     top: 10,
     right: 10,
+    padding: 5,
+    zIndex: 10,
+  },
+  leftIconContainer: {
+    position: "absolute",
+    top: 10,
+    left: 10,
     padding: 5,
     zIndex: 10,
   },
@@ -120,7 +150,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   programName: {
-    paddingTop: 5,
+    paddingVertical: 5,
     fontSize: 24,
     marginTop: 10,
     fontWeight: "bold",

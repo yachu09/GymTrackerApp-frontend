@@ -3,7 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import Feather from "@expo/vector-icons/Feather";
+import Entypo from "@expo/vector-icons/Entypo";
 import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
+import { hasWorkoutTodayInDb } from "../repos/workoutRepository";
+import { Alert } from "react-native";
 
 const ProgramDayBox = ({ day, program, onPress }) => {
   const {
@@ -39,6 +42,20 @@ const ProgramDayBox = ({ day, program, onPress }) => {
     return true;
   };
 
+  const workoutStart = async () => {
+    const alreadyDoneToday = await hasWorkoutTodayInDb();
+
+    if (alreadyDoneToday) {
+      Alert.alert("You should rest!", "You already completed a workout today!");
+      return;
+    }
+
+    navigation.navigate("Workout", {
+      programId: program.id,
+      dayId: day.id,
+    });
+  };
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -53,10 +70,16 @@ const ProgramDayBox = ({ day, program, onPress }) => {
         colors={["lightblue", "#58b4e3ff"]}
       >
         <TouchableOpacity
-          style={styles.iconContainer}
+          style={styles.rightIconContainer}
           onPress={() => setIsModalVisible(true)}
         >
           <Feather name="trash-2" size={20} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.leftIconContainer}
+          // onPress={() => setIsModalVisible(true)}
+        >
+          <Entypo name="edit" size={20} color="black" />
         </TouchableOpacity>
         <View style={styles.viewContainer}>
           <Text style={styles.programName}>{day.dayName}</Text>
@@ -66,10 +89,7 @@ const ProgramDayBox = ({ day, program, onPress }) => {
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                navigation.navigate("Workout", {
-                  programId: program.id,
-                  dayId: day.id,
-                });
+                workoutStart();
               }}
             >
               <Text style={styles.buttonText}>Start Workout</Text>
@@ -132,10 +152,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 25,
   },
-  iconContainer: {
+  rightIconContainer: {
     position: "absolute",
     top: 10,
     right: 10,
+    padding: 5,
+    zIndex: 10,
+  },
+  leftIconContainer: {
+    position: "absolute",
+    top: 10,
+    left: 10,
     padding: 5,
     zIndex: 10,
   },

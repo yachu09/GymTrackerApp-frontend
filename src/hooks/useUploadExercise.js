@@ -7,6 +7,9 @@ export default function useUploadExercise() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  const capitalize = (str) =>
+    str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
+
   const uploadExercise = async ({ name, description, muscleGroup, image }) => {
     try {
       setLoading(true);
@@ -17,6 +20,9 @@ export default function useUploadExercise() {
         throw new Error("Image is required");
       }
 
+      const capName = capitalize(name);
+      const capDescr = capitalize(description);
+
       const localUri = image.uri;
       const filename = localUri.split("/").pop();
 
@@ -26,8 +32,10 @@ export default function useUploadExercise() {
 
       const formData = new FormData();
 
-      formData.append("Name", name);
-      formData.append("Description", description);
+      formData.append("Name", capName);
+      // formData.append("Name", name);
+      formData.append("Description", capDescr);
+      // formData.append("Description", description);
       formData.append("MuscleGroup", muscleGroup);
 
       formData.append("Image", {
