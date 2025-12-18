@@ -7,7 +7,6 @@ import {
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import StandardTextInput from "./shared/StandardTextInput";
 import WeightInput from "./WeightInput";
 import {
   addWeightToDb,
@@ -148,12 +147,10 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginHorizontal: 40,
     marginVertical: 140,
-    // justifyContent: "center",
     alignItems: "center",
     zIndex: 20,
   },
   localModalContent: {
-    // paddingHorizontal: 20,
     backgroundColor: "white",
     borderRadius: 15,
     width: "100%",

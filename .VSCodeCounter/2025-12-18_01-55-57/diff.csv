@@ -1,0 +1,17 @@
+"filename", "language", "JavaScript", "comment", "blank", "total"
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\ProgramDayBox.js", "JavaScript", 58, 3, 3, 64
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\TrainingProgramBox.js", "JavaScript", 50, -6, 3, 47
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\WeightLoggingModal.js", "JavaScript", 4, -1, 0, 3
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\shared\EditTextInput.js", "JavaScript", 35, 0, 4, 39
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\shared\StandardButton.js", "JavaScript", -4, 5, 0, 1
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\workout\ExercisePage.js", "JavaScript", 3, 2, 0, 5
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\components\workout\ExerciseSetRow.js", "JavaScript", 8, 4, 1, 13
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\context\TrainingProgramsContext.js", "JavaScript", 16, -6, 2, 12
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\repos\trainingProgramsRepository.js", "JavaScript", 18, 0, 6, 24
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\AddExerciseScreen.js", "JavaScript", 6, -5, 3, 4
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\AddNewProgramScreen.js", "JavaScript", 11, 1, 1, 13
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\AddProgramDayScreen.js", "JavaScript", 13, 4, 1, 18
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\ExerciseDetailsScreen.js", "JavaScript", 3, 1, 0, 4
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\ExerciseSearchScreen.js", "JavaScript", 2, 2, 0, 4
+"c:\Users\Admin\Desktop\GymTrackingApp\GymTracker\src\screens\WorkoutScreen.js", "JavaScript", 1, 1, 0, 2
+"Total", "-", 224, 5, 24, 253
