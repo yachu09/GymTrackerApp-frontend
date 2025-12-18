@@ -256,6 +256,8 @@ const WorkoutScreen = ({ route }) => {
                 handleFocus={handleFocus}
                 handleInputChange={handleInputChange}
                 oneRepMax={oneRepMax}
+                // inform ExercisePage whether workout is running so it can show suggested reps
+                isWorkoutRunning={isWorkoutRunning}
               />
             )
           }

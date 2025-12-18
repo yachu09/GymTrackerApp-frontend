@@ -43,7 +43,10 @@ const ExerciseSearchScreen = ({ route }) => {
     });
   }, [navigation]);
 
-  const [selectedExercises, setSelectedExercises] = useState([]);
+  // jeśli przychodzimy z ekranu planowania, przyjmujemy już wybrane ids z parametru
+  const [selectedExercises, setSelectedExercises] = useState(
+    route.params?.idsToAdd || []
+  );
 
   const toggleSelectExercise = (exerciseId) => {
     setSelectedExercises((prev) =>
@@ -119,7 +122,8 @@ const ExerciseSearchScreen = ({ route }) => {
           <StandardButton
             text="Add selected exercises"
             onPress={() => {
-              navigation.navigate("AddProgramDay", {
+              // replace a nie navigate zeby ekrany się nie nakładały
+              navigation.replace("AddProgramDay", {
                 idsToAdd: selectedExercises,
                 exercises: exercises,
                 programId: route.params.programId,

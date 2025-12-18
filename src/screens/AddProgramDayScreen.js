@@ -28,14 +28,22 @@ const AddProgramDayScreen = ({ route }) => {
       ? exercises.filter((exercise) => idsToAdd.includes(exercise.id))
       : [];
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   const createProgram = async () => {
     if (!term.length) {
-      console.log("nie utworzono dnia planu: brakuje nazwy");
+      // console.log("nie utworzono dnia planu: brakuje nazwy");
+      setErrorMessage("Name is missing!");
+      return;
+    }
+    if (term.length > 25) {
+      setErrorMessage("Max 25 characters");
       return;
     }
 
     if (!exercisesToProgramDay.length) {
-      console.log("nie dodano ćwiczeń (lista jest pusta)");
+      // console.log("nie dodano ćwiczeń (lista jest pusta)");
+      setErrorMessage("No exercises added");
       return;
     }
 
@@ -51,6 +59,7 @@ const AddProgramDayScreen = ({ route }) => {
       navigation.popToTop();
     } catch (err) {
       console.error("błąd podczas tworzenia dnia treningowego:", err);
+      setErrorMessage("Failed to create training day");
     }
   };
 
@@ -65,6 +74,12 @@ const AddProgramDayScreen = ({ route }) => {
           }}
         />
         <Text style={styles.selectedExercisesText}>
+          {errorMessage && (
+            <Text style={{ color: "red", alignSelf: "center" }}>
+              {errorMessage}
+              {"  "}
+            </Text>
+          )}
           {exercisesToProgramDay.length
             ? `You have selected ${exercisesToProgramDay.length} exercises`
             : "Select exercises first"}
@@ -72,9 +87,12 @@ const AddProgramDayScreen = ({ route }) => {
         <StandardButton
           text="Add exercises"
           onPress={() => {
-            navigation.navigate("ExerciseSearch", {
+            // replace zeby nie nakładać ekranów
+            navigation.replace("ExerciseSearch", {
               fromProgramPlanning: true,
               programId: programId,
+              // wysyłamy ids jesli zostały wcześniej wybrane
+              idsToAdd: idsToAdd || [],
             });
           }}
         />

@@ -58,9 +58,12 @@ const WeightLoggingModal = ({ onClose }) => {
       console.log("blad wagi");
       return;
     }
+    if (weight > 999) {
+      setErrorMessage("Weight exceeds the limit");
+      return;
+    }
 
     //sprawdzenie czy istnieje data
-    //BUG
     const exists = await weightExistsForDate(trimmedDate);
     if (exists) {
       setErrorMessage("Weight already logged for this day");

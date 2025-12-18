@@ -21,23 +21,12 @@ const AddExerciseScreen = () => {
 
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const [invalidNameError, setInvalidNameError] = useState(false);
-  const [noNameError, setNoNameError] = useState(false);
-  const [descriptionError, setDescriptionError] = useState(false);
-  const [noDescriptionError, setNoDescriptionError] = useState(false);
-  const [noImageError, setNoImageError] = useState(false);
+  const [nameError, setNameError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [muscleGroupError, setMuscleGroupError] = useState("");
+  const [imageError, setImageError] = useState("");
 
   const { uploadExercise, loading, error, success } = useUploadExercise();
-
-  // const [uploadSuccess, setUploadSuccess] = useState(false);
-
-  useEffect(() => {
-    if (error) setNoImageError(true);
-  }, [error]);
-
-  // useEffect(() => {
-  //   if (success) setUploadSuccess(true)
-  // }, [success]);
 
   const muscleGroupsToPicker = () => {
     const pickerItems = [];
@@ -51,32 +40,52 @@ const AddExerciseScreen = () => {
 
   const pickerItems = muscleGroupsToPicker();
 
-  //kapitalizuj pierwsza litere nazwy
   const addExercise = async () => {
     const nameRegex = /^[A-Za-z ]+$/;
+    let valid = true;
 
-    if (!name) setNoNameError(true);
-    else setNoNameError(false);
-
-    if (!description) setNoDescriptionError(true);
-    else setNoDescriptionError(false);
-
-    if (name && description && selected) {
-      if (!nameRegex.test(name)) {
-        setInvalidNameError(true);
-        return;
-      }
-      if (description.length > 250) {
-        setDescriptionError(true);
-        return;
-      }
-      await uploadExercise({
-        name,
-        description,
-        muscleGroup: selected,
-        image: selectedImage,
-      });
+    if (!name) {
+      setNameError("Name is missing");
+      valid = false;
+    } else if (!nameRegex.test(name)) {
+      setNameError("Invalid name");
+      valid = false;
+    } else {
+      setNameError("");
     }
+
+    if (!description) {
+      setDescriptionError("Description is missing");
+      valid = false;
+    } else if (description.length > 250) {
+      setDescriptionError("Description too long");
+      valid = false;
+    } else {
+      setDescriptionError("");
+    }
+
+    if (!selected) {
+      setMuscleGroupError("Select muscle group");
+      valid = false;
+    } else {
+      setMuscleGroupError("");
+    }
+
+    if (!selectedImage) {
+      setImageError("Please select an image");
+      valid = false;
+    } else {
+      setImageError("");
+    }
+
+    if (!valid) return;
+
+    await uploadExercise({
+      name,
+      description,
+      muscleGroup: selected,
+      image: selectedImage,
+    });
   };
 
   const pickImage = async () => {
@@ -131,15 +140,8 @@ const AddExerciseScreen = () => {
                 setName(newTerm);
               }}
             />
-            {invalidNameError ? (
-              <Text style={styles.errorMessage}>
-                Name must contain only letters
-              </Text>
-            ) : null}
-            {noNameError ? (
-              <Text style={styles.errorMessage}>Name is missing</Text>
-            ) : null}
-            {/* <Text style={styles.label}>Description: </Text> */}
+            {nameError && <Text style={styles.errorMessage}>{nameError}</Text>}
+
             <StandardTextInput
               placeholder="Enter short description"
               term={description}
@@ -147,12 +149,10 @@ const AddExerciseScreen = () => {
                 setDescription(newTerm);
               }}
             />
-            {descriptionError ? (
-              <Text style={styles.errorMessage}>Description is too long</Text>
-            ) : null}
-            {noDescriptionError ? (
-              <Text style={styles.errorMessage}>Description is missing</Text>
-            ) : null}
+            {descriptionError && (
+              <Text style={styles.errorMessage}>{descriptionError}</Text>
+            )}
+
             <Text style={styles.label}>Muscle Group: </Text>
             <Picker
               selectedValue={selected}
@@ -162,9 +162,15 @@ const AddExerciseScreen = () => {
             >
               {pickerItems}
             </Picker>
+            {muscleGroupError && (
+              <Text style={styles.errorMessage}>{muscleGroupError}</Text>
+            )}
             {selectedImage ? (
               <Image source={{ uri: selectedImage.uri }} style={styles.image} />
             ) : null}
+            {imageError && (
+              <Text style={styles.errorMessage}>{imageError}</Text>
+            )}
           </View>
           <View style={styles.footer}>
             <StandardButton
@@ -173,9 +179,7 @@ const AddExerciseScreen = () => {
                 pickImage();
               }}
             />
-            {noImageError ? (
-              <Text style={styles.errorMessage}>Pick an image</Text>
-            ) : null}
+
             <StandardButton
               text="Add Exercise"
               onPress={() => {

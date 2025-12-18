@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginTop: 10,
     fontWeight: "bold",
+    marginHorizontal: 45,
   },
   button: {
     backgroundColor: "white",

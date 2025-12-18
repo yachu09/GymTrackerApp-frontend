@@ -13,7 +13,20 @@ const ExerciseSetRow = ({
   isFocused,
   onFocus,
   onInputChange,
+  // suggested number of reps from program definition
+  suggestedReps,
+  // whether workout is currently running
+  isWorkoutRunning,
 }) => {
+  // compute placeholder for reps: first priority is user's current value (values.reps)
+  // if not set and workout is running, show suggestedReps, otherwise default to "0"
+  const placeholderReps =
+    values.reps !== undefined && values.reps !== null && values.reps !== ""
+      ? String(values.reps)
+      : isWorkoutRunning && suggestedReps !== undefined && suggestedReps !== null
+      ? String(suggestedReps)
+      : "0";
+
   return (
     <View style={[styles.setContainer, isFocused && styles.focusedRow]}>
       <SetNumber number={index + 1} />
@@ -30,7 +43,7 @@ const ExerciseSetRow = ({
         term={values.reps}
         onFocus={() => onFocus(exerciseId, setId)}
         handleChange={(val) => onInputChange(exerciseId, setId, "reps", val)}
-        placeholder={values.reps || "0"}
+        placeholder={placeholderReps}
       />
       <Text style={styles.unit}>reps</Text>
 
