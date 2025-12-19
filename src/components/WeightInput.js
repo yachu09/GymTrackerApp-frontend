@@ -8,7 +8,7 @@ const WeightInput = ({ handleChange, term, placeholder = 0 }) => {
         style={styles.inputStyle}
         textAlign="center"
         placeholder={placeholder.toString()}
-        keyboardType="numeric"
+        // keyboardType="numeric"
         value={term}
         onChangeText={(term) => {
           handleChange(term);

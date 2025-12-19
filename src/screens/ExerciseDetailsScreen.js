@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import ExerciseRating from "../components/ExerciseRating";
 
 const ExerciseDetailsScreen = ({ route }) => {
   const exercise = route.params.exercise;
-
   const ytUrl =
     "https://www.youtube.com/results?search_query=" +
     encodeURIComponent(`${exercise.name} tutorial`);
@@ -27,6 +27,7 @@ const ExerciseDetailsScreen = ({ route }) => {
         <Text style={styles.name}>{exercise.name}</Text>
         <Image source={{ uri: exercise.imageUrl }} style={styles.image} />
         <Text style={styles.description}>{exercise.description}</Text>
+        <ExerciseRating exercise={exercise} />
         <TouchableOpacity
           onPress={() => {
             openLink();

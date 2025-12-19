@@ -2,9 +2,10 @@ import React, { useState, useMemo } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 import { LinearGradient } from "expo-linear-gradient";
-import { weightData } from "../data/dummyData/weightData";
+import { useWeightData } from "../hooks/useWeightData";
 import WeighLoggingModal from "../components/WeightLoggingModal";
 import StandardButton from "../components/shared/StandardButton";
+import { ActivityIndicator } from "react-native";
 
 const MONTH_NAMES = [
   "Jan",
@@ -33,12 +34,14 @@ const BodyMeasurementsScreen = () => {
 
   const [period, setPeriod] = useState(PERIOD.WEEK);
 
+  const { weightData, loading, reload } = useWeightData();
+
   const baseData = useMemo(() => {
-    return weightData.map((item) => ({
+    return (weightData || []).map((item) => ({
       value: item.value,
       date: new Date(item.date),
     }));
-  }, []);
+  }, [weightData]);
 
   const getWeekData = () => {
     return baseData.map(({ value, date }) => ({
@@ -115,19 +118,53 @@ const BodyMeasurementsScreen = () => {
     };
   }, [filtered]);
 
-  const avgWeight =
-    filtered.reduce((a, b) => a + b.value, 0) / (filtered.length || 1);
+  // Determine y-axis range from actual filtered values, with padding
+  const vals = filtered.map((d) => d.value);
+  const hasVals = vals.length > 0;
 
-  const yMin = Math.floor(avgWeight - 2);
-  const yMax = Math.ceil(avgWeight + 2);
+  const minVal = hasVals ? Math.min(...vals) : 0;
+  const maxVal = hasVals ? Math.max(...vals) : minVal + 5;
+
+  // padding at least 1 unit, or 10% of range
+  const padding = hasVals
+    ? Math.max(1, Math.round((maxVal - minVal) * 0.1))
+    : 2;
+
+  let yMin = Math.floor(minVal - padding);
+  let yMax = Math.ceil(maxVal + padding);
+
+  if (yMin === yMax) {
+    yMax = yMin + 1;
+  }
 
   const yLabels = [];
-  for (let v = yMin; v <= yMax; v++) yLabels.push(v.toString());
+  // Limit y-axis labels to a maximum number (e.g., 6) and space them evenly
+  const maxLabels = 6;
+  const range = yMax - yMin;
+  if (range <= 0) {
+    yLabels.push(yMin.toString());
+  } else {
+    const step = Math.max(1, Math.ceil(range / (maxLabels - 1)));
+    for (let v = yMin; v <= yMax; v += step) {
+      yLabels.push(v.toString());
+    }
+    // ensure we always include the exact yMax as the final label
+    const last = Number(yLabels[yLabels.length - 1]);
+    if (last < yMax) yLabels.push(yMax.toString());
+  }
 
   const normalizedData = filtered.map((item) => ({
     ...item,
     value: item.value - yMin,
   }));
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   const PeriodButton = ({ label, active, onPress }) => (
     <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -201,7 +238,12 @@ const BodyMeasurementsScreen = () => {
       </View>
 
       {isModalVisible && (
-        <WeighLoggingModal onClose={() => setIsModalVisible(false)} />
+        <WeighLoggingModal
+          onClose={() => {
+            setIsModalVisible(false);
+            reload();
+          }}
+        />
       )}
     </LinearGradient>
   );

@@ -13,6 +13,9 @@ const ExercisesDetail = ({ exercise, bgColor }) => {
       />
 
       <Text style={styles.description}>{exercise.description}</Text>
+      <Text style={{ alignSelf: "center", marignTop: 5, fontWeight: 600 }}>
+        Rating: {exercise.rating}
+      </Text>
     </View>
   );
 };

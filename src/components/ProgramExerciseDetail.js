@@ -69,13 +69,15 @@ const ProgramExerciseDetail = ({ exercise }) => {
     const numericText = text.replace(/[^0-9]/g, "");
     switch (from) {
       case "sets":
-        setSets(numericText);
+        if (numericText <= 10) setSets(numericText);
         return;
       case "break":
+        //FIXME
+        //max 999s
         setBreakTime(numericText);
         return;
       case "reps":
-        assignRepsToSets(numericText, set);
+        if (numericText < 100) assignRepsToSets(numericText, set);
         return;
       default:
         return;
