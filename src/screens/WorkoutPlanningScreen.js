@@ -53,6 +53,8 @@ const WorkoutPlanningScreen = () => {
   //po starcie treningu przenieś do ekranu treningowego i zajeb z JEFITa mniej więcej wygląd UI odpalonego treningu
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
+      <Text style={styles.subtitle}>Select a program or create one</Text>
+
       <View style={styles.container}>
         {!programs.length ? (
           <Text style={styles.noPrograms}>
@@ -80,19 +82,19 @@ const WorkoutPlanningScreen = () => {
           }}
         />
         {/* guzik do usuwania danych z bazy */}
-        <StandardButton
+        {/* <StandardButton
           text="DEV: Delete all program data"
           onPress={() => {
             dropAllTables();
           }}
-        />
+        /> */}
         {/* guzik do usuwania historii treningów */}
-        <StandardButton
+        {/* <StandardButton
           text="DEV: Delete all workout history"
           onPress={() => {
             deleteAllWorkouts();
           }}
-        />
+        /> */}
         {/* usun gdy wyjebiesz guziki DEV */}
         <View style={{ height: 10 }}></View>
         {isWorkoutRunning ? <WorkoutBar /> : null}
@@ -102,6 +104,13 @@ const WorkoutPlanningScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  subtitle: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#6B7280",
+    alignSelf: "center",
+    marginTop: 10,
+  },
   container: {
     flex: 1,
   },
@@ -118,7 +127,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: "transparent",
-    borderRadius: 25,
+    borderRadius: 15,
     marginHorizontal: 40,
     // marginVertical: 240,
     height: 120,

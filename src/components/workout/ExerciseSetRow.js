@@ -23,7 +23,9 @@ const ExerciseSetRow = ({
   const placeholderReps =
     values.reps !== undefined && values.reps !== null && values.reps !== ""
       ? String(values.reps)
-      : isWorkoutRunning && suggestedReps !== undefined && suggestedReps !== null
+      : isWorkoutRunning &&
+        suggestedReps !== undefined &&
+        suggestedReps !== null
       ? String(suggestedReps)
       : "0";
 
@@ -61,6 +63,8 @@ const styles = StyleSheet.create({
   setContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    // alignContent: "center"
+    alignItems: "center",
   },
   focusedRow: {
     backgroundColor: "lightgray",

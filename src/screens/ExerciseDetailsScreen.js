@@ -9,42 +9,37 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import ExerciseRating from "../components/ExerciseRating";
+import StandardButton from "../components/shared/StandardButton";
 
 const ExerciseDetailsScreen = ({ route }) => {
   const exercise = route.params.exercise;
   const ytUrl =
     "https://www.youtube.com/results?search_query=" +
     encodeURIComponent(`${exercise.name} tutorial`);
-  //link chwilowo przekierowuje do tutoriala bench pressa. Można dodać linki do każdego ćwiczenia w API ale trzeba zakładać, że tracą one ważność gdy film zostanie np usunięty więc trzeba zapytać promotora
   const openLink = () => {
-    // Linking.openURL("https://www.youtube.com/watch?v=4Y2ZdHCOXok");
     Linking.openURL(ytUrl);
   };
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
       <View style={styles.container}>
-        <Text style={styles.name}>{exercise.name}</Text>
-        <Image source={{ uri: exercise.imageUrl }} style={styles.image} />
-        <Text style={styles.description}>{exercise.description}</Text>
+        <View style={styles.header}>
+          <Text style={styles.title}>{exercise.name}</Text>
+          <Text style={styles.subtitle}>Technique & description</Text>
+        </View>
+
+        <View style={styles.card}>
+          <Image source={{ uri: exercise.imageUrl }} style={styles.image} />
+
+          <Text style={styles.description}>{exercise.description}</Text>
+
+          <StandardButton text="Find tutorial video" onPress={openLink} />
+
+          <TouchableOpacity onPress={openLink} style={styles.linkRow}>
+            <Text style={styles.linkHint}>Searches YouTube</Text>
+          </TouchableOpacity>
+        </View>
         <ExerciseRating exercise={exercise} />
-        <TouchableOpacity
-          onPress={() => {
-            openLink();
-          }}
-        >
-          <Text
-            style={{
-              color: "blue",
-              fontSize: 18,
-              fontWeight: "bold",
-              alignSelf: "center",
-              marginTop: 20,
-            }}
-          >
-            Search for tutorial video
-          </Text>
-        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -54,20 +49,51 @@ const styles = StyleSheet.create({
   container: {
     padding: 15,
   },
-  name: {
-    fontSize: 24,
-    fontWeight: "bold",
-    alignSelf: "center",
+  header: {
+    paddingTop: 10,
+    paddingBottom: 15,
   },
-  description: {
-    fontSize: 16,
-    marginTop: 10,
+  title: {
+    fontSize: 24,
+    fontWeight: "900",
+    color: "black",
+    textAlign: "center",
+  },
+  subtitle: {
+    marginTop: 6,
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#6B7280",
+    textAlign: "center",
+  },
+  card: {
+    backgroundColor: "rgba(255,255,255,0.75)",
+    borderRadius: 15,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "rgba(17, 24, 39, 0.08)",
   },
   image: {
     width: "100%",
-    height: 300,
-    borderRadius: 25,
-    marginTop: 10,
+    height: 260,
+    borderRadius: 15,
+    marginBottom: 15,
+    backgroundColor: "#fff",
+  },
+  description: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "black",
+    lineHeight: 20,
+  },
+  linkRow: {
+    marginTop: 5,
+    alignItems: "center",
+  },
+  linkHint: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#6B7280",
   },
 });
 

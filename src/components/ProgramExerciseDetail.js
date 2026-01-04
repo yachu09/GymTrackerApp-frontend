@@ -98,71 +98,71 @@ const ProgramExerciseDetail = ({ exercise }) => {
   };
 
   return (
-    <LinearGradient
-      start={{ x: 0, y: 0.5 }}
-      end={{ x: 0, y: 1 }}
-      style={styles.container}
-      colors={["lightblue", "#58b4e3ff"]}
-    >
-      <View>
-        <Text style={styles.exerciseName}>{exercise.exerciseName}</Text>
-        <View style={styles.setsContainer}>
-          <Text style={styles.setsText}>Number of sets: </Text>
-          <NumericTextInput
-            term={sets}
-            handleChange={(text) => handleChange(text, "sets")}
-            placeholder={exercise.sets.length}
-          />
-        </View>
-        {items.length ? <View>{items}</View> : null}
-        <View style={{ flexDirection: "row", justifyContent: "center" }}>
-          <Text style={styles.repsText}>Break time: </Text>
-          <NumericTextInput
-            handleChange={(text) => handleChange(text, "break")}
-            placeholder={exercise.sets.length ? exercise.sets[0].breakTime : 0}
-          />
-          <Text style={styles.repsText}>seconds</Text>
-        </View>
-        {confirmed ? (
-          <MaterialIcons name="done" size={20} style={styles.confirmed} />
-        ) : (
-          <Button
-            style={{ marginTop: 40 }}
-            title="Confirm"
-            onPress={() => {
-              if (repsOfSets.length) {
-                addSetsRepsAndBreakTime(exercise.id, repsOfSets, breakTime);
-                setConfirmed(true);
-              } else {
-                setIsModalVisible(true);
-              }
-            }}
-          />
-        )}
-        {isModalVisible && (
-          <View style={styles.localModalContainer}>
-            <View style={styles.localModalContent}>
-              <Text style={{ color: "white", marginBottom: 10 }}>
-                Enter number of sets and reps
-              </Text>
-              <Button
-                title="Okay"
-                onPress={() => {
-                  setIsModalVisible(false);
-                }}
-              />
-            </View>
-          </View>
-        )}
+    // <LinearGradient
+    //   start={{ x: 0, y: 0.5 }}
+    //   end={{ x: 0, y: 1 }}
+    //   style={styles.container}
+    //   colors={["lightblue", "#58b4e3ff"]}
+    // >
+    <View style={styles.container}>
+      <Text style={styles.exerciseName}>{exercise.exerciseName}</Text>
+      <View style={styles.setsContainer}>
+        <Text style={styles.setsText}>Number of sets: </Text>
+        <NumericTextInput
+          term={sets}
+          handleChange={(text) => handleChange(text, "sets")}
+          placeholder={exercise.sets.length}
+        />
       </View>
-    </LinearGradient>
+      {items.length ? <View>{items}</View> : null}
+      <View style={{ flexDirection: "row", justifyContent: "center" }}>
+        <Text style={styles.repsText}>Break time: </Text>
+        <NumericTextInput
+          handleChange={(text) => handleChange(text, "break")}
+          placeholder={exercise.sets.length ? exercise.sets[0].breakTime : 0}
+        />
+        <Text style={styles.repsText}>seconds</Text>
+      </View>
+      {confirmed ? (
+        <MaterialIcons name="done" size={20} style={styles.confirmed} />
+      ) : (
+        <Button
+          style={{ marginTop: 40 }}
+          title="Confirm"
+          onPress={() => {
+            if (repsOfSets.length) {
+              addSetsRepsAndBreakTime(exercise.id, repsOfSets, breakTime);
+              setConfirmed(true);
+            } else {
+              setIsModalVisible(true);
+            }
+          }}
+        />
+      )}
+      {isModalVisible && (
+        <View style={styles.localModalContainer}>
+          <View style={styles.localModalContent}>
+            <Text style={{ color: "white", marginBottom: 10 }}>
+              Enter number of sets and reps
+            </Text>
+            <Button
+              title="Okay"
+              onPress={() => {
+                setIsModalVisible(false);
+              }}
+            />
+          </View>
+        </View>
+      )}
+    </View>
+    // </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "lightblue",
-    borderRadius: 25,
+    backgroundColor: "#58b4e3",
+    borderRadius: 15,
     marginHorizontal: 15,
     marginTop: 10,
     padding: 10,
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   localModalContent: {
     backgroundColor: "#ed4242",
     padding: 20,
-    borderRadius: 25,
+    borderRadius: 15,
   },
 });
 

@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   container: {
     boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     margin: 15,
-    backgroundColor: "lightgray",
+    backgroundColor: "#fff",
     height: 50,
     borderRadius: 25,
   },
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   button: {
-    backgroundColor: "lightblue",
+    backgroundColor: "#58b4e3",
     width: 100,
     height: 50,
     borderRadius: 25,
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingHorizontal: 10,
     alignSelf: "center",
+    color: "white",
   },
   timer: {
     fontSize: 12,

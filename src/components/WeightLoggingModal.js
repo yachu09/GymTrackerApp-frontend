@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
+  TouchableHighlight,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import WeightInput from "./WeightInput";
@@ -13,6 +14,7 @@ import {
   loadWeightsFromDb,
   weightExistsForDate,
 } from "../repos/weightRepository";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const WeightLoggingModal = ({ onClose }) => {
   const [date, setDate] = useState(new Date());
@@ -91,6 +93,14 @@ const WeightLoggingModal = ({ onClose }) => {
   return (
     <View style={styles.localModalContainer}>
       <View style={styles.localModalContent}>
+        <TouchableOpacity style={{ alignSelf: "flex-end" }} onPress={onClose}>
+          <AntDesign
+            name="close"
+            size={24}
+            color="black"
+            style={{ marginTop: 10, marginRight: 10 }}
+          />
+        </TouchableOpacity>
         <DateTimePicker
           value={date}
           mode="date"
@@ -112,9 +122,9 @@ const WeightLoggingModal = ({ onClose }) => {
             width: "90%",
             paddingHorizontal: 25,
             marginTop: 20,
-            borderRadius: 25,
+            borderRadius: 15,
             borderColor: "black",
-            backgroundColor: "lightblue",
+            backgroundColor: "#58b4e3",
             justifyContent: "center",
           }}
           onPress={() => {
@@ -144,7 +154,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: "white",
-    borderRadius: 25,
+    borderRadius: 15,
     marginHorizontal: 40,
     marginVertical: 140,
     alignItems: "center",

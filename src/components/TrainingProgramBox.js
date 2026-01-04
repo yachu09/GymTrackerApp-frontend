@@ -35,12 +35,13 @@ const TrainingProgramBox = ({ program, onPress }) => {
         else onPress();
       }}
     >
-      <LinearGradient
+      {/* <LinearGradient
         start={{ x: 0, y: 0.5 }}
         end={{ x: 0, y: 1 }}
         style={styles.container}
         colors={["lightblue", "#58b4e3ff"]}
-      >
+      > */}
+      <View style={styles.container}>
         {/* delete */}
         <TouchableOpacity
           style={styles.rightIconContainer}
@@ -122,18 +123,20 @@ const TrainingProgramBox = ({ program, onPress }) => {
             </View>
           </View>
         )}
-      </LinearGradient>
+      </View>
+      {/* </LinearGradient> */}
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "lightblue",
+    // backgroundColor: "lightblue",
+    backgroundColor: "#58b4e3",
     height: 100,
     marginHorizontal: 15,
     marginTop: 10,
-    borderRadius: 25,
+    borderRadius: 15,
   },
   rightIconContainer: {
     position: "absolute",
@@ -156,7 +159,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: "rgba(0,0,0,0.6)",
-    borderRadius: 25,
+    borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
     zIndex: 20,
@@ -171,12 +174,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontWeight: "bold",
     marginHorizontal: 45,
+    // color: "white",
   },
   button: {
     backgroundColor: "white",
     height: 30,
     width: 100,
-    borderRadius: 25,
+    borderRadius: 15,
     justifyContent: "center",
     marginTop: 10,
   },

@@ -18,7 +18,7 @@ export default function MainTabs() {
           borderTopWidth: 0,
           height: 70,
         },
-        tabBarActiveTintColor: "blue", // kolor aktywnej ikony/tekstu
+        tabBarActiveTintColor: "white", // kolor aktywnej ikony/tekstu
         tabBarInactiveTintColor: "black",
         tabBarLabelStyle: {
           fontWeight: "bold",

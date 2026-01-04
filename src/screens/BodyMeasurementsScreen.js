@@ -168,15 +168,13 @@ const BodyMeasurementsScreen = () => {
 
   const PeriodButton = ({ label, active, onPress }) => (
     <TouchableOpacity onPress={onPress} style={styles.button}>
-      <LinearGradient
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 0, y: 1 }}
-        // style={styles.button}
-        style={{ flex: 1, justifyContent: "center", borderRadius: 25 }}
-        colors={["lightblue", "#58b4e3ff"]}
+      <View
+        style={{
+          justifyContent: "center",
+        }}
       >
         <Text style={styles.buttonText}>{label}</Text>
-      </LinearGradient>
+      </View>
     </TouchableOpacity>
   );
 
@@ -271,11 +269,11 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "lightblue",
+    backgroundColor: "#58b4e3",
     height: 50,
     width: 100,
     boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-    borderRadius: 25,
+    borderRadius: 15,
     flexDirection: "row",
     marginHorizontal: 15,
     justifyContent: "center",
@@ -284,7 +282,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     alignSelf: "center",
-    color: "black",
+    color: "white",
   },
 });
 

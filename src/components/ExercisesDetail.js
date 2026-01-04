@@ -21,14 +21,24 @@ const ExercisesDetail = ({ exercise, bgColor }) => {
 };
 
 const styles = StyleSheet.create({
+  // container: {
+  //   borderWidth: 1,
+  //   borderColor: "black",
+  //   // marginHorizontal: 10,
+  //   marginLeft: 15,
+  //   backgroundColor: "#f0f0f0",
+  //   padding: 10,
+  //   borderRadius: 15,
+  //   alignItems: "flex-start",
+  //   width: 250,
+  // },
   container: {
-    borderWidth: 1,
-    borderColor: "black",
-    // marginHorizontal: 10,
-    marginLeft: 15,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "rgba(255,255,255,0.75)",
+    borderRadius: 15,
     padding: 10,
-    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: "rgba(17, 24, 39, 0.08)",
+    marginLeft: 15,
     alignItems: "flex-start",
     width: 250,
   },
@@ -41,7 +51,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 150,
-    borderRadius: 25,
+    borderRadius: 15,
     marginBottom: 5,
   },
   description: {

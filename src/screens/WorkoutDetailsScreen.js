@@ -3,6 +3,7 @@ import { Text, StyleSheet, View, FlatList } from "react-native";
 import { Context as WorkoutContext } from "../context/WorkoutContext";
 import WorkoutExerciseDetail from "../components/WorkoutExerciseDetail";
 import { LinearGradient } from "expo-linear-gradient";
+import useTotalWeight from "../hooks/useTotalWeight";
 
 const WorkoutDetailsScreen = ({ route }) => {
   const { workoutId } = route.params;
@@ -10,7 +11,9 @@ const WorkoutDetailsScreen = ({ route }) => {
     state: { workouts },
   } = useContext(WorkoutContext);
   const workout = workouts.find((w) => w.id === workoutId);
-  console.log(JSON.stringify(workout, null, 2));
+  // console.log(JSON.stringify(workout, null, 2));
+  const [totalWeight, errorMessage] = useTotalWeight(workoutId);
+
   return (
     <LinearGradient
       style={{ flex: 1, paddingBottom: 80 }}
@@ -21,6 +24,7 @@ const WorkoutDetailsScreen = ({ route }) => {
           {workout.programName} - {workout.dayName}
         </Text>
         <Text style={styles.dateText}>{workout.date}</Text>
+        <Text style={styles.weightText}> Total load: {totalWeight}</Text>
         <FlatList
           data={workout.exercises}
           keyExtractor={(exercise) => exercise.programExerciseId.toString()}
@@ -45,6 +49,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontWeight: "300",
     fontStyle: "italic",
+  },
+  weightText: {
+    fontSize: 18,
+    fontWeight: 700,
+    alignSelf: "center",
+    color: "#58b4e3",
+    marginBottom: 10,
   },
 });
 

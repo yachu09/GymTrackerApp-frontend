@@ -21,12 +21,12 @@ const StandardButton = ({ onPress, text }) => {
 const styles = StyleSheet.create({
   button: {
     // backgroundColor: "lightblue",
-    backgroundColor: "#60aef1ff",
+    backgroundColor: "#58b4e3",
     height: 50,
     boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     // borderWidth: 1,
     // borderColor: "white",
-    borderRadius: 25,
+    borderRadius: 15,
     flexDirection: "row",
     marginHorizontal: 15,
     marginTop: 10,
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     alignSelf: "center",
-    color: "black",
+    color: "white",
   },
 });
 

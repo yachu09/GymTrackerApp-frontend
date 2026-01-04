@@ -4,6 +4,7 @@ import { Context as WorkoutContext } from "../context/WorkoutContext";
 import { Calendar } from "react-native-calendars";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
+import StandardButton from "../components/shared/StandardButton";
 
 const WorkoutCalendarScreen = () => {
   const navigation = useNavigation();
@@ -22,7 +23,6 @@ const WorkoutCalendarScreen = () => {
   }, []);
 
   useEffect(() => {
-    // 2. Gdy workouty się zmienią → przetwórz je do markedDates
     if (workouts.length > 0) {
       setMarkedDates(createMarkedDates(workouts));
     }
@@ -64,7 +64,7 @@ const WorkoutCalendarScreen = () => {
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
-      <View>
+      {/* <View>
         <Calendar
           style={{ backgroundColor: "transparent" }}
           theme={{
@@ -84,11 +84,43 @@ const WorkoutCalendarScreen = () => {
             revokeDummyData();
           }}
         />
+      </View> */}
+      <View style={styles.header}>
+        <Text style={styles.subtitle}>Tap a day to see workout details</Text>
+      </View>
+
+      <View style={styles.card}>
+        <Calendar
+          style={{ backgroundColor: "transparent" }}
+          enableSwipeMonths
+          markedDates={markedDates}
+          onDayPress={(day) => onDayPress(day)}
+        />
+      </View>
+
+      <View style={styles.dev}>
+        <StandardButton text="DEV: add dummy data" onPress={revokeDummyData} />
       </View>
     </LinearGradient>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  subtitle: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#6B7280",
+    alignSelf: "center",
+    marginVertical: 10,
+  },
+  card: {
+    backgroundColor: "rgba(255,255,255,0.75)",
+    borderRadius: 15,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "rgba(17, 24, 39, 0.08)",
+    marginHorizontal: 15,
+  },
+});
 
 export default WorkoutCalendarScreen;

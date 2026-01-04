@@ -46,7 +46,7 @@ const ExercisesList = ({
             >
               <ExercisesDetail
                 exercise={item}
-                bgColor={isSelected ? "lightblue" : "#f0f0f0"} // niebieskie tło gdy wybrane
+                bgColor={isSelected ? "#58b4e3" : "rgba(255,255,255,0.75)"} // niebieskie tło gdy wybrane
               />
             </TouchableOpacity>
           );

@@ -15,7 +15,6 @@ import {
 } from "react-native";
 
 import StandardButton from "../components/shared/StandardButton";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
 
 import { Context as WorkoutContext } from "../context/WorkoutContext";

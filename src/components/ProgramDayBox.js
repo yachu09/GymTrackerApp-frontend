@@ -196,11 +196,11 @@ const ProgramDayBox = ({ day, program, onPress }) => {
 const styles = StyleSheet.create({
   container: {
     // backgroundColor: "lightblue",
-    backgroundColor: "#60aef1ff",
+    backgroundColor: "#58b4e3",
     height: 100,
     marginHorizontal: 15,
     marginTop: 10,
-    borderRadius: 25,
+    borderRadius: 15,
   },
   rightIconContainer: {
     position: "absolute",
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: "rgba(0,0,0,0.6)",
-    borderRadius: 25,
+    borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
     zIndex: 20,
@@ -236,12 +236,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 10,
     fontWeight: "bold",
+    // color: "white",
   },
   button: {
     backgroundColor: "white",
     height: 30,
     width: 100,
-    borderRadius: 25,
+    borderRadius: 15,
     justifyContent: "center",
     marginTop: 10,
   },

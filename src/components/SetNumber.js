@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 const SetNumber = ({ number, isSelected }) => {
   return (
     <View style={styles.container}>
-      <Text>{number}</Text>
+      <Text style={styles.text}>{number}</Text>
     </View>
   );
 };
@@ -20,8 +20,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     justifyContent: "center",
     alignItems: "center",
+    margin: 7,
   },
-  text: {},
+  text: {
+    fontWeight: 600,
+  },
 });
 
 export default SetNumber;

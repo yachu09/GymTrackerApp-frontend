@@ -85,8 +85,28 @@ const WorkoutSummaryScreen = ({ route }) => {
       >
         <View style={styles.summaryContainer}>
           {/* <Text>Summary of {workout.programName} program workout</Text>
-      <Text>Start of workout: {workout.date}</Text>
+          <Text>Start of workout: {workout.date}</Text>
       <Text>Total Weight Lifted: {totalWeight} kgs</Text> */}
+          <Text
+            style={{
+              marginTop: 15,
+              fontWeight: "bold",
+              fontSize: 18,
+              alignSelf: "center",
+            }}
+          >
+            Workout Complete!
+          </Text>
+          <Text
+            style={{
+              marginTop: 5,
+              fontWeight: "600",
+              fontSize: 14,
+              alignSelf: "center",
+            }}
+          >
+            {workout.programName} - {workout.dayName}
+          </Text>
           <Image
             source={require("../../assets/victory.png")}
             style={styles.image}
@@ -111,11 +131,11 @@ const WorkoutSummaryScreen = ({ route }) => {
               <Text>Duration</Text>
               <Text>{formatDuration(workout.duration)}</Text>
             </View>
-            <View style={styles.infoContainer}>
+            {/* <View style={styles.infoContainer}>
               <FontAwesome5 name="trophy" size={30} color="black" />
               <Text>New Record</Text>
               <Text>0</Text>
-            </View>
+            </View> */}
           </View>
         </View>
       </ViewShot>
@@ -129,6 +149,7 @@ const WorkoutSummaryScreen = ({ route }) => {
           });
         }}
       />
+      <View style={{ height: 10 }}></View>
     </LinearGradient>
   );
 };
@@ -142,6 +163,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: height * 0.08,
     marginBottom: 20,
+    paddingHorizontal: 45,
   },
   infoContainer: {
     alignItems: "center",
@@ -150,8 +172,8 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     alignSelf: "center",
-    marginTop: 30,
-    marginBottom: 20,
+    marginTop: 10,
+    marginBottom: 10,
   },
   weightLifted: {
     fontSize: 20,
