@@ -10,7 +10,7 @@ export default (weight, reps) => {
     }
     const oneRM = calculateOneRepMax(weight, reps);
     setOneRepMax(oneRM);
-  }, [weight, reps]); // 🔹 reaguje na zmianę!
+  }, [weight, reps]);
 
   const calculateOneRepMax = (weight, reps) => {
     return (weight * reps) / 30.48 + weight;

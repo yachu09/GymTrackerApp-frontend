@@ -1,15 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 
 const PersonalRecordBox = ({ record }) => {
   return (
-    // <LinearGradient
-    //   start={{ x: 0, y: 0.5 }}
-    //   end={{ x: 0, y: 1 }}
-    //   style={styles.container}
-    //   colors={["lightblue", "#58b4e3ff"]}
-    // >
     <View style={styles.container}>
       <Text style={styles.exerciseName}>{record.exerciseName}</Text>
       <View
@@ -25,16 +18,12 @@ const PersonalRecordBox = ({ record }) => {
         <Text style={styles.text}>1RM: {record.oneRepMax.toFixed(1)} kg</Text>
       </View>
     </View>
-    // </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#58b4e3",
-    // justifyContent: "center",
-    // alignItems: "center",
-    // alignSelf: "stretch",
     marginHorizontal: 15,
     marginTop: 10,
     borderRadius: 15,

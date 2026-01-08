@@ -60,31 +60,10 @@ const WorkoutCalendarScreen = () => {
     });
   };
 
-  console.log("marked dates: ", JSON.stringify(markedDates, null, 2));
+  // console.log("marked dates: ", JSON.stringify(markedDates, null, 2));
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={["#FFFFFF", "lightblue"]}>
-      {/* <View>
-        <Calendar
-          style={{ backgroundColor: "transparent" }}
-          theme={{
-            backgroundColor: "transparent",
-            calendarBackground: "transparent",
-          }}
-          enableSwipeMonths
-          markedDates={markedDates}
-          onDayPress={(day) => {
-            console.log("Kliknięto dzień:", day.dateString);
-            onDayPress(day);
-          }}
-        />
-        <Button
-          title="add dummy data"
-          onPress={() => {
-            revokeDummyData();
-          }}
-        />
-      </View> */}
       <View style={styles.header}>
         <Text style={styles.subtitle}>Tap a day to see workout details</Text>
       </View>
@@ -98,9 +77,10 @@ const WorkoutCalendarScreen = () => {
         />
       </View>
 
-      <View style={styles.dev}>
+      {/* guzik służący do dodania przykładowych treningów w celach testowania */}
+      {/* <View style={styles.dev}>
         <StandardButton text="DEV: add dummy data" onPress={revokeDummyData} />
-      </View>
+      </View> */}
     </LinearGradient>
   );
 };

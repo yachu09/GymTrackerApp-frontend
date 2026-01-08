@@ -1,4 +1,3 @@
-// hooks/useUploadExercise.js
 import { useState } from "react";
 import ForgeTrackerAPI from "../api/ForgeTrackerAPI";
 
@@ -7,6 +6,7 @@ export default function useUploadExercise() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  //funkcja do kapitalizacji pierwszej litery
   const capitalize = (str) =>
     str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 
@@ -33,9 +33,7 @@ export default function useUploadExercise() {
       const formData = new FormData();
 
       formData.append("Name", capName);
-      // formData.append("Name", name);
       formData.append("Description", capDescr);
-      // formData.append("Description", description);
       formData.append("MuscleGroup", muscleGroup);
 
       formData.append("Image", {

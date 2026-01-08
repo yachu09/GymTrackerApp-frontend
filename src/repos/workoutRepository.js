@@ -1,6 +1,6 @@
 import { getDb, initDatabase } from "../database/localDatabase";
 
-// 1. Pobieranie pełnej listy treningów
+// pobieranie pełnej listy treningów
 export const loadWorkoutsFromDb = async () => {
   const db = await getDb();
 
@@ -48,7 +48,7 @@ export const loadWorkoutsFromDb = async () => {
     );
 
     return {
-      ...workout, // zawiera już: programName, dayName, programDayId
+      ...workout,
       exercises: groupedExercises,
     };
   });
@@ -61,7 +61,7 @@ export const loadWorkoutsFromDb = async () => {
   return workoutsWithDetails;
 };
 
-// 2. Tworzenie treningu
+// Tworzenie treningu
 export const startWorkoutInDb = async (programDayId) => {
   const db = await getDb();
 
@@ -78,7 +78,7 @@ export const startWorkoutInDb = async (programDayId) => {
   return workoutId;
 };
 
-// 3. Dodawanie serii do treningu (bez zmian)
+// Dodawanie serii do treningu
 export const addWorkoutSetToDb = async (
   workoutId,
   programExerciseId,
@@ -156,13 +156,13 @@ export const addDummyDataInDb = async () => {
     console.log("Dodaję dummy data...");
 
     const statements = [
-      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-09 02:10:32")`,
-      `INSERT INTO workouts (programDayId, date) VALUES (10, "2025-11-10 01:18:27")`,
-      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-16 02:12:23")`,
-      `INSERT INTO workouts (programDayId, date) VALUES (10, "2025-11-17 02:15:26")`,
-      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-23 11:11:11")`,
-      `INSERT INTO workouts (programDayId, date) VALUES (10, "2025-11-24 11:11:11")`,
-      `INSERT INTO workouts (programDayId, date) VALUES (8, "2025-11-30 11:11:11")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (2, "2026-01-01 02:10:32")`,
+      `INSERT INTO workouts (programDayId, date) VALUES (2, "2026-01-02 01:18:27")`,
+      // `INSERT INTO workouts (programDayId, date) VALUES (1, "2025-11-16 02:12:23")`,
+      // `INSERT INTO workouts (programDayId, date) VALUES (1, "2025-11-17 02:15:26")`,
+      // `INSERT INTO workouts (programDayId, date) VALUES (2, "2025-11-23 11:11:11")`,
+      // `INSERT INTO workouts (programDayId, date) VALUES (1, "2025-11-24 11:11:11")`,
+      // `INSERT INTO workouts (programDayId, date) VALUES (2, "2025-11-30 11:11:11")`,
     ];
 
     for (const sql of statements) {

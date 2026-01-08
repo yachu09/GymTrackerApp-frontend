@@ -13,13 +13,10 @@ const ExerciseSetRow = ({
   isFocused,
   onFocus,
   onInputChange,
-  // suggested number of reps from program definition
   suggestedReps,
-  // whether workout is currently running
   isWorkoutRunning,
 }) => {
-  // compute placeholder for reps: first priority is user's current value (values.reps)
-  // if not set and workout is running, show suggestedReps, otherwise default to "0"
+  //jeśli nie ustawione i trening jest w toku pokaż sugerowane powtórzenia
   const placeholderReps =
     values.reps !== undefined && values.reps !== null && values.reps !== ""
       ? String(values.reps)
@@ -63,7 +60,6 @@ const styles = StyleSheet.create({
   setContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    // alignContent: "center"
     alignItems: "center",
   },
   focusedRow: {

@@ -229,7 +229,6 @@ const styles = StyleSheet.create({
   },
   successContainer: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
     marginBottom: 40,
   },
@@ -237,6 +236,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#3fc034ff",
+    alignSelf: "center",
   },
   successIcon: {
     alignSelf: "center",

@@ -14,6 +14,7 @@ const usePersonalRecords = () => {
 
   const [personalRecords, setPersonalRecords] = useState([]);
 
+  //pobranie danych treningowych z bazy
   useEffect(() => {
     loadWorkouts();
   }, []);

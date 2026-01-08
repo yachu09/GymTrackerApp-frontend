@@ -12,7 +12,6 @@ const ExercisePage = ({
   handleFocus,
   handleInputChange,
   oneRepMax,
-  // new prop passed from WorkoutScreen
   isWorkoutRunning,
 }) => {
   if (!exercise) return null;
@@ -51,7 +50,6 @@ const ExercisePage = ({
             isFocused={isFocused}
             onFocus={handleFocus}
             onInputChange={handleInputChange}
-            // pass suggested reps from program definition and current running state
             suggestedReps={set.reps}
             isWorkoutRunning={isWorkoutRunning}
           />

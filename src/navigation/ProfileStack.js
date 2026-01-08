@@ -11,14 +11,7 @@ const Stack = createNativeStackNavigator();
 export default function SearchStack() {
   return (
     //nawigator stacka zakładki (tab) "profile"
-    <Stack.Navigator
-      initialRouteName="Profile"
-      screenOptions={
-        {
-          // headerTitle: "Exercise Search",
-        }
-      }
-    >
+    <Stack.Navigator initialRouteName="Profile">
       <Stack.Screen
         name="Profile"
         component={ProfileScreen}

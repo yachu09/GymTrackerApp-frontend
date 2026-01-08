@@ -17,11 +17,7 @@ export const useWeightData = () => {
         ORDER BY date ASC
         `
       );
-
-      /**
-       * Normalizacja:
-       * { id, date: Date, value: number }
-       */
+      //normalizacja
       const mapped = result.map((row) => ({
         id: row.id,
         date: new Date(row.date),

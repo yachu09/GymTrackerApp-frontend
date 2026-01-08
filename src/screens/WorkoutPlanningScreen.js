@@ -31,16 +31,14 @@ const WorkoutPlanningScreen = () => {
     getLatestWorkoutId,
   } = useContext(WorkoutContext);
 
+  //pobranie planów treningowych po wczytaniu ekranu
   useFocusEffect(
     React.useCallback(() => {
       const initAndLoad = async () => {
         try {
           await initDatabase();
           await loadPrograms();
-          // await loadWorkouts();
-          // const id = getLatestWorkoutId();
           console.log("init and load");
-          // console.log("latest workout ID:", id);
         } catch (e) {
           console.error("init and load error (WorkoutPlanningScreen)", e);
         }
@@ -61,6 +59,7 @@ const WorkoutPlanningScreen = () => {
             No training programs yet? Add one!
           </Text>
         ) : null}
+        {/* prezentacja planów w liście */}
         <FlatList
           data={programs}
           keyExtractor={(item) => item.id.toString()}
@@ -95,7 +94,7 @@ const WorkoutPlanningScreen = () => {
             deleteAllWorkouts();
           }}
         /> */}
-        {/* usun gdy wyjebiesz guziki DEV */}
+        {/* usun gdy wyrzucisz guziki DEV */}
         <View style={{ height: 10 }}></View>
         {isWorkoutRunning ? <WorkoutBar /> : null}
       </View>

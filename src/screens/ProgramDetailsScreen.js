@@ -5,12 +5,18 @@ import { LinearGradient } from "expo-linear-gradient";
 import StandardButton from "../components/shared/StandardButton";
 import ProgramDayBox from "../components/ProgramDayBox";
 import { Context as TrainingProgramsContext } from "../context/TrainingProgramsContext";
+import { Context as WorkoutContext } from "../context/WorkoutContext";
+import WorkoutBar from "../components/WorkoutBar";
 
 const ProgramDetailsScreen = ({ route }) => {
   const navigation = useNavigation();
   const programId = route.params.programId;
 
   const { state: programs } = useContext(TrainingProgramsContext);
+
+  const {
+    state: { isWorkoutRunning },
+  } = useContext(WorkoutContext);
 
   const program = programs.find((p) => p.id === programId);
 
@@ -49,6 +55,7 @@ const ProgramDetailsScreen = ({ route }) => {
             navigation.navigate("AddProgramDay", { programId: program.id });
           }}
         />
+        {isWorkoutRunning ? <WorkoutBar /> : null}
         <View style={{ height: 10 }}></View>
       </View>
     </LinearGradient>

@@ -47,7 +47,6 @@ const ProgramExerciseDetail = ({ exercise }) => {
     items.push(
       <View style={styles.repsContainer} key={i}>
         <Text style={styles.repsText}>Set {i + 1}: </Text>
-        {/* FIXME change the default value for break time to 120s*/}
         <NumericTextInput
           // i + 1 = set number
           term={repsOfSets.find((r) => r.set === i + 1)?.reps || ""}
@@ -65,15 +64,13 @@ const ProgramExerciseDetail = ({ exercise }) => {
 
   //handle any input different than number
   const handleChange = (text, from, set) => {
-    //removes every character thats not a number
+    //usuwa każdy znak który nie jest cyfrą
     const numericText = text.replace(/[^0-9]/g, "");
     switch (from) {
       case "sets":
         if (numericText <= 10) setSets(numericText);
         return;
       case "break":
-        //FIXME
-        //max 999s
         setBreakTime(numericText);
         return;
       case "reps":
