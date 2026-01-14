@@ -20,7 +20,7 @@ export const useWeightData = () => {
       //normalizacja
       const mapped = result.map((row) => ({
         id: row.id,
-        date: new Date(row.date),
+        date: row.date,
         value: Number(row.weight),
       }));
 

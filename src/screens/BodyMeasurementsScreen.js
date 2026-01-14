@@ -1,11 +1,16 @@
 import React, { useState, useMemo } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 import { LinearGradient } from "expo-linear-gradient";
 import { useWeightData } from "../hooks/useWeightData";
 import WeighLoggingModal from "../components/WeightLoggingModal";
 import StandardButton from "../components/shared/StandardButton";
-import { ActivityIndicator } from "react-native";
 
 const MONTH_NAMES = [
   "Jan",
@@ -26,30 +31,60 @@ const WEEKDAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const BodyMeasurementsScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const PERIOD = {
-    WEEK: "week",
-    MONTH: "month",
-    YEAR: "year",
-  };
-
+  // dostępne okresy
+  const PERIOD = { WEEK: "week", MONTH: "month", YEAR: "year" };
   const [period, setPeriod] = useState(PERIOD.WEEK);
 
   const { weightData, loading, reload } = useWeightData();
 
+  // dane bazowe z parsowaniem daty
   const baseData = useMemo(() => {
-    return (weightData || []).map((item) => ({
-      value: item.value,
-      date: new Date(item.date),
-    }));
+    return (weightData || []).map((item) => {
+      let date;
+
+      if (typeof item.date === "string") {
+        const parts = item.date.split("-").map(Number);
+        const [year, month, day] = parts;
+        if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+          date = new Date(year, month - 1, day);
+        } else {
+          date = new Date(item.date);
+        }
+      } else if (item.date instanceof Date) {
+        date = item.date;
+      } else {
+        date = new Date(item.date);
+      }
+
+      return {
+        value: item.value,
+        date,
+      };
+    });
   }, [weightData]);
 
+  // ostatnie 7 dni
   const getWeekData = () => {
-    return baseData.map(({ value, date }) => ({
-      value,
-      label: WEEKDAY[date.getDay()], // Mon, Tue, Wed...
-    }));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const weekAgo = new Date(today);
+    weekAgo.setDate(today.getDate() - 6);
+
+    return baseData
+      .filter(({ date }) => {
+        const d = new Date(date);
+        d.setHours(0, 0, 0, 0);
+        return d >= weekAgo && d <= today;
+      })
+      .sort((a, b) => a.date - b.date)
+      .map(({ value, date }) => ({
+        value,
+        label: WEEKDAY[date.getDay()],
+      }));
   };
 
+  //średnia waga kazdego miesiąca
   const getMonthAverages = () => {
     const groups = {};
 
@@ -71,13 +106,14 @@ const BodyMeasurementsScreen = () => {
       });
   };
 
+  // srednia waga każdego roku
   const getYearAverages = () => {
     const groups = {};
 
     baseData.forEach(({ value, date }) => {
-      const key = date.getFullYear();
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(value);
+      const year = date.getFullYear();
+      if (!groups[year]) groups[year] = [];
+      groups[year].push(value);
     });
 
     return Object.keys(groups)
@@ -92,6 +128,7 @@ const BodyMeasurementsScreen = () => {
       });
   };
 
+  // dane zależne od wybranego okresu
   const filtered = useMemo(() => {
     switch (period) {
       case PERIOD.WEEK:
@@ -105,12 +142,11 @@ const BodyMeasurementsScreen = () => {
     }
   }, [period, baseData]);
 
+  // statystyki
   const stats = useMemo(() => {
     if (!filtered.length) return { avg: 0, min: 0, max: 0 };
-
     const vals = filtered.map((d) => d.value);
     const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
-
     return {
       avg: avg.toFixed(1),
       min: Math.min(...vals).toFixed(1),
@@ -118,41 +154,24 @@ const BodyMeasurementsScreen = () => {
     };
   }, [filtered]);
 
-  // Determine y-axis range from actual filtered values, with padding
+  // zakres osi Y
   const vals = filtered.map((d) => d.value);
-  const hasVals = vals.length > 0;
+  const minVal = vals.length ? Math.min(...vals) : 0;
+  const maxVal = vals.length ? Math.max(...vals) : minVal + 5;
 
-  const minVal = hasVals ? Math.min(...vals) : 0;
-  const maxVal = hasVals ? Math.max(...vals) : minVal + 5;
-
-  // padding at least 1 unit, or 10% of range
-  const padding = hasVals
-    ? Math.max(1, Math.round((maxVal - minVal) * 0.1))
-    : 2;
-
+  const padding = Math.max(1, Math.round((maxVal - minVal) * 0.1));
   let yMin = Math.floor(minVal - padding);
   let yMax = Math.ceil(maxVal + padding);
-
-  if (yMin === yMax) {
-    yMax = yMin + 1;
-  }
+  if (yMin === yMax) yMax = yMin + 1;
 
   const yLabels = [];
-  // Limit y-axis labels to a maximum number (e.g., 6) and space them evenly
-  const maxLabels = 6;
-  const range = yMax - yMin;
-  if (range <= 0) {
-    yLabels.push(yMin.toString());
-  } else {
-    const step = Math.max(1, Math.ceil(range / (maxLabels - 1)));
-    for (let v = yMin; v <= yMax; v += step) {
-      yLabels.push(v.toString());
-    }
-    // ensure we always include the exact yMax as the final label
-    const last = Number(yLabels[yLabels.length - 1]);
-    if (last < yMax) yLabels.push(yMax.toString());
-  }
+  const steps = 5;
+  const step = Math.ceil((yMax - yMin) / steps);
+  for (let v = yMin; v <= yMax; v += step) yLabels.push(v.toString());
+  if (Number(yLabels[yLabels.length - 1]) !== yMax)
+    yLabels.push(yMax.toString());
 
+  // Normalizacja danych
   const normalizedData = filtered.map((item) => ({
     ...item,
     value: item.value - yMin,
@@ -166,15 +185,9 @@ const BodyMeasurementsScreen = () => {
     );
   }
 
-  const PeriodButton = ({ label, active, onPress }) => (
+  const PeriodButton = ({ label, onPress }) => (
     <TouchableOpacity onPress={onPress} style={styles.button}>
-      <View
-        style={{
-          justifyContent: "center",
-        }}
-      >
-        <Text style={styles.buttonText}>{label}</Text>
-      </View>
+      <Text style={styles.buttonText}>{label}</Text>
     </TouchableOpacity>
   );
 
@@ -186,21 +199,9 @@ const BodyMeasurementsScreen = () => {
       />
 
       <View style={styles.periodRow}>
-        <PeriodButton
-          label="Week"
-          active={period === PERIOD.WEEK}
-          onPress={() => setPeriod(PERIOD.WEEK)}
-        />
-        <PeriodButton
-          label="Month"
-          active={period === PERIOD.MONTH}
-          onPress={() => setPeriod(PERIOD.MONTH)}
-        />
-        <PeriodButton
-          label="Year"
-          active={period === PERIOD.YEAR}
-          onPress={() => setPeriod(PERIOD.YEAR)}
-        />
+        <PeriodButton label="Week" onPress={() => setPeriod(PERIOD.WEEK)} />
+        <PeriodButton label="Month" onPress={() => setPeriod(PERIOD.MONTH)} />
+        <PeriodButton label="Year" onPress={() => setPeriod(PERIOD.YEAR)} />
       </View>
 
       <View style={styles.chartContainer}>
@@ -211,19 +212,12 @@ const BodyMeasurementsScreen = () => {
           isAnimated
           color="blue"
           dataPointsColor="blue"
-          startFillColor="rgba(0, 70, 255, 0.25)"
-          endFillColor="rgba(0, 70, 255, 0.05)"
           yAxisOffset={0}
           maxValue={yMax - yMin}
           yAxisLabelTexts={yLabels}
           noOfSections={yLabels.length - 1}
           spacing={60}
           height={250}
-          xAxisLabelTextStyle={{ fontSize: 10, color: "#222" }}
-          yAxisTextStyle={{ fontSize: 12, color: "#222" }}
-          scrollable
-          scrollToEnd
-          scrollAnimation
         />
       </View>
 
@@ -257,7 +251,6 @@ const styles = StyleSheet.create({
     marginTop: 40,
     marginHorizontal: 20,
   },
-
   statsContainer: {
     marginTop: 25,
     alignItems: "center",
@@ -267,21 +260,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 4,
   },
-
   button: {
     backgroundColor: "#58b4e3",
     height: 50,
     width: 100,
-    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     borderRadius: 15,
-    flexDirection: "row",
-    marginHorizontal: 15,
     justifyContent: "center",
+    alignItems: "center",
   },
   buttonText: {
     fontSize: 18,
     fontWeight: "bold",
-    alignSelf: "center",
     color: "white",
   },
 });

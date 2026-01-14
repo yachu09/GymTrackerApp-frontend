@@ -79,13 +79,16 @@ const WeightLoggingModal = ({ onClose }) => {
     onClose();
   };
 
-  function trimDate(dateString) {
-    const date = new Date(dateString);
+  function trimDate(dateInput) {
+    const date = new Date(dateInput);
     if (isNaN(date)) return null;
 
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const day = String(date.getUTCDate()).padStart(2, "0");
+    // Use local getters (getFullYear/getMonth/getDate) so the stored
+    // YYYY-MM-DD corresponds to the user's local date and doesn't shift
+    // because of UTC timezone offsets.
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
 
     return `${year}-${month}-${day}`;
   }
