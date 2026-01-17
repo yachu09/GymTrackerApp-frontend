@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import ExerciseSetRow from "./ExerciseSetRow";
 
 const { width } = Dimensions.get("window");
@@ -18,7 +25,9 @@ const ExercisePage = ({
 
   return (
     <View style={styles.page}>
-      <Image source={{ uri: exercise.imageUrl }} style={styles.image} />
+      <View style={{ backgroundColor: "white", marginBottom: 5 }}>
+        <Image source={{ uri: exercise.imageUrl }} style={styles.image} />
+      </View>
 
       <View style={styles.headerRow}>
         <Text style={styles.name}>{exercise.exerciseName}</Text>
@@ -30,31 +39,33 @@ const ExercisePage = ({
         )}
       </View>
 
-      {exercise.sets.map((set, index) => {
-        const setNumber = set.setNumber ?? set.id ?? index + 1;
-        const key = `${exercise.id}_${setNumber}`;
-        const values = setInputs[key] || {};
+      <ScrollView>
+        {exercise.sets.map((set, index) => {
+          const setNumber = set.setNumber ?? set.id ?? index + 1;
+          const key = `${exercise.id}_${setNumber}`;
+          const values = setInputs[key] || {};
 
-        const isFocused =
-          focusedSet?.exerciseId === exercise.id &&
-          focusedSet?.setId === setNumber;
+          const isFocused =
+            focusedSet?.exerciseId === exercise.id &&
+            focusedSet?.setId === setNumber;
 
-        return (
-          <ExerciseSetRow
-            key={key}
-            exerciseId={exercise.id}
-            setId={setNumber}
-            index={index}
-            values={values}
-            logged={loggedSets.has(key)}
-            isFocused={isFocused}
-            onFocus={handleFocus}
-            onInputChange={handleInputChange}
-            suggestedReps={set.reps}
-            isWorkoutRunning={isWorkoutRunning}
-          />
-        );
-      })}
+          return (
+            <ExerciseSetRow
+              key={key}
+              exerciseId={exercise.id}
+              setId={setNumber}
+              index={index}
+              values={values}
+              logged={loggedSets.has(key)}
+              isFocused={isFocused}
+              onFocus={handleFocus}
+              onInputChange={handleInputChange}
+              suggestedReps={set.reps}
+              isWorkoutRunning={isWorkoutRunning}
+            />
+          );
+        })}
+      </ScrollView>
     </View>
   );
 };
@@ -67,9 +78,11 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width,
-    height: 150,
-    borderRadius: 10,
-    marginBottom: 5,
+    height: 200,
+    // borderRadius: 10,
+    // marginBottom: 5,
+    aspectRatio: 1,
+    alignSelf: "center",
   },
   headerRow: {
     flexDirection: "row",

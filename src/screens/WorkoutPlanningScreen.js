@@ -45,7 +45,7 @@ const WorkoutPlanningScreen = () => {
       };
 
       initAndLoad();
-    }, [])
+    }, []),
   );
 
   //po starcie treningu przenieś do ekranu treningowego i zajeb z JEFITa mniej więcej wygląd UI odpalonego treningu
