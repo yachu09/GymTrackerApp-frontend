@@ -1,7 +1,7 @@
 Wymagane oprogramowania:
-.NET SDK 8.0
-Microsoft SQL Server
-node.js
+.NET SDK 8.0, 
+Microsoft SQL Server,
+node.js,
 npm packet manager
 
 Instrukcja uruchomienia:
