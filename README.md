@@ -2,7 +2,7 @@ Wymagane oprogramowania:
 .NET SDK 8.0, 
 Microsoft SQL Server,
 node.js,
-npm packet manager
+npm package manager
 
 Instrukcja uruchomienia:
 Aby uzyskać dostęp do bazy ćwiczeń należy pobrać backend z repozytorium: https://github.com/yachu09/GymTrackerApp-backend
