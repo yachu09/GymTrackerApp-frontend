@@ -1,8 +1,8 @@
 Wymagane oprogramowania:
 .NET SDK 8.0, 
-Microsoft SQL Server,
-node.js,
-npm package manager
+Microsoft SQL Server (wersja localDB),
+node.js (np 24.13.0),
+npm package manager (np 11.6.2)
 
 Instrukcja uruchomienia:
 Aby uzyskać dostęp do bazy ćwiczeń należy pobrać backend z repozytorium: https://github.com/yachu09/GymTrackerApp-backend
@@ -17,3 +17,5 @@ Po zainstalowaniu zależności należy skonfigurować adres IP w instancji axios
 Gdy powyższe czynności zostały wykonane można uruchomić Metro Bundler za pomocą komendy "npx expo start"
 <img width="2202" height="1338" alt="image" src="https://github.com/user-attachments/assets/9d309883-8411-47a2-a372-5ac27ebdfea0" />
 Telefonem z zainstalowaną aplikacją Expo Go skanujemy kod QR i projekt zostaje uruchomiony. 
+
+Uwaga: zdjęcia ćwiczeń mogą być niewidoczne i konieczne będzie podmienienie adresów IP w ścieżkach w pliku exercsies.json
